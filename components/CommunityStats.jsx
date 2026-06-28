@@ -1,4 +1,4 @@
-import { communityStats } from '@/data/surveys'
+import { mockCommunityStats } from '@/data/surveys'
 
 export default function CommunityStats() {
   return (
@@ -7,7 +7,7 @@ export default function CommunityStats() {
         <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#C4D0C6]">
-              Topluluk verisi
+              Örnek topluluk verisi
             </p>
             <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] sm:text-4xl">
               Sessiz kalan başvurular sadece senin başına gelmiyor olabilir.
@@ -17,10 +17,14 @@ export default function CommunityStats() {
               kaybolmasın. Bir araya geldiklerinde şirketlerin işe alım
               davranışlarını görünür kılan sinyallere dönüşür.
             </p>
+            <p className="mt-4 text-xs leading-5 text-[#BEB5A7]">
+              Bu prototipteki değerler temsili mock verilerdir; gerçek topluluk
+              ölçümleri değildir.
+            </p>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            {communityStats.map((stat) => (
+            {mockCommunityStats.map((stat) => (
               <div
                 key={stat.label}
                 className="rounded-[1.5rem] border border-white/10 bg-white/10 p-5"

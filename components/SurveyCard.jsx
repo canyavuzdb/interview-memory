@@ -12,7 +12,7 @@ export default function SurveyCard({ survey }) {
   return (
     <article className="snap-center rounded-[2rem] border border-[#E2DDD4] bg-[#FFFCF7] p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-[0_18px_60px_rgba(25,23,20,0.08)] sm:min-w-[420px]">
       <div className="flex items-start justify-between gap-5">
-        <div className="flex h-13 w-13 items-center justify-center rounded-2xl bg-[#191714] text-[#FFFCF7]">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#191714] text-[#FFFCF7]">
           <Icon size={23} />
         </div>
 

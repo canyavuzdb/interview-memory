@@ -1,6 +1,12 @@
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
-import SurveyCarousel from '../../components/SurveyCarousel'
+import SurveyCarousel from '@/components/SurveyCarousel'
+
+export const metadata = {
+  title: 'Anonim Anketler',
+  description:
+    'Şirket deneyimini veya başvuru ve mülakat oranlarını kayıt olmadan anonim olarak paylaş.',
+}
 
 export default function SurveysPage() {
   return (

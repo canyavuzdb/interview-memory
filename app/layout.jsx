@@ -1,8 +1,12 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'Mülakat Atlası',
-  description: 'Adayların anonim mülakat deneyimleriyle işe alım süreçlerini görünür kılan platform.',
+  title: {
+    default: 'Interview Memory',
+    template: '%s | Interview Memory',
+  },
+  description:
+    'Adayların anonim başvuru ve mülakat deneyimlerini topluluk verisine dönüştüren platform.',
 };
 
 export default function RootLayout({ children }) {

@@ -1,6 +1,12 @@
 import Link from 'next/link'
 import { ArrowLeft, BarChart3 } from 'lucide-react'
 
+export const metadata = {
+  title: 'Başvuru Benchmark',
+  description:
+    'Başvuru, dönüş, HR görüşmesi ve teknik mülakat oranlarını anonim olarak topluluk verisine ekle.',
+}
+
 export default function ApplicationBenchmarkSurveyPage() {
   return (
     <main className="min-h-screen bg-[#F7F4EF] text-[#191714]">
