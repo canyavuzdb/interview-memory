@@ -1,12 +1,13 @@
 {
-  "name": "mulakat-atlasi-ui-starter",
+  "name": "interview-memory-ui",
   "version": "0.1.0",
   "private": true,
+  "description": "A modern frontend prototype for anonymous interview experiences and hiring process insights.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint . --max-warnings=0"
   },
   "dependencies": {
     "lucide-react": "latest",
@@ -15,10 +16,11 @@
     "react-dom": "latest"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.5",
     "autoprefixer": "^10.5.2",
-    "eslint": "latest",
-    "eslint-config-next": "latest",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.9",
     "postcss": "^8.5.15",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "3.4.17"
   }
 }
