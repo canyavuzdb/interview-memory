@@ -1,139 +1,229 @@
-import { ArrowRight, BarChart3, LockKeyhole, MessageSquareText, Search } from 'lucide-react';
-import Header from '@/components/Header';
-import CompanyCard from '@/components/CompanyCard';
-import InsightCard from '@/components/InsightCard';
-import ShareExperienceCard from '@/components/ShareExperienceCard';
-import { companies, insights, rejectionReasons } from '@/data/mockData';
+import Link from 'next/link'
+import { ArrowRight, BarChart3, Building2, Search, Sparkles } from 'lucide-react'
+import AnonymousTrustSection from '@/components/AnonymousTrustSection'
+import CommunityStats from '@/components/CommunityStats'
+import SurveyCarousel from '@/components/SurveyCarousel'
 
 export default function HomePage() {
   return (
-    <main>
-      <Header />
-
-      <section className="container-page pb-14 pt-12 sm:pb-20 sm:pt-20">
-        <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-          <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-3 py-1.5 text-xs font-medium text-muted shadow-card">
-              <span className="h-2 w-2 rounded-full bg-accent" />
-              Anonim mülakat deneyimleriyle işe alım şeffaflığı
+    <main className="min-h-screen bg-[#F7F4EF] text-[#191714]">
+      <header className="sticky top-0 z-30 border-b border-[#E2DDD4]/80 bg-[#F7F4EF]/85 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-6 lg:px-8">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#191714] text-[#FFFCF7]">
+              IM
             </div>
-
-            <h1 className="mt-6 max-w-4xl text-4xl font-semibold tracking-[-0.04em] text-ink sm:text-6xl lg:text-7xl">
-              Adaylar yıllardır değerlendiriliyor. Artık süreçler de değerlendirilsin.
-            </h1>
-
-            <p className="mt-6 max-w-2xl text-base leading-8 text-muted sm:text-lg">
-              Mülakat Atlası, adayların anonim deneyimlerinden şirketlerin işe alım süreçlerini,
-              soru tiplerini, feedback kalitesini ve aday deneyimini görünür kılan sade bir platformdur.
-            </p>
-
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a href="#share" className="inline-flex items-center justify-center gap-2 rounded-full bg-accentDark px-5 py-3 text-sm font-semibold text-surface shadow-card transition hover:-translate-y-0.5 hover:bg-accent">
-                Deneyim paylaş
-                <ArrowRight size={17} />
-              </a>
-              <a href="#companies" className="inline-flex items-center justify-center gap-2 rounded-full border border-line bg-surface px-5 py-3 text-sm font-semibold text-ink shadow-card transition hover:-translate-y-0.5 hover:border-accent/40">
-                Şirketleri keşfet
-              </a>
+            <div>
+              <p className="text-sm font-semibold leading-none tracking-tight">
+                Interview Memory
+              </p>
+              <p className="mt-1 hidden text-xs text-[#706A61] sm:block">
+                Anonymous hiring signals
+              </p>
             </div>
-          </div>
+          </Link>
 
-          <div className="glass-panel rounded-[2rem] p-4 sm:p-6">
-            <div className="rounded-[1.5rem] border border-line bg-surface p-4 shadow-card">
-              <div className="flex items-center gap-3 rounded-2xl border border-line bg-canvas px-4 py-3">
-                <Search size={18} className="text-muted" />
-                <span className="text-sm text-muted">Şirket, rol veya sektör ara...</span>
-              </div>
+          <nav className="hidden items-center gap-8 text-sm font-medium text-[#706A61] md:flex">
+            <a href="#surveys" className="transition hover:text-[#191714]">
+              Anketler
+            </a>
+            <a href="#how-it-works" className="transition hover:text-[#191714]">
+              Nasıl çalışır?
+            </a>
+            <a href="#stats" className="transition hover:text-[#191714]">
+              Veriler
+            </a>
+          </nav>
 
-              <div className="mt-5 rounded-3xl bg-accentDark p-5 text-surface">
-                <div className="text-xs font-medium uppercase tracking-[0.22em] text-white/60">Hiring Experience Score</div>
-                <div className="mt-4 flex items-end justify-between gap-4">
-                  <div>
-                    <div className="text-5xl font-semibold tracking-tight">7.2</div>
-                    <p className="mt-2 text-sm text-white/68">128 anonim deneyime göre</p>
-                  </div>
-                  <div className="rounded-full bg-white/10 px-3 py-1 text-xs text-white/78">Fintech</div>
-                </div>
-              </div>
-
-              <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                <MiniMetric icon={<MessageSquareText size={17} />} title="Feedback" value="3.8" />
-                <MiniMetric icon={<BarChart3 size={17} />} title="Şeffaflık" value="6.4" />
-                <MiniMetric icon={<LockKeyhole size={17} />} title="Güven" value="8.9" />
-              </div>
-
-              <div className="mt-5 rounded-3xl border border-line bg-canvas p-4">
-                <div className="text-sm font-semibold">En sık belirtilen olası eleme sebepleri</div>
-                <div className="mt-4 space-y-3">
-                  {rejectionReasons.map((reason, index) => (
-                    <div key={reason} className="flex items-center justify-between gap-3 text-sm">
-                      <span className="text-muted">{reason}</span>
-                      <span className="rounded-full bg-surface px-2.5 py-1 text-xs font-medium text-ink">#{index + 1}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+          <a
+            href="#surveys"
+            className="rounded-full bg-[#191714] px-4 py-2 text-sm font-semibold text-[#FFFCF7] shadow-sm transition hover:-translate-y-0.5 hover:bg-[#31443A]"
+          >
+            Anonim katıl
+          </a>
         </div>
-      </section>
+      </header>
 
-      <div className="soft-divider" />
+      <section className="mx-auto grid max-w-7xl gap-12 px-5 py-16 sm:px-6 md:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-24">
+        <div className="flex flex-col justify-center">
+          <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-[#E2DDD4] bg-[#FFFCF7] px-4 py-2 text-sm text-[#706A61] shadow-sm">
+            <Sparkles size={16} className="text-[#5B6F64]" />
+            Kayıt olmadan anonim katkı
+          </div>
 
-      <section id="insights" className="container-page py-14 sm:py-20">
-        <div className="max-w-2xl">
-          <div className="text-sm font-semibold text-accentDark">Topluluk içgörüleri</div>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Otomatik red maillerinin arkasındaki belirsizliği azalt.</h2>
-          <p className="mt-4 text-sm leading-7 text-muted sm:text-base">
-            Mock verilerle hazırlanmış bu alan ileride gerçek deneyimlerden gelen istatistiklere bağlanabilir.
+          <h1 className="max-w-4xl text-5xl font-semibold tracking-[-0.055em] text-[#191714] sm:text-6xl lg:text-7xl">
+            Başvuruların kara deliğe mi düşüyor?
+          </h1>
+
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-[#706A61]">
+            Otomatik red, ghosting ve feedback almayan süreçler artık veri
+            oluyor. Interview Memory, adayların başvuru ve mülakat
+            deneyimlerini anonim şekilde toplayarak işe alım süreçlerini
+            görünür kılar.
           </p>
-        </div>
 
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          {insights.map((insight) => (
-            <InsightCard key={insight.label} {...insight} />
-          ))}
-        </div>
-      </section>
+          <p className="mt-5 max-w-xl text-xl font-semibold tracking-tight text-[#191714]">
+            Şirketler seni değerlendiriyor. Sen de süreci ölç.
+          </p>
 
-      <section id="companies" className="container-page py-14 sm:py-20">
-        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-          <div>
-            <div className="text-sm font-semibold text-accentDark">Şirket profilleri</div>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">İşe alım süreçlerinin aday gözünden karnesi.</h2>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <a
+              href="#surveys"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#191714] px-6 py-3 text-sm font-semibold text-[#FFFCF7] shadow-sm transition hover:-translate-y-0.5 hover:bg-[#31443A]"
+            >
+              Anketleri keşfet
+              <ArrowRight size={17} />
+            </a>
+
+            <Link
+              href="/surveys/application-benchmark"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-[#D9D2C7] bg-[#FFFCF7] px-6 py-3 text-sm font-semibold text-[#191714] shadow-sm transition hover:-translate-y-0.5 hover:border-[#BEB5A7]"
+            >
+              Kaç başvuruya mülakat düşüyor?
+              <Search size={17} />
+            </Link>
           </div>
-          <button className="w-fit rounded-full border border-line bg-surface px-4 py-2.5 text-sm font-semibold shadow-card transition hover:-translate-y-0.5 hover:border-accent/40">
-            Tüm şirketler
-          </button>
         </div>
 
-        <div className="mt-8 grid gap-5 lg:grid-cols-3">
-          {companies.map((company) => (
-            <CompanyCard key={company.name} company={company} />
-          ))}
+        <div className="relative">
+          <div className="absolute -left-6 top-10 hidden h-32 w-32 rounded-full bg-[#D8CDBD] blur-3xl lg:block" />
+          <div className="absolute -bottom-8 right-4 hidden h-40 w-40 rounded-full bg-[#C4D0C6] blur-3xl lg:block" />
+
+          <div className="relative overflow-hidden rounded-[2rem] border border-[#E2DDD4] bg-[#FFFCF7] p-5 shadow-[0_24px_80px_rgba(25,23,20,0.08)]">
+            <div className="rounded-[1.5rem] border border-[#E2DDD4] bg-[#F7F4EF] p-5">
+              <p className="text-sm font-semibold text-[#191714]">
+                Topluluk sinyali
+              </p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">
+                Benzer adaylar kaç başvuruda dönüş alıyor?
+              </h2>
+              <p className="mt-3 text-sm leading-7 text-[#706A61]">
+                Deneyim, rol ve network verileriyle başvuru süreçlerinin
+                görünmeyen tarafını ölçülebilir hale getiriyoruz.
+              </p>
+
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                <div className="rounded-2xl border border-[#E2DDD4] bg-[#FFFCF7] p-4">
+                  <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#191714] text-[#FFFCF7]">
+                    <Building2 size={20} />
+                  </div>
+                  <p className="text-sm font-semibold">
+                    Şirket deneyimi
+                  </p>
+                  <p className="mt-2 text-xs leading-5 text-[#706A61]">
+                    Başvuru, red, ghosting, HR ve mülakat süreci sinyalleri.
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-[#E2DDD4] bg-[#FFFCF7] p-4">
+                  <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#191714] text-[#FFFCF7]">
+                    <BarChart3 size={20} />
+                  </div>
+                  <p className="text-sm font-semibold">
+                    Başvuru benchmark
+                  </p>
+                  <p className="mt-2 text-xs leading-5 text-[#706A61]">
+                    Kaç başvuruya dönüş, HR görüşmesi ve teknik mülakat düşüyor?
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 rounded-[1.5rem] border border-[#E2DDD4] bg-[#191714] p-5 text-[#FFFCF7]">
+              <p className="text-sm font-semibold text-[#C4D0C6]">
+                Sessiz başvurular artık görünür
+              </p>
+              <p className="mt-3 text-2xl font-semibold tracking-tight">
+                Bir adayın yaşadığı belirsizlik, toplulukla birleşince işe alım
+                süreçlerinin gerçek sinyaline dönüşür.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
-      <ShareExperienceCard />
+      <AnonymousTrustSection />
 
-      <footer className="border-t border-line py-8">
-        <div className="container-page flex flex-col justify-between gap-3 text-sm text-muted sm:flex-row">
-          <span>© 2026 Mülakat Atlası UI Starter</span>
-          <span>Frontend mockup · Next.js · Tailwind CSS</span>
+      <SurveyCarousel />
+
+      <section
+        id="how-it-works"
+        className="mx-auto max-w-7xl px-5 py-14 sm:px-6 lg:px-8"
+      >
+        <div className="grid gap-5 md:grid-cols-3">
+          <div className="rounded-[1.75rem] border border-[#E2DDD4] bg-[#FFFCF7] p-6 shadow-sm">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#5B6F64]">
+              01
+            </p>
+            <h3 className="mt-4 text-xl font-semibold tracking-tight">
+              Anket seç
+            </h3>
+            <p className="mt-3 text-sm leading-7 text-[#706A61]">
+              Şirket deneyimini paylaşabilir ya da başvuru/mülakat oranını
+              topluluk verisine ekleyebilirsin.
+            </p>
+          </div>
+
+          <div className="rounded-[1.75rem] border border-[#E2DDD4] bg-[#FFFCF7] p-6 shadow-sm">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#5B6F64]">
+              02
+            </p>
+            <h3 className="mt-4 text-xl font-semibold tracking-tight">
+              Anonim doldur
+            </h3>
+            <p className="mt-3 text-sm leading-7 text-[#706A61]">
+              Kayıt olmadan sürecin nerede kaldığını, dönüş alıp almadığını ve
+              feedback durumunu paylaş.
+            </p>
+          </div>
+
+          <div className="rounded-[1.75rem] border border-[#E2DDD4] bg-[#FFFCF7] p-6 shadow-sm">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#5B6F64]">
+              03
+            </p>
+            <h3 className="mt-4 text-xl font-semibold tracking-tight">
+              Veri oluşsun
+            </h3>
+            <p className="mt-3 text-sm leading-7 text-[#706A61]">
+              Toplanan anonim veriler şirketlerin işe alım davranışlarını ve
+              adayların başvuru gerçekliğini görünür kılar.
+            </p>
+          </div>
         </div>
-      </footer>
-    </main>
-  );
-}
+      </section>
 
-function MiniMetric({ icon, title, value }) {
-  return (
-    <div className="rounded-2xl border border-line bg-surfaceMuted/60 p-4">
-      <div className="flex items-center justify-between gap-3 text-muted">
-        {icon}
-        <span className="text-2xl font-semibold text-ink">{value}</span>
+      <div id="stats">
+        <CommunityStats />
       </div>
-      <div className="mt-2 text-xs text-muted">{title}</div>
-    </div>
-  );
+
+      <section className="mx-auto max-w-7xl px-5 py-14 pb-20 sm:px-6 lg:px-8">
+        <div className="rounded-[2rem] border border-[#E2DDD4] bg-[#FFFCF7] p-6 text-center shadow-sm md:p-10">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#5B6F64]">
+            Katkın önemli
+          </p>
+          <h2 className="mx-auto mt-3 max-w-3xl text-3xl font-semibold tracking-[-0.04em] sm:text-4xl">
+            Başvuru süreçleri sessiz kaldıkça belirsizlik büyür. Paylaşıldıkça
+            veri olur.
+          </h2>
+          <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+            <Link
+              href="/surveys/company-experience"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#191714] px-6 py-3 text-sm font-semibold text-[#FFFCF7] transition hover:-translate-y-0.5 hover:bg-[#31443A]"
+            >
+              Şirket deneyimi paylaş
+              <ArrowRight size={17} />
+            </Link>
+
+            <Link
+              href="/surveys/application-benchmark"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-[#D9D2C7] bg-[#F7F4EF] px-6 py-3 text-sm font-semibold text-[#191714] transition hover:-translate-y-0.5 hover:border-[#BEB5A7]"
+            >
+              Başvuru oranını paylaş
+              <ArrowRight size={17} />
+            </Link>
+          </div>
+        </div>
+      </section>
+    </main>
+  )
 }
