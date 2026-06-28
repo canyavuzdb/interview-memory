@@ -1,6 +1,12 @@
 import Link from 'next/link'
 import { ArrowLeft, Building2 } from 'lucide-react'
 
+export const metadata = {
+  title: 'Şirket Deneyimini Paylaş',
+  description:
+    'Bir şirketle yaşadığın başvuru veya mülakat deneyimini kayıt olmadan anonim olarak paylaş.',
+}
+
 export default function CompanyExperienceSurveyPage() {
   return (
     <main className="min-h-screen bg-[#F7F4EF] text-[#191714]">

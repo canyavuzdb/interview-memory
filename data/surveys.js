@@ -39,7 +39,7 @@ export const surveys = [
   },
 ]
 
-export const communityStats = [
+export const mockCommunityStats = [
   {
     value: '1.248',
     label: 'Anonim katkı',
