@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowRight, BarChart3, Building2, Search, Sparkles } from 'lucide-react'
+import { ArrowRight, BarChart3, Building2, LogIn, Search, Sparkles } from 'lucide-react'
 import AnonymousTrustSection from '@/components/AnonymousTrustSection'
 import CommunityStats from '@/components/CommunityStats'
 import PreferenceControls from '@/components/PreferenceControls'
@@ -75,22 +75,27 @@ export default async function HomePage({ params }) {
             </a>
           </nav>
 
-          <div className="flex items-center gap-2 justify-self-end">
-            <PreferenceControls
-              locale={locale}
-              languageLabel={messages.common.languageLabel}
-              themeLabel={messages.common.themeToggle}
-              themeTitle={messages.common.themeTitle}
-            />
-            <a
-              href="#surveys"
-              className="hidden items-center justify-center whitespace-nowrap border border-ink bg-ink px-5 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-surface transition hover:bg-accentDark xl:inline-flex"
+          <PreferenceControls
+            locale={locale}
+            languageLabel={messages.common.languageLabel}
+            themeLabel={messages.common.themeToggle}
+            themeTitle={messages.common.themeTitle}
+            className="justify-self-end"
+          >
+            <Link
+              href={`/${locale}/login`}
+              aria-label={messages.header.signIn}
+              className="inline-flex h-9 items-center justify-center gap-2 bg-transparent px-2 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-[var(--ink-soft)] transition hover:bg-[var(--surface-hover)] hover:text-ink md:px-3"
             >
-              <StableLocalizedText reserve={alternateMessages.header.join}>
-                {messages.header.join}
+              <LogIn size={15} aria-hidden="true" />
+              <StableLocalizedText
+                reserve={alternateMessages.header.signIn}
+                className="hidden md:grid"
+              >
+                {messages.header.signIn}
               </StableLocalizedText>
-            </a>
-          </div>
+            </Link>
+          </PreferenceControls>
         </div>
       </header>
 
