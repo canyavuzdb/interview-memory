@@ -15,6 +15,13 @@ const themeScript = `
   })();
 `;
 
+const localeScript = `
+  (() => {
+    const locale = window.location.pathname.split('/')[1];
+    document.documentElement.lang = locale === 'en' ? 'en' : 'tr';
+  })();
+`;
+
 export const metadata = {
   title: {
     default: 'Interview Memory',
@@ -29,6 +36,7 @@ export default function RootLayout({ children }) {
     <html lang="tr" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script dangerouslySetInnerHTML={{ __html: localeScript }} />
       </head>
       <body>{children}</body>
     </html>
