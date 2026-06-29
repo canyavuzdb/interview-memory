@@ -7,9 +7,11 @@ export default function PreferenceControls({
   languageLabel,
   themeLabel,
   themeTitle,
+  children,
+  className = '',
 }) {
   return (
-    <div className="inline-flex items-stretch divide-x divide-[var(--line-strong)] border border-[var(--line-strong)] bg-[var(--nav-surface)]">
+    <div className={`inline-flex items-stretch divide-x divide-[var(--line-strong)] border border-[var(--line-strong)] bg-[var(--nav-surface)] ${className}`}>
       <LanguageSwitcher
         locale={locale}
         path={path}
@@ -21,6 +23,7 @@ export default function PreferenceControls({
         title={themeTitle}
         embedded
       />
+      {children}
     </div>
   )
 }

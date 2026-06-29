@@ -39,13 +39,40 @@ const messages = {
         description:
           'Başvuru, dönüş, HR görüşmesi ve teknik mülakat oranlarını anonim olarak topluluk verisine ekle.',
       },
+      login: {
+        title: 'Giriş Yap',
+        description:
+          'Google hesabınla Interview Memory giriş akışını incele.',
+      },
     },
     header: {
       navLabel: 'Ana navigasyon',
       surveys: 'Anketler',
       howItWorks: 'Nasıl çalışır?',
       data: 'Veriler',
-      join: 'Anonim katıl',
+      signIn: 'Giriş yap',
+    },
+    login: {
+      eyebrow: 'Hesap erişimi',
+      title: 'Deneyimlerin kaybolmasın.',
+      description:
+        'Giriş yaptığında katkılarını takip edebilir ve yalnızca hesap sahiplerine açılan topluluk içgörülerine erişebilirsin.',
+      benefitsEyebrow: 'Hesapla neler değişir?',
+      benefits: [
+        'Anonim katkı geçmişini tek yerde takip et',
+        'Kaydettiğin şirket ve rol sinyallerine geri dön',
+        'Üyelere özel detaylı içgörülere eriş',
+      ],
+      accessTitle: 'Hesabına hızlıca eriş',
+      accessDescription:
+        'Google hesabınla giriş yapabilir veya hesap oluşturmadan anonim olarak kullanmaya devam edebilirsin.',
+      googleCta: 'Google ile devam et',
+      alternative: 'ya da',
+      previewNotice:
+        'Bu bir arayüz önizlemesidir. Google OAuth henüz bağlanmadı ve hiçbir bilgi gönderilmedi.',
+      privacyNote:
+        'Google ile devam ettiğinde temel hesap bilgilerin giriş için kullanılır; anket yanıtların herkese açık kimliğinle paylaşılmaz.',
+      anonymousCta: 'Anonim kullanmaya devam et',
     },
     home: {
       hero: {
@@ -298,13 +325,40 @@ const messages = {
         description:
           'Add your application, response, HR interview, and technical interview rates to the community data anonymously.',
       },
+      login: {
+        title: 'Sign In',
+        description:
+          'Preview the Interview Memory sign-in flow using your Google account.',
+      },
     },
     header: {
       navLabel: 'Main navigation',
       surveys: 'Surveys',
       howItWorks: 'How it works',
       data: 'Data',
-      join: 'Join anonymously',
+      signIn: 'Sign in',
+    },
+    login: {
+      eyebrow: 'Account access',
+      title: 'Keep your experiences within reach.',
+      description:
+        'Sign in to follow your contributions and access community insights available only to account holders.',
+      benefitsEyebrow: 'What changes with an account?',
+      benefits: [
+        'Track your anonymous contribution history in one place',
+        'Return to company and role signals you saved',
+        'Access detailed insights available to members',
+      ],
+      accessTitle: 'Access your account quickly',
+      accessDescription:
+        'Sign in with your Google account or continue using Interview Memory anonymously without creating an account.',
+      googleCta: 'Continue with Google',
+      alternative: 'or',
+      previewNotice:
+        'This is an interface preview. Google OAuth is not connected yet and no information was sent.',
+      privacyNote:
+        'When you continue with Google, basic account information is used for sign-in; your survey responses are not shared under your public identity.',
+      anonymousCta: 'Continue using anonymously',
     },
     home: {
       hero: {
