@@ -44,6 +44,11 @@ const messages = {
         description:
           'Google hesabınla Interview Memory giriş akışını incele.',
       },
+      notFound: {
+        title: 'Sayfa Bulunamadı',
+        description:
+          'Aradığın sayfa taşınmış, silinmiş veya hiç var olmamış olabilir.',
+      },
     },
     header: {
       navLabel: 'Ana navigasyon',
@@ -73,6 +78,15 @@ const messages = {
       privacyNote:
         'Google ile devam ettiğinde temel hesap bilgilerin giriş için kullanılır; anket yanıtların herkese açık kimliğinle paylaşılmaz.',
       anonymousCta: 'Anonim kullanmaya devam et',
+    },
+    notFound: {
+      eyebrow: 'Kayıp sinyal',
+      title: 'Bu sayfadan geri dönüş alamadık.',
+      description:
+        'Aradığın bağlantı sessizliğe karışmış olabilir. Ana sayfaya dönebilir veya anonim anketleri keşfetmeye devam edebilirsin.',
+      homeCta: 'Ana sayfaya dön',
+      surveysCta: 'Anketleri keşfet',
+      codeLabel: 'Sayfa bulunamadı',
     },
     home: {
       hero: {
@@ -330,6 +344,11 @@ const messages = {
         description:
           'Preview the Interview Memory sign-in flow using your Google account.',
       },
+      notFound: {
+        title: 'Page Not Found',
+        description:
+          'The page you are looking for may have moved, been deleted, or never existed.',
+      },
     },
     header: {
       navLabel: 'Main navigation',
@@ -359,6 +378,15 @@ const messages = {
       privacyNote:
         'When you continue with Google, basic account information is used for sign-in; your survey responses are not shared under your public identity.',
       anonymousCta: 'Continue using anonymously',
+    },
+    notFound: {
+      eyebrow: 'Lost signal',
+      title: 'We could not get a response from this page.',
+      description:
+        'The link you followed may have disappeared into the silence. Return home or keep exploring the anonymous surveys.',
+      homeCta: 'Back to homepage',
+      surveysCta: 'Explore surveys',
+      codeLabel: 'Page not found',
     },
     home: {
       hero: {
