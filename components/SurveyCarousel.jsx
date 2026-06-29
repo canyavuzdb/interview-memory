@@ -6,7 +6,7 @@ export default function SurveyCarousel() {
     <section id="surveys" className="mx-auto max-w-7xl px-5 py-14 sm:px-6 lg:px-8">
       <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#5B6F64]">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
             Anonim anketler
           </p>
           <h2 className="mt-3 max-w-2xl text-3xl font-semibold tracking-[-0.04em] sm:text-4xl">
@@ -14,7 +14,7 @@ export default function SurveyCarousel() {
           </h2>
         </div>
 
-        <p className="max-w-md text-sm leading-7 text-[#706A61]">
+        <p className="max-w-md text-sm leading-7 text-muted">
           Seçtiğin ankete göre ayrı bir sayfaya yönlendirilirsin. İsim, e-posta
           veya üyelik zorunluluğu yok.
         </p>
