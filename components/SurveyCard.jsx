@@ -10,7 +10,7 @@ export default function SurveyCard({ survey }) {
   const Icon = iconMap[survey.icon] ?? Building2
 
   return (
-    <article className="snap-center rounded-[2rem] border border-line bg-surface p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-soft sm:min-w-[420px]">
+    <article className="flex min-h-[880px] snap-center flex-col rounded-[2rem] border border-line bg-surface p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-soft sm:min-h-[710px] sm:min-w-[420px] xl:min-h-[650px]">
       <div className="flex items-start justify-between gap-5">
         <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-ink text-surface">
           <Icon size={23} />
@@ -56,13 +56,15 @@ export default function SurveyCard({ survey }) {
         ))}
       </div>
 
-      <Link
-        href={survey.href}
-        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-semibold text-surface transition hover:-translate-y-0.5 hover:bg-accentDark"
-      >
-        {survey.cta}
-        <ArrowRight size={16} />
-      </Link>
+      <div className="mt-auto pt-6">
+        <Link
+          href={survey.href}
+          className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-semibold text-surface transition hover:-translate-y-0.5 hover:bg-accentDark"
+        >
+          {survey.cta}
+          <ArrowRight size={16} />
+        </Link>
+      </div>
     </article>
   )
 }

@@ -2,7 +2,12 @@
 
 import { Moon, Sun } from 'lucide-react'
 
-export default function ThemeToggle({ className = '' }) {
+export default function ThemeToggle({
+  className = '',
+  label,
+  title,
+  embedded = false,
+}) {
   function toggleTheme() {
     const currentTheme = document.documentElement.dataset.theme ?? 'light'
     const nextTheme = currentTheme === 'dark' ? 'light' : 'dark'
@@ -15,9 +20,13 @@ export default function ThemeToggle({ className = '' }) {
     <button
       type="button"
       onClick={toggleTheme}
-      aria-label="Açık ve koyu tema arasında geçiş yap"
-      title="Temayı değiştir"
-      className={`grid h-9 w-9 shrink-0 place-items-center border border-[var(--line-strong)] bg-[var(--nav-surface)] text-ink transition hover:bg-[var(--surface-hover)] ${className}`}
+      aria-label={label}
+      title={title}
+      className={`grid h-9 w-9 shrink-0 place-items-center text-ink transition hover:bg-[var(--surface-hover)] ${
+        embedded
+          ? 'bg-transparent'
+          : 'border border-[var(--line-strong)] bg-[var(--nav-surface)]'
+      } ${className}`}
     >
       <Moon size={16} className="theme-icon-dark" />
       <Sun size={16} className="theme-icon-light hidden" />

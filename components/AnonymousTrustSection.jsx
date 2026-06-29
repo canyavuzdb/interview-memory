@@ -1,34 +1,26 @@
 import { EyeOff, LockKeyhole, ShieldCheck, UserCheck } from 'lucide-react'
 
-const trustItems = [
+const trustIcons = [
   {
-    title: 'Kayıt gerekmiyor',
-    description: 'Anketlere katılmak için hesap oluşturmak zorunda değilsin.',
     icon: UserCheck,
   },
   {
-    title: 'Anonim katılım',
-    description: 'İsim, e-posta veya kişisel bilgi paylaşmadan katkı verebilirsin.',
     icon: EyeOff,
   },
   {
-    title: 'Güvenli veri yaklaşımı',
-    description: 'Kişi isimleri, gizli dokümanlar ve hakaret içeren içerikler yayınlanmaz.',
     icon: ShieldCheck,
   },
   {
-    title: 'Moderasyonlu paylaşım',
-    description: 'Toplanan deneyimler public görünmeden önce kontrol edilecek şekilde tasarlanır.',
     icon: LockKeyhole,
   },
 ]
 
-export default function AnonymousTrustSection() {
+export default function AnonymousTrustSection({ items }) {
   return (
     <section className="mx-auto max-w-7xl px-5 py-10 sm:px-6 lg:px-8">
       <div className="grid gap-4 md:grid-cols-4">
-        {trustItems.map((item) => {
-          const Icon = item.icon
+        {items.map((item, index) => {
+          const Icon = trustIcons[index].icon
 
           return (
             <div
