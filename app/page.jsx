@@ -6,38 +6,44 @@ import SurveyCarousel from '@/components/SurveyCarousel'
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-[#F7F4EF] text-[#191714]">
-      <header className="sticky top-0 z-30 border-b border-[#E2DDD4]/80 bg-[#F7F4EF]/85 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-6 lg:px-8">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#191714] text-[#FFFCF7]">
+    <main className="landing-grid min-h-screen text-[#191714]">
+      <header className="sticky top-0 z-30 border-b border-[#BEB8AC]/70 bg-transparent">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 sm:px-6 lg:px-8">
+          <Link href="/" className="flex items-center gap-3" aria-label="Interview Memory ana sayfa">
+            <div className="grid h-9 w-9 place-items-center border border-[#4F493F] bg-[#E7E3D8] font-mono text-[11px] font-bold tracking-[-0.08em] text-[#191714]">
               IM
             </div>
             <div>
-              <p className="text-sm font-semibold leading-none tracking-tight">
-                Interview Memory
+              <p className="text-xs font-bold uppercase leading-none tracking-[0.08em]">
+                <span className="text-[#6F8177]">I</span>nterview
               </p>
-              <p className="mt-1 hidden text-xs text-[#706A61] sm:block">
-                Anonymous hiring signals
+              <p className="mt-1 text-xs font-bold uppercase leading-none tracking-[0.08em]">
+                <span className="text-[#6F8177]">M</span>emory
               </p>
             </div>
           </Link>
 
-          <nav className="hidden items-center gap-8 text-sm font-medium text-[#706A61] md:flex">
-            <a href="#surveys" className="transition hover:text-[#191714]">
+          <nav
+            aria-label="Ana navigasyon"
+            className="hidden divide-x divide-[#BEB8AC] border border-[#BEB8AC] bg-[#EEEAE0]/80 font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-[#4F493F] md:flex"
+          >
+            <a href="#surveys" className="px-4 py-2.5 transition hover:bg-[#E3DED2] hover:text-[#191714]">
+              <span className="mr-2 text-[#8A8378]">01/</span>
               Anketler
             </a>
-            <a href="#how-it-works" className="transition hover:text-[#191714]">
+            <a href="#how-it-works" className="px-4 py-2.5 transition hover:bg-[#E3DED2] hover:text-[#191714]">
+              <span className="mr-2 text-[#8A8378]">02/</span>
               Nasıl çalışır?
             </a>
-            <a href="#stats" className="transition hover:text-[#191714]">
+            <a href="#stats" className="px-4 py-2.5 transition hover:bg-[#E3DED2] hover:text-[#191714]">
+              <span className="mr-2 text-[#8A8378]">03/</span>
               Veriler
             </a>
           </nav>
 
           <a
             href="#surveys"
-            className="rounded-full bg-[#191714] px-4 py-2 text-sm font-semibold text-[#FFFCF7] shadow-sm transition hover:-translate-y-0.5 hover:bg-[#31443A]"
+            className="border border-[#191714] bg-[#191714] px-4 py-2.5 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-[#FFFCF7] transition hover:bg-[#31443A]"
           >
             Anonim katıl
           </a>
@@ -46,7 +52,7 @@ export default function HomePage() {
 
       <section className="mx-auto grid max-w-7xl gap-12 px-5 py-16 sm:px-6 md:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-24">
         <div className="flex flex-col justify-center">
-          <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-[#E2DDD4] bg-[#FFFCF7] px-4 py-2 text-sm text-[#706A61] shadow-sm">
+          <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-sm border border-[#E2DDD4] bg-[#FFFCF7] px-4 py-2 text-sm text-[#706A61] shadow-sm">
             <Sparkles size={16} className="text-[#5B6F64]" />
             Kayıt olmadan anonim katkı
           </div>
@@ -69,7 +75,7 @@ export default function HomePage() {
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
               href="#surveys"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#191714] px-6 py-3 text-sm font-semibold text-[#FFFCF7] shadow-sm transition hover:-translate-y-0.5 hover:bg-[#31443A]"
+              className="inline-flex items-center justify-center gap-2 rounded-sm bg-[#191714] px-6 py-3 text-sm font-semibold text-[#FFFCF7] shadow-sm transition hover:-translate-y-0.5 hover:bg-[#31443A]"
             >
               Anketleri keşfet
               <ArrowRight size={17} />
@@ -77,7 +83,7 @@ export default function HomePage() {
 
             <Link
               href="/surveys/application-benchmark"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-[#D9D2C7] bg-[#FFFCF7] px-6 py-3 text-sm font-semibold text-[#191714] shadow-sm transition hover:-translate-y-0.5 hover:border-[#BEB5A7]"
+              className="inline-flex items-center justify-center gap-2 rounded-sm border border-[#D9D2C7] bg-[#FFFCF7] px-6 py-3 text-sm font-semibold text-[#191714] shadow-sm transition hover:-translate-y-0.5 hover:border-[#BEB5A7]"
             >
               Kaç başvuruya mülakat düşüyor?
               <Search size={17} />
@@ -89,8 +95,8 @@ export default function HomePage() {
           <div className="absolute -left-6 top-10 hidden h-32 w-32 rounded-full bg-[#D8CDBD] blur-3xl lg:block" />
           <div className="absolute -bottom-8 right-4 hidden h-40 w-40 rounded-full bg-[#C4D0C6] blur-3xl lg:block" />
 
-          <div className="relative overflow-hidden rounded-[2rem] border border-[#E2DDD4] bg-[#FFFCF7] p-5 shadow-[0_24px_80px_rgba(25,23,20,0.08)]">
-            <div className="rounded-[1.5rem] border border-[#E2DDD4] bg-[#F7F4EF] p-5">
+          <div className="relative overflow-hidden rounded-sm border border-[#E2DDD4] bg-[#FFFCF7] p-5 shadow-[0_24px_80px_rgba(25,23,20,0.08)]">
+            <div className="rounded-sm border border-[#E2DDD4] bg-[#F7F4EF] p-5">
               <p className="text-sm font-semibold text-[#191714]">
                 Topluluk sinyali
               </p>
@@ -103,8 +109,8 @@ export default function HomePage() {
               </p>
 
               <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl border border-[#E2DDD4] bg-[#FFFCF7] p-4">
-                  <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#191714] text-[#FFFCF7]">
+                <div className="rounded-sm border border-[#E2DDD4] bg-[#FFFCF7] p-4">
+                  <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-sm bg-[#191714] text-[#FFFCF7]">
                     <Building2 size={20} />
                   </div>
                   <p className="text-sm font-semibold">
@@ -115,8 +121,8 @@ export default function HomePage() {
                   </p>
                 </div>
 
-                <div className="rounded-2xl border border-[#E2DDD4] bg-[#FFFCF7] p-4">
-                  <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#191714] text-[#FFFCF7]">
+                <div className="rounded-sm border border-[#E2DDD4] bg-[#FFFCF7] p-4">
+                  <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-sm bg-[#191714] text-[#FFFCF7]">
                     <BarChart3 size={20} />
                   </div>
                   <p className="text-sm font-semibold">
@@ -129,7 +135,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="mt-4 rounded-[1.5rem] border border-[#E2DDD4] bg-[#191714] p-5 text-[#FFFCF7]">
+            <div className="mt-4 rounded-sm border border-[#E2DDD4] bg-[#191714] p-5 text-[#FFFCF7]">
               <p className="text-sm font-semibold text-[#C4D0C6]">
                 Sessiz başvurular artık görünür
               </p>
