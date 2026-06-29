@@ -1,5 +1,20 @@
 import './globals.css';
 
+const themeScript = `
+  (() => {
+    try {
+      const savedTheme = localStorage.getItem('theme');
+      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light';
+      document.documentElement.dataset.theme =
+        savedTheme === 'light' || savedTheme === 'dark' ? savedTheme : systemTheme;
+    } catch {
+      document.documentElement.dataset.theme = 'light';
+    }
+  })();
+`;
+
 export const metadata = {
   title: {
     default: 'Interview Memory',
@@ -11,7 +26,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="tr">
+    <html lang="tr" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body>{children}</body>
     </html>
   );

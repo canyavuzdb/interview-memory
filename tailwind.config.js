@@ -8,20 +8,20 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        canvas: '#F7F4EF',
-        surface: '#FFFCF7',
-        surfaceMuted: '#F1EDE6',
-        ink: '#191714',
-        muted: '#706A61',
-        line: '#E2DDD4',
-        accent: '#5B6F64',
-        accentDark: '#31443A',
+        canvas: 'var(--canvas)',
+        surface: 'var(--surface)',
+        surfaceMuted: 'var(--surface-muted)',
+        ink: 'var(--ink)',
+        muted: 'var(--muted)',
+        line: 'var(--line)',
+        accent: 'var(--accent)',
+        accentDark: 'var(--accent-dark)',
         warning: '#9A6B2F',
         danger: '#9B4A45',
       },
       boxShadow: {
-        soft: '0 18px 60px rgba(25, 23, 20, 0.08)',
-        card: '0 10px 30px rgba(25, 23, 20, 0.06)',
+        soft: 'var(--shadow-soft)',
+        card: 'var(--shadow-card)',
       },
       borderRadius: {
         '2xl': '1.25rem',

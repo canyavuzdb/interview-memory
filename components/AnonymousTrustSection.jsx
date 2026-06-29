@@ -33,15 +33,15 @@ export default function AnonymousTrustSection() {
           return (
             <div
               key={item.title}
-              className="rounded-[1.5rem] border border-[#E2DDD4] bg-[#FFFCF7] p-5 shadow-sm"
+              className="rounded-[1.5rem] border border-line bg-surface p-5 shadow-sm"
             >
-              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F1EDE6] text-[#31443A]">
+              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-surfaceMuted text-accentDark">
                 <Icon size={21} />
               </div>
-              <h3 className="text-base font-semibold tracking-tight text-[#191714]">
+              <h3 className="text-base font-semibold tracking-tight text-ink">
                 {item.title}
               </h3>
-              <p className="mt-2 text-sm leading-6 text-[#706A61]">
+              <p className="mt-2 text-sm leading-6 text-muted">
                 {item.description}
               </p>
             </div>

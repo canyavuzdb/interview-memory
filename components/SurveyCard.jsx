@@ -10,27 +10,27 @@ export default function SurveyCard({ survey }) {
   const Icon = iconMap[survey.icon] ?? Building2
 
   return (
-    <article className="snap-center rounded-[2rem] border border-[#E2DDD4] bg-[#FFFCF7] p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-[0_18px_60px_rgba(25,23,20,0.08)] sm:min-w-[420px]">
+    <article className="snap-center rounded-[2rem] border border-line bg-surface p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-soft sm:min-w-[420px]">
       <div className="flex items-start justify-between gap-5">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#191714] text-[#FFFCF7]">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-ink text-surface">
           <Icon size={23} />
         </div>
 
-        <div className="flex items-center gap-1.5 rounded-full border border-[#E2DDD4] bg-[#F7F4EF] px-3 py-1 text-xs font-medium text-[#706A61]">
+        <div className="flex items-center gap-1.5 rounded-full border border-line bg-canvas px-3 py-1 text-xs font-medium text-muted">
           <Clock size={13} />
           {survey.duration}
         </div>
       </div>
 
-      <p className="mt-6 text-xs font-semibold uppercase tracking-[0.22em] text-[#5B6F64]">
+      <p className="mt-6 text-xs font-semibold uppercase tracking-[0.22em] text-accent">
         {survey.eyebrow}
       </p>
 
-      <h3 className="mt-3 text-2xl font-semibold tracking-[-0.035em] text-[#191714]">
+      <h3 className="mt-3 text-2xl font-semibold tracking-[-0.035em] text-ink">
         {survey.title}
       </h3>
 
-      <p className="mt-4 text-sm leading-7 text-[#706A61]">
+      <p className="mt-4 text-sm leading-7 text-muted">
         {survey.description}
       </p>
 
@@ -38,7 +38,7 @@ export default function SurveyCard({ survey }) {
         {survey.bullets.map((item) => (
           <div
             key={item}
-            className="rounded-2xl border border-[#E2DDD4] bg-[#F7F4EF] px-4 py-3 text-sm text-[#4F493F]"
+            className="rounded-2xl border border-line bg-canvas px-4 py-3 text-sm text-[var(--ink-soft)]"
           >
             {item}
           </div>
@@ -49,7 +49,7 @@ export default function SurveyCard({ survey }) {
         {survey.tags.map((tag) => (
           <span
             key={tag}
-            className="rounded-full border border-[#E2DDD4] bg-[#FFFCF7] px-3 py-1 text-xs text-[#706A61]"
+            className="rounded-full border border-line bg-surface px-3 py-1 text-xs text-muted"
           >
             {tag}
           </span>
@@ -58,7 +58,7 @@ export default function SurveyCard({ survey }) {
 
       <Link
         href={survey.href}
-        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#191714] px-5 py-3 text-sm font-semibold text-[#FFFCF7] transition hover:-translate-y-0.5 hover:bg-[#31443A]"
+        className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-semibold text-surface transition hover:-translate-y-0.5 hover:bg-accentDark"
       >
         {survey.cta}
         <ArrowRight size={16} />
