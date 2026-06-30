@@ -1,8 +1,9 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowRight, BarChart3, Building2, LogIn, Search, Sparkles } from 'lucide-react'
+import { ArrowRight, LogIn, Search, ShieldCheck } from 'lucide-react'
 import AnonymousTrustSection from '@/components/AnonymousTrustSection'
 import CommunityStats from '@/components/CommunityStats'
+import HeroAnalyticsPanel from '@/components/HeroAnalyticsPanel'
 import PreferenceControls from '@/components/PreferenceControls'
 import StableLocalizedText from '@/components/StableLocalizedText'
 import SurveyCarousel from '@/components/SurveyCarousel'
@@ -99,11 +100,13 @@ export default async function HomePage({ params }) {
         </div>
       </header>
 
-      <section className="mx-auto grid max-w-7xl gap-12 px-5 py-16 sm:px-6 md:py-20 lg:px-8 lg:py-24 xl:grid-cols-[1.05fr_0.95fr]">
-        <div className="flex flex-col justify-center">
-          <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-sm border border-line bg-surface px-4 py-2 text-sm text-muted shadow-sm">
-            <Sparkles size={16} className="text-accent" />
-            {messages.home.hero.badge}
+      <section className="mx-auto grid max-w-7xl items-stretch gap-12 px-5 py-16 sm:px-6 md:py-20 lg:px-8 lg:py-24 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+        <div className="min-w-0 flex flex-col justify-center">
+          <div className="mb-7 inline-flex w-fit items-stretch border-y border-[var(--line-strong)] font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted">
+            <span className="grid w-10 place-items-center border-r border-[var(--line-strong)] text-accent">
+              <ShieldCheck size={15} strokeWidth={1.7} aria-hidden="true" />
+            </span>
+            <span className="px-3 py-2.5">{messages.home.hero.badge}</span>
           </div>
 
           <h1 className="min-h-[200px] max-w-4xl text-5xl font-semibold tracking-[-0.055em] text-ink sm:min-h-[188px] sm:text-6xl lg:min-h-[152px] lg:text-7xl xl:min-h-[224px]">
@@ -141,58 +144,10 @@ export default async function HomePage({ params }) {
           </div>
         </div>
 
-        <div className="relative min-h-[1006px] lg:min-h-[560px] xl:min-h-0">
+        <div className="relative min-w-0">
           <div className="absolute -left-6 top-10 hidden h-32 w-32 rounded-full bg-[var(--glow-primary)] blur-3xl lg:block" />
           <div className="absolute -bottom-8 right-4 hidden h-40 w-40 rounded-full bg-[var(--glow-secondary)] blur-3xl lg:block" />
-
-          <div className="relative h-full overflow-hidden rounded-sm border border-line bg-surface p-5 shadow-[var(--shadow-soft)]">
-            <div className="rounded-sm border border-line bg-canvas p-5">
-              <p className="text-sm font-semibold text-ink">
-                {messages.home.signal.eyebrow}
-              </p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">
-                {messages.home.signal.title}
-              </h2>
-              <p className="mt-3 text-sm leading-7 text-muted">
-                {messages.home.signal.description}
-              </p>
-
-              <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-sm border border-line bg-surface p-4">
-                  <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-sm bg-ink text-surface">
-                    <Building2 size={20} />
-                  </div>
-                  <p className="text-sm font-semibold">
-                    {messages.home.signal.companyTitle}
-                  </p>
-                  <p className="mt-2 text-xs leading-5 text-muted">
-                    {messages.home.signal.companyDescription}
-                  </p>
-                </div>
-
-                <div className="rounded-sm border border-line bg-surface p-4">
-                  <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-sm bg-ink text-surface">
-                    <BarChart3 size={20} />
-                  </div>
-                  <p className="text-sm font-semibold">
-                    {messages.home.signal.benchmarkTitle}
-                  </p>
-                  <p className="mt-2 text-xs leading-5 text-muted">
-                    {messages.home.signal.benchmarkDescription}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-4 rounded-sm border border-line bg-ink p-5 text-surface">
-              <p className="text-sm font-semibold text-[var(--inverse-muted)]">
-                {messages.home.signal.bottomEyebrow}
-              </p>
-              <p className="mt-3 text-2xl font-semibold tracking-tight">
-                {messages.home.signal.bottomText}
-              </p>
-            </div>
-          </div>
+          <HeroAnalyticsPanel copy={messages.home.signal} locale={locale} />
         </div>
       </section>
 
