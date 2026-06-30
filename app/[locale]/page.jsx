@@ -214,6 +214,16 @@ export default async function HomePage({ params }) {
           </div>
         </div>
       </section>
+
+      <a
+        href="https://github.com/canyavuzdb/interview-memory/tree/master"
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Can Yavuz — Interview Memory GitHub repository"
+        className="fixed bottom-5 left-5 z-40 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted transition hover:text-ink sm:bottom-6 sm:left-6"
+      >
+        Can Yavuz
+      </a>
     </main>
   )
 }
