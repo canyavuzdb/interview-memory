@@ -120,3 +120,117 @@ body {
   background-position: -1px -1px;
   background-size: 32px 32px;
 }
+
+@keyframes analytics-tab-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes analytics-view-in {
+  from {
+    opacity: 0;
+    transform: translate3d(14px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes analytics-view-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(-14px, 0, 0);
+  }
+}
+
+.analytics-view-in {
+  animation: analytics-view-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.analytics-view-out {
+  animation: analytics-view-out 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.analytics-tab-progress {
+  transform-origin: left;
+  animation: analytics-tab-fill 10s linear forwards;
+}
+
+.hero-analytics-panel {
+  isolation: isolate;
+  transform-origin: center;
+  transform: translate3d(0, -8px, 0);
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease;
+  box-shadow:
+    12px 14px 0 color-mix(in srgb, var(--line-strong) 38%, transparent),
+    0 34px 78px color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.hero-analytics-panel::before {
+  position: absolute;
+  z-index: 20;
+  inset: 9px;
+  pointer-events: none;
+  content: '';
+  background:
+    linear-gradient(var(--line-emphasis), var(--line-emphasis)) left top / 22px 1px no-repeat,
+    linear-gradient(var(--line-emphasis), var(--line-emphasis)) left top / 1px 22px no-repeat,
+    linear-gradient(var(--line-emphasis), var(--line-emphasis)) right top / 22px 1px no-repeat,
+    linear-gradient(var(--line-emphasis), var(--line-emphasis)) right top / 1px 22px no-repeat,
+    linear-gradient(var(--line-emphasis), var(--line-emphasis)) left bottom / 22px 1px no-repeat,
+    linear-gradient(var(--line-emphasis), var(--line-emphasis)) left bottom / 1px 22px no-repeat,
+    linear-gradient(var(--line-emphasis), var(--line-emphasis)) right bottom / 22px 1px no-repeat,
+    linear-gradient(var(--line-emphasis), var(--line-emphasis)) right bottom / 1px 22px no-repeat;
+}
+
+.hero-analytics-panel:hover .analytics-tab-progress {
+  animation-play-state: paused;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hero-analytics-panel:hover {
+    transform: translate3d(0, -11px, 0) scale(1.012);
+    box-shadow:
+      15px 18px 0 color-mix(in srgb, var(--line-strong) 42%, transparent),
+      0 42px 92px color-mix(in srgb, var(--ink) 22%, transparent);
+  }
+}
+
+@media (max-width: 639px) {
+  .hero-analytics-panel {
+    transform: translate3d(0, -4px, 0);
+    box-shadow:
+      6px 7px 0 color-mix(in srgb, var(--line-strong) 32%, transparent),
+      0 22px 48px color-mix(in srgb, var(--ink) 14%, transparent);
+  }
+
+  .hero-analytics-panel::before {
+    inset: 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-analytics-panel {
+    transition: none;
+  }
+
+  .analytics-tab-progress {
+    animation: none;
+  }
+
+  .analytics-view-in,
+  .analytics-view-out {
+    animation: none;
+  }
+}
