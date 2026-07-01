@@ -15,3 +15,6 @@ pnpm-debug.log*
 .env
 .env.local
 .env.production
+
+# Generated project reports
+/output/pdf/interview-memory-proje-durum-raporu.pdf
