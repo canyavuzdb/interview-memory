@@ -19,7 +19,7 @@
   --accent-border: rgba(91, 111, 100, 0.38);
   --accent-ring: rgba(91, 111, 100, 0.26);
   --grid-canvas: #FFF8F0;
-  --grid-line: rgba(49, 68, 58, 0.065);
+  --grid-line: rgba(49, 68, 58, 0.035);
   --nav-surface: rgba(238, 234, 224, 0.8);
   --surface-hover: #E3DED2;
   --glow-primary: #D8CDBD;
@@ -53,7 +53,7 @@
   --accent-border: rgba(156, 175, 159, 0.42);
   --accent-ring: rgba(156, 175, 159, 0.28);
   --grid-canvas: #151814;
-  --grid-line: rgba(184, 201, 190, 0.075);
+  --grid-line: rgba(184, 201, 190, 0.045);
   --nav-surface: rgba(27, 30, 26, 0.82);
   --surface-hover: #2B3029;
   --glow-primary: #263029;
@@ -237,23 +237,6 @@ body {
     0 34px 78px color-mix(in srgb, var(--ink) 18%, transparent);
 }
 
-.hero-analytics-panel::before {
-  position: absolute;
-  z-index: 20;
-  inset: 9px;
-  pointer-events: none;
-  content: '';
-  background:
-    linear-gradient(var(--accent), var(--accent)) left top / 22px 1px no-repeat,
-    linear-gradient(var(--accent), var(--accent)) left top / 1px 22px no-repeat,
-    linear-gradient(var(--accent), var(--accent)) right top / 22px 1px no-repeat,
-    linear-gradient(var(--accent), var(--accent)) right top / 1px 22px no-repeat,
-    linear-gradient(var(--accent), var(--accent)) left bottom / 22px 1px no-repeat,
-    linear-gradient(var(--accent), var(--accent)) left bottom / 1px 22px no-repeat,
-    linear-gradient(var(--accent), var(--accent)) right bottom / 22px 1px no-repeat,
-    linear-gradient(var(--accent), var(--accent)) right bottom / 1px 22px no-repeat;
-}
-
 .hero-analytics-panel:hover .analytics-tab-progress {
   animation-play-state: paused;
 }
@@ -273,10 +256,6 @@ body {
     box-shadow:
       6px 7px 0 color-mix(in srgb, var(--line-strong) 32%, transparent),
       0 22px 48px color-mix(in srgb, var(--ink) 14%, transparent);
-  }
-
-  .hero-analytics-panel::before {
-    inset: 6px;
   }
 }
 

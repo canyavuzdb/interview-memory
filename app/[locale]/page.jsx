@@ -145,8 +145,6 @@ export default async function HomePage({ params }) {
         </div>
 
         <div className="relative min-w-0">
-          <div className="absolute -left-6 top-10 hidden h-32 w-32 rounded-full bg-[var(--glow-primary)] blur-3xl lg:block" />
-          <div className="absolute -bottom-8 right-4 hidden h-40 w-40 rounded-full bg-[var(--glow-secondary)] blur-3xl lg:block" />
           <HeroAnalyticsPanel copy={messages.home.signal} locale={locale} />
         </div>
       </section>
