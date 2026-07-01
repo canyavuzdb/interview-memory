@@ -94,6 +94,47 @@ function DistributionChart({ label, distribution }) {
   )
 }
 
+function PromiseRealityComparison({ comparison }) {
+  return (
+    <div className="mt-5 border-y border-[var(--line-strong)]">
+      <div className="grid sm:grid-cols-2">
+        <div className="bg-[var(--surface-muted)] px-5 py-5 sm:px-6 sm:py-6">
+          <p className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-muted">
+            01 / {comparison.promiseLabel}
+          </p>
+          <p className="mt-4 font-mono text-4xl font-bold leading-none tracking-[-0.09em] text-ink sm:text-5xl">
+            {comparison.promiseValue}
+          </p>
+          <p className="mt-3 max-w-[16rem] text-xs leading-5 text-muted">
+            {comparison.promiseDescription}
+          </p>
+        </div>
+
+        <div className="border-t border-[var(--line-strong)] bg-[var(--accent-soft)] px-5 py-5 sm:border-l sm:border-t-0 sm:px-6 sm:py-6">
+          <p className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-accentDark">
+            02 / {comparison.realityLabel}
+          </p>
+          <p className="mt-4 font-mono text-4xl font-bold leading-none tracking-[-0.09em] text-ink sm:text-5xl">
+            {comparison.realityValue}
+          </p>
+          <p className="mt-3 max-w-[16rem] text-xs leading-5 text-muted">
+            {comparison.realityDescription}
+          </p>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between gap-4 border-t border-[var(--line-strong)] px-5 py-3 sm:px-6">
+        <p className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-muted">
+          {comparison.deltaLabel}
+        </p>
+        <p className="font-mono text-lg font-bold tracking-[-0.05em] text-accentDark">
+          {comparison.deltaValue}
+        </p>
+      </div>
+    </div>
+  )
+}
+
 function AnalyticsView({ copy, locale, onAnimationEnd, outgoing = false, view }) {
   return (
     <div
@@ -112,18 +153,24 @@ function AnalyticsView({ copy, locale, onAnimationEnd, outgoing = false, view })
         {view.description}
       </p>
 
-      <div className="mt-5 grid grid-cols-2 divide-x divide-[var(--line-strong)] border-y border-[var(--line-strong)]">
-        <Kpi value={view.primaryValue} label={view.primaryLabel} />
-        <Kpi value={view.secondaryValue} label={view.secondaryLabel} />
-      </div>
-
-      {view.type === 'funnel' ? (
-        <FunnelChart label={view.chartLabel ?? copy.flowChartLabel} stages={view.stages} />
+      {view.type === 'comparison' ? (
+        <PromiseRealityComparison comparison={view.comparison} />
       ) : (
-        <DistributionChart
-          label={view.chartLabel ?? copy.distributionChartLabel}
-          distribution={view.distribution}
-        />
+        <>
+          <div className="mt-5 grid grid-cols-2 divide-x divide-[var(--line-strong)] border-y border-[var(--line-strong)]">
+            <Kpi value={view.primaryValue} label={view.primaryLabel} />
+            <Kpi value={view.secondaryValue} label={view.secondaryLabel} />
+          </div>
+
+          {view.type === 'funnel' ? (
+            <FunnelChart label={view.chartLabel ?? copy.flowChartLabel} stages={view.stages} />
+          ) : (
+            <DistributionChart
+              label={view.chartLabel ?? copy.distributionChartLabel}
+              distribution={view.distribution}
+            />
+          )}
+        </>
       )}
 
       <footer className="mt-auto flex items-end justify-between gap-5 border-t border-[var(--line-strong)] pt-4">
