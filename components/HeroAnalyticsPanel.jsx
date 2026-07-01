@@ -47,6 +47,13 @@ function FunnelChart({ label, stages }) {
   )
 }
 
+const distributionToneVariables = {
+  timely: '--status-timely',
+  late: '--status-late',
+  rejected: '--status-rejected',
+  silent: '--status-silent',
+}
+
 function DistributionChart({ label, distribution }) {
   return (
     <div className="mt-6">
@@ -57,15 +64,23 @@ function DistributionChart({ label, distribution }) {
         {distribution.map((item, index) => (
           <div
             key={item.label}
-            style={{ width: item.width }}
-            className={index === 0 ? 'bg-ink' : 'bg-accent'}
+            title={`${item.label}: ${item.value}`}
+            style={{
+              width: item.width,
+              backgroundColor: `var(${distributionToneVariables[item.tone] ?? (index === 0 ? '--status-silent' : '--status-timely')})`,
+            }}
           />
         ))}
       </div>
-      <div className="mt-3 grid grid-cols-2 gap-4">
+      <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-4">
         {distribution.map((item, index) => (
           <div key={item.label} className="flex items-start gap-2">
-            <span className={`mt-1 h-2 w-2 shrink-0 ${index === 0 ? 'bg-ink' : 'bg-accent'}`} />
+            <span
+              className="mt-1 h-2 w-2 shrink-0"
+              style={{
+                backgroundColor: `var(${distributionToneVariables[item.tone] ?? (index === 0 ? '--status-silent' : '--status-timely')})`,
+              }}
+            />
             <div>
               <p className="font-mono text-xs font-bold text-ink">{item.value}</p>
               <p className="mt-1 font-mono text-[9px] font-bold uppercase leading-4 tracking-[0.08em] text-muted">

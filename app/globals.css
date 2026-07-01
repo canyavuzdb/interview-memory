@@ -18,6 +18,10 @@
   --accent-soft: rgba(91, 111, 100, 0.10);
   --accent-border: rgba(91, 111, 100, 0.38);
   --accent-ring: rgba(91, 111, 100, 0.26);
+  --status-timely: #5B6F64;
+  --status-late: #A69E91;
+  --status-rejected: #A56F32;
+  --status-silent: #191714;
   --grid-canvas: #FFF8F0;
   --grid-line: rgba(49, 68, 58, 0.035);
   --nav-surface: rgba(238, 234, 224, 0.8);
@@ -52,6 +56,10 @@
   --accent-soft: rgba(156, 175, 159, 0.12);
   --accent-border: rgba(156, 175, 159, 0.42);
   --accent-ring: rgba(156, 175, 159, 0.28);
+  --status-timely: #9CAF9F;
+  --status-late: #7D857A;
+  --status-rejected: #C8975E;
+  --status-silent: #4C544A;
   --grid-canvas: #151814;
   --grid-line: rgba(184, 201, 190, 0.045);
   --nav-surface: rgba(27, 30, 26, 0.82);
