@@ -100,7 +100,7 @@ function PromiseRealityComparison({ comparison }) {
       <div className="grid sm:grid-cols-2">
         <div className="bg-[var(--surface-muted)] px-5 py-5 sm:px-6 sm:py-6">
           <p className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-muted">
-            01 / {comparison.promiseLabel}
+            {comparison.promiseLabel}
           </p>
           <p className="mt-4 font-mono text-4xl font-bold leading-none tracking-[-0.09em] text-ink sm:text-5xl">
             {comparison.promiseValue}
@@ -112,7 +112,7 @@ function PromiseRealityComparison({ comparison }) {
 
         <div className="border-t border-[var(--line-strong)] bg-[var(--accent-soft)] px-5 py-5 sm:border-l sm:border-t-0 sm:px-6 sm:py-6">
           <p className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-accentDark">
-            02 / {comparison.realityLabel}
+            {comparison.realityLabel}
           </p>
           <p className="mt-4 font-mono text-4xl font-bold leading-none tracking-[-0.09em] text-ink sm:text-5xl">
             {comparison.realityValue}
@@ -229,7 +229,7 @@ export default function HeroAnalyticsPanel({ copy, locale }) {
     >
       <header className="flex items-center justify-between gap-4 px-6 pb-5 pt-6 sm:px-8">
         <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-ink">
-          01 / {copy.eyebrow}
+          {copy.panelType} / {copy.eyebrow}
         </p>
         <p className="text-right font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-accentDark">
           {copy.sampleData}

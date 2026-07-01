@@ -110,6 +110,7 @@ const messages = {
         benchmarkDescription:
           'Kaç başvuruya dönüş, HR görüşmesi ve teknik mülakat düşüyor?',
         panelLabel: 'Topluluk veri özeti',
+        panelType: 'Veri dosyası',
         sampleData: 'Örnek veri',
         sampleSize: '1.248 katkı',
         methodology:
@@ -123,7 +124,7 @@ const messages = {
             type: 'funnel',
             path: '/surveys/application-benchmark',
             tabLabel: 'Başvuru benchmark',
-            eyebrow: 'Anket 02 / Başvuru benchmark',
+            eyebrow: 'Sinyal / Başvuru benchmark',
             title: 'Başvurudan teknik görüşmeye uzanan daralma',
             description:
               'Topluluk verisi, başvurudan teknik görüşmeye uzanan daralmayı görünür hale getirir.',
@@ -144,7 +145,7 @@ const messages = {
             type: 'signal',
             path: '/surveys/company-experience',
             tabLabel: 'Şirket deneyimi',
-            eyebrow: 'Anket 01 / Şirket deneyimi',
+            eyebrow: 'Sinyal / Şirket deneyimi',
             title: 'Sessiz kalan süreçler görünür oluyor',
             description:
               'Yanıtsız kalan başvurular ve düşük feedback oranı tek tek kaybolmak yerine ortak bir sinyale dönüşür.',
@@ -163,7 +164,7 @@ const messages = {
             type: 'signal',
             path: '/surveys/company-experience',
             tabLabel: 'Feedback kalitesi',
-            eyebrow: 'Anket 01 / Feedback kalitesi',
+            eyebrow: 'Sinyal / Feedback kalitesi',
             title: 'Anlamlı feedback hâlâ istisna',
             description:
               'Adayların yalnızca küçük bir bölümü, neden elendiğini açıklayan kullanılabilir bir geri bildirim aldığını belirtiyor.',
@@ -182,7 +183,7 @@ const messages = {
             type: 'comparison',
             path: '/surveys/company-experience',
             tabLabel: 'Söz / Gerçek',
-            eyebrow: 'Anket 01 / Söz ve gerçek',
+            eyebrow: 'Karşılaştırma / Söz ve gerçek',
             title: 'Söylenen süre ile yaşanan süre aynı değil',
             description:
               'Şirketin belirttiği geri dönüş süresiyle adayların fiilen yaşadığı süreyi aynı ölçekte karşılaştırıyoruz.',
@@ -499,6 +500,7 @@ const messages = {
         benchmarkDescription:
           'How many applications lead to a response, HR call, or technical interview?',
         panelLabel: 'Community data summary',
+        panelType: 'Data file',
         sampleData: 'Sample data',
         sampleSize: '1,248 contributions',
         methodology:
@@ -512,7 +514,7 @@ const messages = {
             type: 'funnel',
             path: '/surveys/application-benchmark',
             tabLabel: 'Application benchmark',
-            eyebrow: 'Survey 02 / Application benchmark',
+            eyebrow: 'Signal / Application benchmark',
             title: 'The narrowing path to a technical interview',
             description:
               'Community data makes the narrowing path from application to technical interview visible.',
@@ -533,7 +535,7 @@ const messages = {
             type: 'signal',
             path: '/surveys/company-experience',
             tabLabel: 'Company experience',
-            eyebrow: 'Survey 01 / Company experience',
+            eyebrow: 'Signal / Company experience',
             title: 'Silent processes become visible',
             description:
               'Unanswered applications and low feedback rates become a shared signal instead of disappearing one by one.',
@@ -552,7 +554,7 @@ const messages = {
             type: 'signal',
             path: '/surveys/company-experience',
             tabLabel: 'Feedback quality',
-            eyebrow: 'Survey 01 / Feedback quality',
+            eyebrow: 'Signal / Feedback quality',
             title: 'Meaningful feedback remains the exception',
             description:
               'Only a small share of candidates report receiving actionable feedback that explains why they were rejected.',
@@ -571,7 +573,7 @@ const messages = {
             type: 'comparison',
             path: '/surveys/company-experience',
             tabLabel: 'Promise / Reality',
-            eyebrow: 'Survey 01 / Promise and reality',
+            eyebrow: 'Comparison / Promise and reality',
             title: 'The stated timeline and lived timeline do not match',
             description:
               'We compare the response time stated by the company with the timeline candidates actually experienced.',
