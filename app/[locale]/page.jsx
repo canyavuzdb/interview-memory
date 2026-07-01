@@ -86,7 +86,7 @@ export default async function HomePage({ params }) {
             <Link
               href={`/${locale}/login`}
               aria-label={messages.header.signIn}
-              className="brand-control inline-flex h-9 items-center justify-center gap-2 bg-transparent px-2 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-[var(--ink-soft)] transition md:px-3"
+              className="inline-flex h-9 min-w-9 items-center justify-center gap-2 border border-ink bg-ink px-2 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-surface transition hover:-translate-y-px hover:bg-accentDark hover:text-surface md:px-4"
             >
               <LogIn size={15} aria-hidden="true" />
               <StableLocalizedText

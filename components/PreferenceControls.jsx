@@ -11,18 +11,20 @@ export default function PreferenceControls({
   className = '',
 }) {
   return (
-    <div className={`inline-flex items-stretch divide-x divide-[var(--line-strong)] border border-[var(--line-strong)] bg-[var(--nav-surface)] ${className}`}>
-      <LanguageSwitcher
-        locale={locale}
-        path={path}
-        label={languageLabel}
-        embedded
-      />
-      <ThemeToggle
-        label={themeLabel}
-        title={themeTitle}
-        embedded
-      />
+    <div className={`inline-flex items-stretch gap-3 ${className}`}>
+      <div className="inline-flex items-stretch divide-x divide-[var(--line-strong)] border border-[var(--line-strong)] bg-[var(--nav-surface)]">
+        <LanguageSwitcher
+          locale={locale}
+          path={path}
+          label={languageLabel}
+          embedded
+        />
+        <ThemeToggle
+          label={themeLabel}
+          title={themeTitle}
+          embedded
+        />
+      </div>
       {children}
     </div>
   )
