@@ -197,7 +197,7 @@ export default function HeroAnalyticsPanel({ copy, locale }) {
               aria-selected={active}
               aria-controls="hero-analytics-panel"
               onClick={() => selectView(index)}
-              className={`relative min-h-14 overflow-hidden px-3 py-2 text-left font-mono text-[9px] font-bold uppercase leading-4 tracking-[0.06em] transition ${tabBorders} ${active ? 'bg-ink text-surface' : 'text-muted hover:bg-[var(--surface-hover)] hover:text-ink'}`}
+              className={`relative min-h-14 overflow-hidden px-3 py-2 text-left font-mono text-[9px] font-bold uppercase leading-4 tracking-[0.06em] transition ${tabBorders} ${active ? 'bg-ink text-surface' : 'text-muted hover:bg-[var(--accent-soft)] hover:text-accentDark'}`}
             >
               {active && (
                 <span

@@ -5,7 +5,7 @@
   aria-labelledby="title description"
 >
   <title id="title">Interview Memory IM logo</title>
-  <desc id="description">A black IM monogram centered inside a square outline.</desc>
+  <desc id="description">A black and sage IM monogram centered inside a square outline.</desc>
 
   <rect
     x="32"
@@ -23,7 +23,7 @@
   />
 
   <path
-    fill="currentColor"
+    fill="var(--im-accent, #5B6F64)"
     d="M276 336V176h36l34 82 34-82h36v160h-30V232l-27 68h-26l-27-68v104z"
   />
 </svg>

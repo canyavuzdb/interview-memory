@@ -10,7 +10,7 @@ export default function SurveyCard({ survey }) {
   const Icon = iconMap[survey.icon] ?? Building2
 
   return (
-    <article className="flex min-h-[880px] snap-center flex-col rounded-[2rem] border border-line bg-surface p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-soft sm:min-h-[710px] sm:min-w-[420px] xl:min-h-[650px]">
+    <article className="flex min-h-[880px] snap-center flex-col rounded-[2rem] border border-line bg-surface p-6 shadow-sm transition hover:-translate-y-1 hover:border-[var(--accent-border)] hover:shadow-soft sm:min-h-[710px] sm:min-w-[420px] xl:min-h-[650px]">
       <div className="flex items-start justify-between gap-5">
         <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-ink text-surface">
           <Icon size={23} />

@@ -39,7 +39,7 @@ export default async function HomePage({ params }) {
       <header className="sticky top-0 z-30 border-b border-[var(--line-strong)] bg-transparent">
         <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto] items-center px-5 py-3 sm:px-6 lg:grid-cols-[1fr_auto_1fr] lg:px-8">
           <Link href={`/${locale}`} className="flex items-center gap-3 justify-self-start" aria-label={messages.common.homeAria}>
-            <div className="grid h-9 w-9 place-items-center border border-[var(--ink-soft)] bg-surfaceMuted font-mono text-[11px] font-bold tracking-[-0.08em] text-ink">
+            <div className="brand-logo-mark grid h-9 w-9 place-items-center border bg-surfaceMuted font-mono text-[11px] font-bold tracking-[-0.08em] text-ink">
               IM
             </div>
             <div>
@@ -56,19 +56,19 @@ export default async function HomePage({ params }) {
             aria-label={messages.header.navLabel}
             className="hidden justify-self-center divide-x divide-[var(--line-strong)] border border-[var(--line-strong)] bg-[var(--nav-surface)] font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--ink-soft)] lg:flex"
           >
-            <a href="#surveys" className="inline-flex items-center justify-center whitespace-nowrap px-5 py-2.5 transition hover:bg-[var(--surface-hover)] hover:text-ink">
+            <a href="#surveys" className="brand-nav-item inline-flex items-center justify-center whitespace-nowrap px-5 py-2.5 transition hover:bg-[var(--surface-hover)] hover:text-accentDark">
               <span className="mr-2 text-muted">01/</span>
               <StableLocalizedText reserve={alternateMessages.header.surveys}>
                 {messages.header.surveys}
               </StableLocalizedText>
             </a>
-            <a href="#how-it-works" className="inline-flex items-center justify-center whitespace-nowrap px-5 py-2.5 transition hover:bg-[var(--surface-hover)] hover:text-ink">
+            <a href="#how-it-works" className="brand-nav-item inline-flex items-center justify-center whitespace-nowrap px-5 py-2.5 transition hover:bg-[var(--surface-hover)] hover:text-accentDark">
               <span className="mr-2 text-muted">02/</span>
               <StableLocalizedText reserve={alternateMessages.header.howItWorks}>
                 {messages.header.howItWorks}
               </StableLocalizedText>
             </a>
-            <a href="#stats" className="inline-flex items-center justify-center whitespace-nowrap px-5 py-2.5 transition hover:bg-[var(--surface-hover)] hover:text-ink">
+            <a href="#stats" className="brand-nav-item inline-flex items-center justify-center whitespace-nowrap px-5 py-2.5 transition hover:bg-[var(--surface-hover)] hover:text-accentDark">
               <span className="mr-2 text-muted">03/</span>
               <StableLocalizedText reserve={alternateMessages.header.data}>
                 {messages.header.data}
@@ -86,7 +86,7 @@ export default async function HomePage({ params }) {
             <Link
               href={`/${locale}/login`}
               aria-label={messages.header.signIn}
-              className="inline-flex h-9 items-center justify-center gap-2 bg-transparent px-2 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-[var(--ink-soft)] transition hover:bg-[var(--surface-hover)] hover:text-ink md:px-3"
+              className="brand-control inline-flex h-9 items-center justify-center gap-2 bg-transparent px-2 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-[var(--ink-soft)] transition md:px-3"
             >
               <LogIn size={15} aria-hidden="true" />
               <StableLocalizedText
@@ -103,7 +103,7 @@ export default async function HomePage({ params }) {
       <section className="mx-auto grid max-w-7xl items-stretch gap-12 px-5 py-16 sm:px-6 md:py-20 lg:px-8 lg:py-24 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
         <div className="min-w-0 flex flex-col justify-center">
           <div className="mb-7 inline-flex w-fit items-stretch border-y border-[var(--line-strong)] font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted">
-            <span className="grid w-10 place-items-center border-r border-[var(--line-strong)] text-accent">
+            <span className="grid w-10 place-items-center border-r border-[var(--accent-border)] bg-[var(--accent-soft)] text-accentDark">
               <ShieldCheck size={15} strokeWidth={1.7} aria-hidden="true" />
             </span>
             <span className="px-3 py-2.5">{messages.home.hero.badge}</span>
@@ -134,12 +134,12 @@ export default async function HomePage({ params }) {
 
             <Link
               href={`/${locale}/surveys/application-benchmark`}
-              className="inline-flex h-[64px] items-center justify-center gap-2 rounded-sm border border-[var(--line-strong)] bg-surface px-6 py-3 text-center text-sm font-semibold text-ink shadow-sm transition hover:-translate-y-0.5 hover:border-[var(--line-emphasis)] sm:h-auto sm:w-[400px]"
+              className="group inline-flex h-[64px] items-center justify-center gap-2 rounded-sm border border-[var(--line-strong)] bg-surface px-6 py-3 text-center text-sm font-semibold text-ink shadow-sm transition hover:-translate-y-0.5 hover:border-[var(--accent-border)] sm:h-auto sm:w-[400px]"
             >
               <StableLocalizedText reserve={alternateMessages.home.hero.benchmark}>
                 {messages.home.hero.benchmark}
               </StableLocalizedText>
-              <Search size={17} />
+              <Search size={17} className="text-accentDark transition-transform group-hover:scale-110" />
             </Link>
           </div>
         </div>
@@ -204,12 +204,12 @@ export default async function HomePage({ params }) {
 
             <Link
               href={`/${locale}/surveys/application-benchmark`}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[var(--line-strong)] bg-canvas px-6 py-3 text-sm font-semibold text-ink transition hover:-translate-y-0.5 hover:border-[var(--line-emphasis)] sm:w-[280px]"
+              className="group inline-flex w-full items-center justify-center gap-2 rounded-full border border-[var(--line-strong)] bg-canvas px-6 py-3 text-sm font-semibold text-ink transition hover:-translate-y-0.5 hover:border-[var(--accent-border)] sm:w-[280px]"
             >
               <StableLocalizedText reserve={alternateMessages.home.finalCta.benchmark}>
                 {messages.home.finalCta.benchmark}
               </StableLocalizedText>
-              <ArrowRight size={17} />
+              <ArrowRight size={17} className="transition group-hover:translate-x-0.5 group-hover:text-accentDark" />
             </Link>
           </div>
         </div>
@@ -220,7 +220,7 @@ export default async function HomePage({ params }) {
         target="_blank"
         rel="noreferrer"
         aria-label="Can Yavuz — Interview Memory GitHub repository"
-        className="fixed bottom-5 left-5 z-40 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted transition hover:text-ink sm:bottom-6 sm:left-6"
+        className="brand-text-link fixed bottom-5 left-5 z-40 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted sm:bottom-6 sm:left-6"
       >
         Can Yavuz
       </a>
