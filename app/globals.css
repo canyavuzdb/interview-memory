@@ -235,43 +235,16 @@ body {
 
 .hero-analytics-panel {
   isolation: isolate;
-  transform-origin: center;
-  transform: translate3d(0, -8px, 0);
-  transition:
-    transform 220ms ease,
-    box-shadow 220ms ease;
   box-shadow:
-    12px 14px 0 color-mix(in srgb, var(--line-strong) 38%, transparent),
-    0 34px 78px color-mix(in srgb, var(--ink) 18%, transparent);
+    2px 2px 0 color-mix(in srgb, var(--line-strong) 24%, transparent),
+    0 4px 12px color-mix(in srgb, var(--ink) 5%, transparent);
 }
 
 .hero-analytics-panel:hover .analytics-tab-progress {
   animation-play-state: paused;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .hero-analytics-panel:hover {
-    transform: translate3d(0, -11px, 0) scale(1.012);
-    box-shadow:
-      15px 18px 0 color-mix(in srgb, var(--line-strong) 42%, transparent),
-      0 42px 92px color-mix(in srgb, var(--ink) 22%, transparent);
-  }
-}
-
-@media (max-width: 639px) {
-  .hero-analytics-panel {
-    transform: translate3d(0, -4px, 0);
-    box-shadow:
-      6px 7px 0 color-mix(in srgb, var(--line-strong) 32%, transparent),
-      0 22px 48px color-mix(in srgb, var(--ink) 14%, transparent);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .hero-analytics-panel {
-    transition: none;
-  }
-
   .analytics-tab-progress {
     animation: none;
   }
