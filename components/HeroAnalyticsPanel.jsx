@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import ResponseStatusBar from '@/components/ResponseStatusBar'
+import SampleDataBadge from '@/components/SampleDataBadge'
 
 function Kpi({ value, label }) {
   return (
@@ -195,12 +196,8 @@ export default function HeroAnalyticsPanel({ copy, locale }) {
       className="hero-analytics-panel relative flex min-h-[640px] scroll-mt-24 flex-col overflow-hidden border border-[var(--line-strong)] bg-surface shadow-[var(--shadow-card)] [overflow-anchor:none] xl:h-[680px]"
     >
       <header className="flex items-center justify-between gap-4 px-6 pb-5 pt-6 sm:px-8">
-        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-ink">
-          {copy.panelType} / {copy.eyebrow}
-        </p>
-        <p className="text-right font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-accentDark">
-          {copy.sampleData}
-        </p>
+        <SampleDataBadge label={`${copy.panelType} / ${copy.eyebrow}`} />
+        <SampleDataBadge align="right" label={copy.sampleData} value={copy.sampleSize} />
       </header>
 
       <div

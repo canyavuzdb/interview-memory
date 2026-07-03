@@ -125,7 +125,11 @@ export default async function HomePage({ params }) {
             ))}
           </ul>
 
-          <p className="mt-7 max-w-2xl text-lg leading-8 text-muted">
+          <p className="mt-7 max-w-2xl text-lg font-semibold leading-8 text-ink">
+            {messages.home.hero.problem}
+          </p>
+
+          <p className="mt-3 max-w-2xl text-lg leading-8 text-muted">
             {messages.home.hero.descriptionParts.pre}
             <span className="hero-body-highlight whitespace-nowrap font-mono">
               {messages.home.hero.descriptionParts.highlight}
@@ -133,26 +137,26 @@ export default async function HomePage({ params }) {
             {messages.home.hero.descriptionParts.post}
           </p>
 
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <a
-              href="#surveys"
-              className="inline-flex h-[46px] items-center justify-center gap-2 rounded-sm bg-ink px-6 py-3 text-sm font-semibold text-surface shadow-sm transition hover:-translate-y-0.5 hover:bg-accentDark sm:h-auto sm:w-[200px]"
+          <div className="mt-9 grid gap-3 sm:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+            <Link
+              href={`/${locale}/surveys/application-benchmark`}
+              className="inline-flex h-16 w-full items-center justify-between gap-4 rounded-sm bg-ink px-7 py-3 text-sm font-semibold text-surface shadow-sm transition hover:-translate-y-0.5 hover:bg-accentDark"
             >
               <StableLocalizedText reserve={alternateMessages.home.hero.explore}>
                 {messages.home.hero.explore}
               </StableLocalizedText>
               <ArrowRight size={17} />
-            </a>
+            </Link>
 
-            <Link
-              href={`/${locale}/surveys/application-benchmark`}
-              className="group inline-flex h-[64px] items-center justify-center gap-2 rounded-sm border border-[var(--line-strong)] bg-surface px-6 py-3 text-center text-sm font-semibold text-ink shadow-sm transition hover:-translate-y-0.5 hover:border-[var(--accent-border)] sm:h-auto sm:w-[400px]"
+            <a
+              href="#stats"
+              className="group inline-flex h-16 w-full items-center justify-center gap-3 rounded-sm border border-[var(--line-strong)] bg-surface px-5 py-3 text-center text-sm font-semibold text-ink shadow-sm transition hover:-translate-y-0.5 hover:border-[var(--accent-border)]"
             >
               <StableLocalizedText reserve={alternateMessages.home.hero.benchmark}>
                 {messages.home.hero.benchmark}
               </StableLocalizedText>
               <Search size={17} className="text-accentDark transition-transform group-hover:scale-110" />
-            </Link>
+            </a>
           </div>
         </div>
 
