@@ -8,6 +8,21 @@ export function getMessages(locale) {
   return messages[locale] ?? messages.tr
 }
 
+const responseStatuses = {
+  tr: [
+    { label: 'Zamanında', value: '%34', width: '34%', tone: 'timely' },
+    { label: 'Gecikmiş', value: '%13', width: '13%', tone: 'late' },
+    { label: 'Otomatik ret', value: '%12', width: '12%', tone: 'rejected' },
+    { label: 'Yanıtsız', value: '%41', width: '41%', tone: 'silent' },
+  ],
+  en: [
+    { label: 'On time', value: '34%', width: '34%', tone: 'timely' },
+    { label: 'Delayed', value: '13%', width: '13%', tone: 'late' },
+    { label: 'Automated rejection', value: '12%', width: '12%', tone: 'rejected' },
+    { label: 'No response', value: '41%', width: '41%', tone: 'silent' },
+  ],
+}
+
 const messages = {
   tr: {
     localeName: 'Türkçe',
@@ -90,11 +105,15 @@ const messages = {
     },
     home: {
       hero: {
-        badge: 'Deneyimlerini anonim paylaş',
         title: 'Başvuruların kara deliğe mi düşüyor?',
-        description:
-          'Otomatik red, ghosting ve feedback almayan süreçler artık veri oluyor. Interview Memory, adayların başvuru ve mülakat deneyimlerini anonim şekilde toplayarak işe alım süreçlerini görünür kılar.',
-        slogan: 'Şirketler seni değerlendiriyor. Sen de süreci ölç.',
+        subtitle: 'Şirketler seni değerlendiriyor. Sen de süreci ölç.',
+        signalsLabel: 'Başvuru yanıt durumları',
+        signals: responseStatuses.tr.map(({ label }) => label),
+        descriptionParts: {
+          pre: 'Interview Memory, adayların başvuru ve mülakat deneyimlerini ',
+          highlight: 'anonim',
+          post: ' şekilde toplayarak işe alım süreçlerini görünür kılar.',
+        },
         explore: 'Anketleri keşfet',
         benchmark: 'Kaç başvuruya mülakat düşüyor?',
       },
@@ -119,6 +138,26 @@ const messages = {
         distributionChartLabel: 'Süreç dağılımı',
         viewCta: 'Detayları ve anketi gör',
         views: [
+          {
+            id: 'response-speed',
+            type: 'comparison',
+            path: '/surveys/company-experience',
+            tabLabel: 'Söz / Gerçek',
+            eyebrow: 'Karşılaştırma / Söz ve gerçek',
+            title: 'Söylenen süre ile yaşanan süre aynı değil',
+            description:
+              'Şirketin belirttiği geri dönüş süresiyle adayların fiilen yaşadığı süreyi aynı ölçekte karşılaştırıyoruz.',
+            comparison: {
+              promiseLabel: 'Söz',
+              promiseValue: '3 gün',
+              promiseDescription: 'Şirketin başvuru sırasında belirttiği ilk geri dönüş süresi.',
+              realityLabel: 'Gerçek',
+              realityValue: '9 gün',
+              realityDescription: 'Adayların bildirdiği gerçekleşen ilk dönüş süresinin ortancası.',
+              deltaLabel: 'Söz ile gerçek arasındaki fark',
+              deltaValue: '+6 gün',
+            },
+          },
           {
             id: 'application-benchmark',
             type: 'funnel',
@@ -150,14 +189,11 @@ const messages = {
             description:
               'Yanıtsız kalan başvurular ve düşük feedback oranı tek tek kaybolmak yerine ortak bir sinyale dönüşür.',
             primaryValue: '%41',
-            primaryLabel: 'Sessiz kalan süreç',
+            primaryLabel: 'Yanıtsız',
             secondaryValue: '%12',
-            secondaryLabel: 'Feedback oranı',
+            secondaryLabel: 'Otomatik ret',
             chartLabel: 'Yanıt durumu',
-            distribution: [
-              { label: 'Sessiz kalan', value: '%41', width: '41%' },
-              { label: 'Dönüş yapılan', value: '%59', width: '59%' },
-            ],
+            distribution: responseStatuses.tr,
           },
           {
             id: 'feedback-quality',
@@ -177,26 +213,6 @@ const messages = {
               { label: 'Anlamlı feedback', value: '%12', width: '12%' },
               { label: 'Yetersiz veya yok', value: '%88', width: '88%' },
             ],
-          },
-          {
-            id: 'response-speed',
-            type: 'comparison',
-            path: '/surveys/company-experience',
-            tabLabel: 'Söz / Gerçek',
-            eyebrow: 'Karşılaştırma / Söz ve gerçek',
-            title: 'Söylenen süre ile yaşanan süre aynı değil',
-            description:
-              'Şirketin belirttiği geri dönüş süresiyle adayların fiilen yaşadığı süreyi aynı ölçekte karşılaştırıyoruz.',
-            comparison: {
-              promiseLabel: 'Söz',
-              promiseValue: '3 gün',
-              promiseDescription: 'Şirketin başvuru sırasında belirttiği ilk geri dönüş süresi.',
-              realityLabel: 'Gerçek',
-              realityValue: '9 gün',
-              realityDescription: 'Adayların bildirdiği gerçekleşen ilk dönüş süresinin ortancası.',
-              deltaLabel: 'Söz ile gerçek arasındaki fark',
-              deltaValue: '+6 gün',
-            },
           },
         ],
         bottomEyebrow: 'Sessiz başvurular artık görünür',
@@ -480,11 +496,15 @@ const messages = {
     },
     home: {
       hero: {
-        badge: 'Share your experiences anonymously',
         title: 'Are your applications falling into a black hole?',
-        description:
-          'Automated rejections, ghosting, and processes without feedback now become data. Interview Memory collects application and interview experiences anonymously to make hiring processes visible.',
-        slogan: 'Companies evaluate you. Now measure the process.',
+        subtitle: 'Companies evaluate you. Now measure the process.',
+        signalsLabel: 'Application response statuses',
+        signals: responseStatuses.en.map(({ label }) => label),
+        descriptionParts: {
+          pre: 'Interview Memory collects application and interview experiences ',
+          highlight: 'anonymously',
+          post: ' to make hiring processes visible.',
+        },
         explore: 'Explore surveys',
         benchmark: 'How many applications lead to an interview?',
       },
@@ -509,6 +529,26 @@ const messages = {
         distributionChartLabel: 'Process distribution',
         viewCta: 'View details and survey',
         views: [
+          {
+            id: 'response-speed',
+            type: 'comparison',
+            path: '/surveys/company-experience',
+            tabLabel: 'Promise / Reality',
+            eyebrow: 'Comparison / Promise and reality',
+            title: 'The stated timeline and lived timeline do not match',
+            description:
+              'We compare the response time stated by the company with the timeline candidates actually experienced.',
+            comparison: {
+              promiseLabel: 'Promise',
+              promiseValue: '3 days',
+              promiseDescription: 'The first-response timeline stated by the company during the application.',
+              realityLabel: 'Reality',
+              realityValue: '9 days',
+              realityDescription: 'The median actual first-response time reported by candidates.',
+              deltaLabel: 'Gap between promise and reality',
+              deltaValue: '+6 days',
+            },
+          },
           {
             id: 'application-benchmark',
             type: 'funnel',
@@ -540,14 +580,11 @@ const messages = {
             description:
               'Unanswered applications and low feedback rates become a shared signal instead of disappearing one by one.',
             primaryValue: '41%',
-            primaryLabel: 'Silent processes',
+            primaryLabel: 'No response',
             secondaryValue: '12%',
-            secondaryLabel: 'Feedback rate',
+            secondaryLabel: 'Automated rejection',
             chartLabel: 'Response status',
-            distribution: [
-              { label: 'Silent', value: '41%', width: '41%' },
-              { label: 'Received response', value: '59%', width: '59%' },
-            ],
+            distribution: responseStatuses.en,
           },
           {
             id: 'feedback-quality',
@@ -567,26 +604,6 @@ const messages = {
               { label: 'Meaningful feedback', value: '12%', width: '12%' },
               { label: 'Insufficient or none', value: '88%', width: '88%' },
             ],
-          },
-          {
-            id: 'response-speed',
-            type: 'comparison',
-            path: '/surveys/company-experience',
-            tabLabel: 'Promise / Reality',
-            eyebrow: 'Comparison / Promise and reality',
-            title: 'The stated timeline and lived timeline do not match',
-            description:
-              'We compare the response time stated by the company with the timeline candidates actually experienced.',
-            comparison: {
-              promiseLabel: 'Promise',
-              promiseValue: '3 days',
-              promiseDescription: 'The first-response timeline stated by the company during the application.',
-              realityLabel: 'Reality',
-              realityValue: '9 days',
-              realityDescription: 'The median actual first-response time reported by candidates.',
-              deltaLabel: 'Gap between promise and reality',
-              deltaValue: '+6 days',
-            },
           },
         ],
         bottomEyebrow: 'Silent applications become visible',

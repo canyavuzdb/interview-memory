@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowRight, LogIn, Search, ShieldCheck } from 'lucide-react'
+import { ArrowRight, LogIn, Search } from 'lucide-react'
 import AnonymousTrustSection from '@/components/AnonymousTrustSection'
 import CommunityStats from '@/components/CommunityStats'
 import HeroAnalyticsPanel from '@/components/HeroAnalyticsPanel'
@@ -102,26 +102,38 @@ export default async function HomePage({ params }) {
 
       <section className="mx-auto grid max-w-7xl items-stretch gap-12 px-5 py-16 sm:px-6 md:py-20 lg:px-8 lg:py-24 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
         <div className="min-w-0 flex flex-col justify-center">
-          <div className="mb-7 inline-flex w-fit items-stretch border-y border-[var(--line-strong)] font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted">
-            <span className="grid w-10 place-items-center border-r border-[var(--accent-border)] bg-[var(--accent-soft)] text-accentDark">
-              <ShieldCheck size={15} strokeWidth={1.7} aria-hidden="true" />
-            </span>
-            <span className="px-3 py-2.5">{messages.home.hero.badge}</span>
-          </div>
-
           <h1 className="min-h-[200px] max-w-4xl text-5xl font-semibold tracking-[-0.055em] text-ink sm:min-h-[188px] sm:text-6xl lg:min-h-[152px] lg:text-7xl xl:min-h-[224px]">
             {messages.home.hero.title}
           </h1>
 
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-muted">
-            {messages.home.hero.description}
+          <p className="mt-6 max-w-xl text-xl font-semibold tracking-tight text-ink">
+            {messages.home.hero.subtitle}
           </p>
 
-          <p className="mt-5 max-w-xl text-xl font-semibold tracking-tight text-ink">
-            {messages.home.hero.slogan}
+          <ul
+            aria-label={messages.home.hero.signalsLabel}
+            className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-2"
+          >
+            {messages.home.hero.signals.map((signal, index) => (
+              <li
+                key={signal}
+                className="flex cursor-default select-none items-center gap-3 font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-muted"
+              >
+                {index > 0 && <span aria-hidden="true">·</span>}
+                {signal}
+              </li>
+            ))}
+          </ul>
+
+          <p className="mt-7 max-w-2xl text-lg leading-8 text-muted">
+            {messages.home.hero.descriptionParts.pre}
+            <span className="hero-body-highlight whitespace-nowrap font-mono">
+              {messages.home.hero.descriptionParts.highlight}
+            </span>
+            {messages.home.hero.descriptionParts.post}
           </p>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
             <a
               href="#surveys"
               className="inline-flex h-[46px] items-center justify-center gap-2 rounded-sm bg-ink px-6 py-3 text-sm font-semibold text-surface shadow-sm transition hover:-translate-y-0.5 hover:bg-accentDark sm:h-auto sm:w-[200px]"
