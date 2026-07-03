@@ -312,34 +312,12 @@ const messages = {
       },
     ],
     community: {
-      eyebrow: 'Örnek topluluk verisi',
-      title: 'Sessiz kalan başvurular sadece senin başına gelmiyor olabilir.',
+      eyebrow: '04 / Topluluk sinyalleri',
+      title: 'Tek deneyim, kolektif sinyale dönüşüyor.',
       description:
-        'Otomatik red, ghosting ve feedback almayan süreçler tek tek kaybolmasın. Bir araya geldiklerinde şirketlerin işe alım davranışlarını görünür kılan sinyallere dönüşür.',
+        'Paylaşılan deneyimler; başvuru oranlarını, şirket davranışlarını, feedback kalitesini ve söylenenle yaşanan arasındaki farkı görünür kılar.',
       note:
-        'Bu prototipteki değerler temsili mock verilerdir; gerçek topluluk ölçümleri değildir.',
-      stats: [
-        {
-          value: '1.248',
-          label: 'Anonim katkı',
-          description: 'Başvuru ve mülakat süreci sinyali',
-        },
-        {
-          value: '%41',
-          label: 'Sessiz kalan süreç',
-          description: 'Dönüş yapılmadığı belirtilen deneyimler',
-        },
-        {
-          value: '%12',
-          label: 'Feedback oranı',
-          description: 'Olumsuz süreçte anlamlı feedback alan adaylar',
-        },
-        {
-          value: '18',
-          label: 'Başvuru / mülakat',
-          description: 'Mock veriye göre ilk görüşme ortalaması',
-        },
-      ],
+        'Örnek veriler / gerçek topluluk ölçümü değildir',
     },
     surveyIndex: {
       eyebrow: 'Anketler',
@@ -703,34 +681,12 @@ const messages = {
       },
     ],
     community: {
-      eyebrow: 'Sample community data',
-      title: 'Silent applications may not be happening only to you.',
+      eyebrow: '04 / Community signals',
+      title: 'One experience becomes a collective signal.',
       description:
-        'Do not let automated rejections, ghosting, and missing feedback disappear one by one. Together, they become signals that reveal company hiring behavior.',
+        'Shared experiences reveal application rates, company behavior, feedback quality, and the gap between what was promised and what happened.',
       note:
-        'The values in this prototype are representative mock data, not real community metrics.',
-      stats: [
-        {
-          value: '1,248',
-          label: 'Anonymous contributions',
-          description: 'Application and interview process signals',
-        },
-        {
-          value: '41%',
-          label: 'Silent processes',
-          description: 'Experiences reported without a response',
-        },
-        {
-          value: '12%',
-          label: 'Feedback rate',
-          description: 'Candidates receiving meaningful feedback after rejection',
-        },
-        {
-          value: '18',
-          label: 'Applications / interview',
-          description: 'Mock average before the first interview',
-        },
-      ],
+        'Sample data / not real community measurements',
     },
     surveyIndex: {
       eyebrow: 'Surveys',

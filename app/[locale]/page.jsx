@@ -190,7 +190,7 @@ export default async function HomePage({ params }) {
       </section>
 
       <div id="stats">
-        <CommunityStats copy={messages.community} />
+        <CommunityStats copy={messages.community} signalCopy={messages.home.signal} />
       </div>
 
       <section className="mx-auto max-w-7xl px-5 py-14 pb-20 sm:px-6 lg:px-8">
