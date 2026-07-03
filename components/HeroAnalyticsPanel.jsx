@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
+import ResponseStatusBar from '@/components/ResponseStatusBar'
 
 function Kpi({ value, label }) {
   return (
@@ -23,11 +24,11 @@ function FunnelChart({ label, stages }) {
       <p className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-muted">
         {label}
       </p>
-      <div className="mt-3 grid grid-cols-2 border border-[var(--line-strong)] sm:grid-cols-4 sm:divide-x sm:divide-[var(--line-strong)]">
-        {stages.map((stage, index) => (
+      <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-4">
+        {stages.map((stage) => (
           <div
             key={stage.label}
-            className={`min-h-24 p-3 ${index < 2 ? 'border-b border-[var(--line-strong)] sm:border-b-0' : ''} ${index % 2 === 0 ? 'border-r border-[var(--line-strong)] sm:border-r-0' : ''}`}
+            className="min-h-20 border-t border-[var(--line-strong)] px-1 pt-3"
           >
             <div className="flex items-start justify-between gap-2">
               <p className="font-mono text-2xl font-bold tracking-[-0.08em] text-ink">
@@ -53,27 +54,49 @@ function DistributionChart({ label, distribution }) {
       <p className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-muted">
         {label}
       </p>
-      <div className="mt-3 flex h-7 overflow-hidden border border-[var(--line-strong)]">
-        {distribution.map((item, index) => (
-          <div
-            key={item.label}
-            style={{ width: item.width }}
-            className={index === 0 ? 'bg-ink' : 'bg-accent'}
-          />
-        ))}
+      <div className="mt-3">
+        <ResponseStatusBar distribution={distribution} />
       </div>
-      <div className="mt-3 grid grid-cols-2 gap-4">
-        {distribution.map((item, index) => (
-          <div key={item.label} className="flex items-start gap-2">
-            <span className={`mt-1 h-2 w-2 shrink-0 ${index === 0 ? 'bg-ink' : 'bg-accent'}`} />
-            <div>
-              <p className="font-mono text-xs font-bold text-ink">{item.value}</p>
-              <p className="mt-1 font-mono text-[9px] font-bold uppercase leading-4 tracking-[0.08em] text-muted">
-                {item.label}
-              </p>
-            </div>
-          </div>
-        ))}
+    </div>
+  )
+}
+
+function PromiseRealityComparison({ comparison }) {
+  return (
+    <div className="mt-5 border-y border-[var(--line-strong)]">
+      <div className="grid sm:grid-cols-2">
+        <div className="bg-[var(--surface-muted)] px-5 py-5 sm:px-6 sm:py-6">
+          <p className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-muted">
+            {comparison.promiseLabel}
+          </p>
+          <p className="mt-4 font-mono text-4xl font-bold leading-none tracking-[-0.09em] text-ink sm:text-5xl">
+            {comparison.promiseValue}
+          </p>
+          <p className="mt-3 max-w-[16rem] text-xs leading-5 text-muted">
+            {comparison.promiseDescription}
+          </p>
+        </div>
+
+        <div className="border-t border-[var(--line-strong)] bg-[var(--accent-soft)] px-5 py-5 sm:border-l sm:border-t-0 sm:px-6 sm:py-6">
+          <p className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-accentDark">
+            {comparison.realityLabel}
+          </p>
+          <p className="mt-4 font-mono text-4xl font-bold leading-none tracking-[-0.09em] text-ink sm:text-5xl">
+            {comparison.realityValue}
+          </p>
+          <p className="mt-3 max-w-[16rem] text-xs leading-5 text-muted">
+            {comparison.realityDescription}
+          </p>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between gap-4 border-t border-[var(--line-strong)] px-5 py-3 sm:px-6">
+        <p className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-muted">
+          {comparison.deltaLabel}
+        </p>
+        <p className="font-mono text-lg font-bold tracking-[-0.05em] text-accentDark">
+          {comparison.deltaValue}
+        </p>
       </div>
     </div>
   )
@@ -85,7 +108,7 @@ function AnalyticsView({ copy, locale, onAnimationEnd, outgoing = false, view })
       aria-hidden={outgoing || undefined}
       inert={outgoing || undefined}
       onAnimationEnd={onAnimationEnd}
-      className={`flex flex-col px-5 py-5 sm:px-7 sm:py-6 ${outgoing ? 'analytics-view-out pointer-events-none absolute inset-0 z-10' : 'analytics-view-in relative z-0 w-full'}`}
+      className={`flex flex-col px-6 py-6 sm:px-8 sm:py-7 ${outgoing ? 'analytics-view-out pointer-events-none absolute inset-0 z-10' : 'analytics-view-in relative z-0 w-full'}`}
     >
       <p className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-accent">
         {view.eyebrow}
@@ -97,18 +120,24 @@ function AnalyticsView({ copy, locale, onAnimationEnd, outgoing = false, view })
         {view.description}
       </p>
 
-      <div className="mt-5 grid grid-cols-2 divide-x divide-[var(--line-strong)] border-y border-[var(--line-strong)]">
-        <Kpi value={view.primaryValue} label={view.primaryLabel} />
-        <Kpi value={view.secondaryValue} label={view.secondaryLabel} />
-      </div>
-
-      {view.type === 'funnel' ? (
-        <FunnelChart label={view.chartLabel ?? copy.flowChartLabel} stages={view.stages} />
+      {view.type === 'comparison' ? (
+        <PromiseRealityComparison comparison={view.comparison} />
       ) : (
-        <DistributionChart
-          label={view.chartLabel ?? copy.distributionChartLabel}
-          distribution={view.distribution}
-        />
+        <>
+          <div className="mt-5 grid grid-cols-2 divide-x divide-[var(--line-strong)] border-y border-[var(--line-strong)]">
+            <Kpi value={view.primaryValue} label={view.primaryLabel} />
+            <Kpi value={view.secondaryValue} label={view.secondaryLabel} />
+          </div>
+
+          {view.type === 'funnel' ? (
+            <FunnelChart label={view.chartLabel ?? copy.flowChartLabel} stages={view.stages} />
+          ) : (
+            <DistributionChart
+              label={view.chartLabel ?? copy.distributionChartLabel}
+              distribution={view.distribution}
+            />
+          )}
+        </>
       )}
 
       <footer className="mt-auto flex items-end justify-between gap-5 border-t border-[var(--line-strong)] pt-4">
@@ -165,29 +194,22 @@ export default function HeroAnalyticsPanel({ copy, locale }) {
       aria-label={copy.panelLabel}
       className="hero-analytics-panel relative flex min-h-[640px] scroll-mt-24 flex-col overflow-hidden border border-[var(--line-strong)] bg-surface shadow-[var(--shadow-card)] [overflow-anchor:none] xl:h-[680px]"
     >
-      <header className="flex items-center justify-between gap-4 px-5 pb-4 pt-5 sm:px-7 sm:pt-6">
+      <header className="flex items-center justify-between gap-4 px-6 pb-5 pt-6 sm:px-8">
         <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-ink">
-          01 / {copy.eyebrow}
+          {copy.panelType} / {copy.eyebrow}
         </p>
-        <div className="text-right font-mono text-[9px] font-bold uppercase leading-4 tracking-[0.1em] text-muted">
-          <p>{copy.sampleData}</p>
-          <p className="text-accent">n = {copy.sampleSize}</p>
-        </div>
+        <p className="text-right font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-accentDark">
+          {copy.sampleData}
+        </p>
       </header>
 
       <div
         role="tablist"
         aria-label={copy.panelLabel}
-        className="grid grid-cols-2 border-y border-[var(--line-strong)] sm:grid-cols-4"
+        className="grid grid-cols-2 gap-x-2 gap-y-1 border-b border-[var(--line-strong)] px-4 pb-2 sm:grid-cols-4 sm:px-6"
       >
         {copy.views.map((item, index) => {
           const active = index === activeIndex
-          const tabBorders = [
-            'border-b border-r border-[var(--line-strong)] sm:border-b-0',
-            'border-b border-[var(--line-strong)] sm:border-b-0 sm:border-r',
-            'border-r border-[var(--line-strong)]',
-            '',
-          ][index]
 
           return (
             <button
@@ -197,14 +219,14 @@ export default function HeroAnalyticsPanel({ copy, locale }) {
               aria-selected={active}
               aria-controls="hero-analytics-panel"
               onClick={() => selectView(index)}
-              className={`relative min-h-14 overflow-hidden px-3 py-2 text-left font-mono text-[9px] font-bold uppercase leading-4 tracking-[0.06em] transition ${tabBorders} ${active ? 'bg-ink text-surface' : 'text-muted hover:bg-[var(--surface-hover)] hover:text-ink'}`}
+              className={`relative min-h-12 overflow-hidden px-2 py-2 text-left font-mono text-[9px] font-bold uppercase leading-4 tracking-[0.06em] transition ${active ? 'bg-[var(--accent-soft)] text-accentDark' : 'text-muted hover:bg-[var(--accent-soft)] hover:text-accentDark'}`}
             >
               {active && (
                 <span
                   key={`${item.id}-${cycleKey}`}
                   aria-hidden="true"
                   onAnimationEnd={advanceView}
-                  className="analytics-tab-progress absolute inset-0 bg-accent"
+                  className="analytics-tab-progress absolute bottom-0 left-0 h-0.5 w-full bg-accent"
                 />
               )}
               <span className="relative z-10">

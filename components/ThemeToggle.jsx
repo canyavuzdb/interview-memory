@@ -22,7 +22,7 @@ export default function ThemeToggle({
       onClick={toggleTheme}
       aria-label={label}
       title={title}
-      className={`grid h-9 w-9 shrink-0 place-items-center text-ink transition hover:bg-[var(--surface-hover)] ${
+      className={`brand-control grid h-9 w-9 shrink-0 place-items-center text-ink transition ${
         embedded
           ? 'bg-transparent'
           : 'border border-[var(--line-strong)] bg-[var(--nav-surface)]'

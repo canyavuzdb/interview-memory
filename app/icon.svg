@@ -1,5 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" fill="#F1EEE5" />
+  <title>Interview Memory IM logo</title>
+  <rect width="512" height="512" fill="#FFF8F0" />
   <rect
     x="30"
     y="30"
@@ -14,7 +15,7 @@
     d="M116 166h142v32h-53v116h53v32H116v-32h53V198h-53z"
   />
   <path
-    fill="#191714"
+    fill="#5B6F64"
     d="M274 346V166h40l34 88 34-88h40v180h-34V226l-26 72h-28l-26-72v120z"
   />
 </svg>

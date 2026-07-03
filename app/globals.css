@@ -15,8 +15,16 @@
   --line-emphasis: #A69E91;
   --accent: #5B6F64;
   --accent-dark: #31443A;
+  --text-emphasis: #356A50;
+  --accent-soft: rgba(91, 111, 100, 0.10);
+  --accent-border: rgba(91, 111, 100, 0.38);
+  --accent-ring: rgba(91, 111, 100, 0.26);
+  --status-timely: #5B6F64;
+  --status-late: #A69E91;
+  --status-rejected: #A56F32;
+  --status-silent: #191714;
   --grid-canvas: #FFF8F0;
-  --grid-line: rgba(49, 68, 58, 0.065);
+  --grid-line: rgba(49, 68, 58, 0.035);
   --nav-surface: rgba(238, 234, 224, 0.8);
   --surface-hover: #E3DED2;
   --glow-primary: #D8CDBD;
@@ -46,8 +54,16 @@
   --line-emphasis: #667064;
   --accent: #9CAF9F;
   --accent-dark: #B8C9BE;
+  --text-emphasis: #A8C6B2;
+  --accent-soft: rgba(156, 175, 159, 0.12);
+  --accent-border: rgba(156, 175, 159, 0.42);
+  --accent-ring: rgba(156, 175, 159, 0.28);
+  --status-timely: #9CAF9F;
+  --status-late: #7D857A;
+  --status-rejected: #C8975E;
+  --status-silent: #4C544A;
   --grid-canvas: #151814;
-  --grid-line: rgba(184, 201, 190, 0.075);
+  --grid-line: rgba(184, 201, 190, 0.045);
   --nav-surface: rgba(27, 30, 26, 0.82);
   --surface-hover: #2B3029;
   --glow-primary: #263029;
@@ -92,7 +108,69 @@ body {
 }
 
 ::selection {
-  background: rgba(91, 111, 100, 0.22);
+  background: var(--accent-ring);
+}
+
+.hero-body-highlight {
+  color: var(--text-emphasis);
+  cursor: default;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-decoration: none;
+}
+
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.brand-logo-mark {
+  border-color: var(--accent-border);
+  background: color-mix(in srgb, var(--surface-muted) 74%, var(--accent-soft));
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+.brand-nav-item {
+  position: relative;
+}
+
+.brand-nav-item::after {
+  position: absolute;
+  right: 12px;
+  bottom: -1px;
+  left: 12px;
+  height: 2px;
+  content: '';
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 180ms ease;
+}
+
+.brand-nav-item:hover::after,
+.brand-nav-item:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.brand-control:hover {
+  color: var(--accent-dark);
+  background: var(--accent-soft);
+}
+
+.brand-text-link {
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-position: left bottom;
+  background-repeat: no-repeat;
+  background-size: 0 1px;
+  transition:
+    color 180ms ease,
+    background-size 180ms ease;
+}
+
+.brand-text-link:hover,
+.brand-text-link:focus-visible {
+  color: var(--accent-dark);
+  background-size: 100% 1px;
 }
 
 .container-page {
@@ -167,64 +245,16 @@ body {
 
 .hero-analytics-panel {
   isolation: isolate;
-  transform-origin: center;
-  transform: translate3d(0, -8px, 0);
-  transition:
-    transform 220ms ease,
-    box-shadow 220ms ease;
   box-shadow:
-    12px 14px 0 color-mix(in srgb, var(--line-strong) 38%, transparent),
-    0 34px 78px color-mix(in srgb, var(--ink) 18%, transparent);
-}
-
-.hero-analytics-panel::before {
-  position: absolute;
-  z-index: 20;
-  inset: 9px;
-  pointer-events: none;
-  content: '';
-  background:
-    linear-gradient(var(--line-emphasis), var(--line-emphasis)) left top / 22px 1px no-repeat,
-    linear-gradient(var(--line-emphasis), var(--line-emphasis)) left top / 1px 22px no-repeat,
-    linear-gradient(var(--line-emphasis), var(--line-emphasis)) right top / 22px 1px no-repeat,
-    linear-gradient(var(--line-emphasis), var(--line-emphasis)) right top / 1px 22px no-repeat,
-    linear-gradient(var(--line-emphasis), var(--line-emphasis)) left bottom / 22px 1px no-repeat,
-    linear-gradient(var(--line-emphasis), var(--line-emphasis)) left bottom / 1px 22px no-repeat,
-    linear-gradient(var(--line-emphasis), var(--line-emphasis)) right bottom / 22px 1px no-repeat,
-    linear-gradient(var(--line-emphasis), var(--line-emphasis)) right bottom / 1px 22px no-repeat;
+    2px 2px 0 color-mix(in srgb, var(--line-strong) 24%, transparent),
+    0 4px 12px color-mix(in srgb, var(--ink) 5%, transparent);
 }
 
 .hero-analytics-panel:hover .analytics-tab-progress {
   animation-play-state: paused;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .hero-analytics-panel:hover {
-    transform: translate3d(0, -11px, 0) scale(1.012);
-    box-shadow:
-      15px 18px 0 color-mix(in srgb, var(--line-strong) 42%, transparent),
-      0 42px 92px color-mix(in srgb, var(--ink) 22%, transparent);
-  }
-}
-
-@media (max-width: 639px) {
-  .hero-analytics-panel {
-    transform: translate3d(0, -4px, 0);
-    box-shadow:
-      6px 7px 0 color-mix(in srgb, var(--line-strong) 32%, transparent),
-      0 22px 48px color-mix(in srgb, var(--ink) 14%, transparent);
-  }
-
-  .hero-analytics-panel::before {
-    inset: 6px;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .hero-analytics-panel {
-    transition: none;
-  }
-
   .analytics-tab-progress {
     animation: none;
   }

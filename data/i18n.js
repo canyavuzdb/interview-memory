@@ -8,6 +8,21 @@ export function getMessages(locale) {
   return messages[locale] ?? messages.tr
 }
 
+const responseStatuses = {
+  tr: [
+    { label: 'Zamanında', value: '%34', width: '34%', tone: 'timely' },
+    { label: 'Gecikmiş', value: '%13', width: '13%', tone: 'late' },
+    { label: 'Otomatik ret', value: '%12', width: '12%', tone: 'rejected' },
+    { label: 'Yanıtsız', value: '%41', width: '41%', tone: 'silent' },
+  ],
+  en: [
+    { label: 'On time', value: '34%', width: '34%', tone: 'timely' },
+    { label: 'Delayed', value: '13%', width: '13%', tone: 'late' },
+    { label: 'Automated rejection', value: '12%', width: '12%', tone: 'rejected' },
+    { label: 'No response', value: '41%', width: '41%', tone: 'silent' },
+  ],
+}
+
 const messages = {
   tr: {
     localeName: 'Türkçe',
@@ -90,11 +105,15 @@ const messages = {
     },
     home: {
       hero: {
-        badge: 'Deneyimlerini anonim paylaş',
         title: 'Başvuruların kara deliğe mi düşüyor?',
-        description:
-          'Otomatik red, ghosting ve feedback almayan süreçler artık veri oluyor. Interview Memory, adayların başvuru ve mülakat deneyimlerini anonim şekilde toplayarak işe alım süreçlerini görünür kılar.',
-        slogan: 'Şirketler seni değerlendiriyor. Sen de süreci ölç.',
+        subtitle: 'Şirketler seni değerlendiriyor. Sen de süreci ölç.',
+        signalsLabel: 'Başvuru yanıt durumları',
+        signals: responseStatuses.tr.map(({ label }) => label),
+        descriptionParts: {
+          pre: 'Interview Memory, adayların başvuru ve mülakat deneyimlerini ',
+          highlight: 'anonim',
+          post: ' şekilde toplayarak işe alım süreçlerini görünür kılar.',
+        },
         explore: 'Anketleri keşfet',
         benchmark: 'Kaç başvuruya mülakat düşüyor?',
       },
@@ -110,6 +129,7 @@ const messages = {
         benchmarkDescription:
           'Kaç başvuruya dönüş, HR görüşmesi ve teknik mülakat düşüyor?',
         panelLabel: 'Topluluk veri özeti',
+        panelType: 'Veri dosyası',
         sampleData: 'Örnek veri',
         sampleSize: '1.248 katkı',
         methodology:
@@ -119,11 +139,31 @@ const messages = {
         viewCta: 'Detayları ve anketi gör',
         views: [
           {
+            id: 'response-speed',
+            type: 'comparison',
+            path: '/surveys/company-experience',
+            tabLabel: 'Söz / Gerçek',
+            eyebrow: 'Karşılaştırma / Söz ve gerçek',
+            title: 'Söylenen süre ile yaşanan süre aynı değil',
+            description:
+              'Şirketin belirttiği geri dönüş süresiyle adayların fiilen yaşadığı süreyi aynı ölçekte karşılaştırıyoruz.',
+            comparison: {
+              promiseLabel: 'Söz',
+              promiseValue: '3 gün',
+              promiseDescription: 'Şirketin başvuru sırasında belirttiği ilk geri dönüş süresi.',
+              realityLabel: 'Gerçek',
+              realityValue: '9 gün',
+              realityDescription: 'Adayların bildirdiği gerçekleşen ilk dönüş süresinin ortancası.',
+              deltaLabel: 'Söz ile gerçek arasındaki fark',
+              deltaValue: '+6 gün',
+            },
+          },
+          {
             id: 'application-benchmark',
             type: 'funnel',
             path: '/surveys/application-benchmark',
             tabLabel: 'Başvuru benchmark',
-            eyebrow: 'Anket 02 / Başvuru benchmark',
+            eyebrow: 'Sinyal / Başvuru benchmark',
             title: 'Başvurudan teknik görüşmeye uzanan daralma',
             description:
               'Topluluk verisi, başvurudan teknik görüşmeye uzanan daralmayı görünür hale getirir.',
@@ -144,26 +184,23 @@ const messages = {
             type: 'signal',
             path: '/surveys/company-experience',
             tabLabel: 'Şirket deneyimi',
-            eyebrow: 'Anket 01 / Şirket deneyimi',
+            eyebrow: 'Sinyal / Şirket deneyimi',
             title: 'Sessiz kalan süreçler görünür oluyor',
             description:
               'Yanıtsız kalan başvurular ve düşük feedback oranı tek tek kaybolmak yerine ortak bir sinyale dönüşür.',
             primaryValue: '%41',
-            primaryLabel: 'Sessiz kalan süreç',
+            primaryLabel: 'Yanıtsız',
             secondaryValue: '%12',
-            secondaryLabel: 'Feedback oranı',
+            secondaryLabel: 'Otomatik ret',
             chartLabel: 'Yanıt durumu',
-            distribution: [
-              { label: 'Sessiz kalan', value: '%41', width: '41%' },
-              { label: 'Dönüş yapılan', value: '%59', width: '59%' },
-            ],
+            distribution: responseStatuses.tr,
           },
           {
             id: 'feedback-quality',
             type: 'signal',
             path: '/surveys/company-experience',
             tabLabel: 'Feedback kalitesi',
-            eyebrow: 'Anket 01 / Feedback kalitesi',
+            eyebrow: 'Sinyal / Feedback kalitesi',
             title: 'Anlamlı feedback hâlâ istisna',
             description:
               'Adayların yalnızca küçük bir bölümü, neden elendiğini açıklayan kullanılabilir bir geri bildirim aldığını belirtiyor.',
@@ -175,25 +212,6 @@ const messages = {
             distribution: [
               { label: 'Anlamlı feedback', value: '%12', width: '12%' },
               { label: 'Yetersiz veya yok', value: '%88', width: '88%' },
-            ],
-          },
-          {
-            id: 'response-speed',
-            type: 'signal',
-            path: '/surveys/company-experience',
-            tabLabel: 'Yanıt süresi',
-            eyebrow: 'Anket 01 / Yanıt süresi',
-            title: 'İlk yanıt çoğu zaman bir haftayı aşıyor',
-            description:
-              'Başvuru sonrası ilk geri dönüş hızı, adayların süreçte ne kadar süre belirsizlik yaşadığını gösteriyor.',
-            primaryValue: '9 gün',
-            primaryLabel: 'Ortanca ilk yanıt',
-            secondaryValue: '27 gün',
-            secondaryLabel: 'Ortanca süreç',
-            chartLabel: 'İlk yanıt aralığı',
-            distribution: [
-              { label: '7 gün içinde', value: '%34', width: '34%' },
-              { label: 'Daha geç veya yok', value: '%66', width: '66%' },
             ],
           },
         ],
@@ -294,34 +312,12 @@ const messages = {
       },
     ],
     community: {
-      eyebrow: 'Örnek topluluk verisi',
-      title: 'Sessiz kalan başvurular sadece senin başına gelmiyor olabilir.',
+      eyebrow: '04 / Topluluk sinyalleri',
+      title: 'Tek deneyim, kolektif sinyale dönüşüyor.',
       description:
-        'Otomatik red, ghosting ve feedback almayan süreçler tek tek kaybolmasın. Bir araya geldiklerinde şirketlerin işe alım davranışlarını görünür kılan sinyallere dönüşür.',
+        'Paylaşılan deneyimler; başvuru oranlarını, şirket davranışlarını, feedback kalitesini ve söylenenle yaşanan arasındaki farkı görünür kılar.',
       note:
-        'Bu prototipteki değerler temsili mock verilerdir; gerçek topluluk ölçümleri değildir.',
-      stats: [
-        {
-          value: '1.248',
-          label: 'Anonim katkı',
-          description: 'Başvuru ve mülakat süreci sinyali',
-        },
-        {
-          value: '%41',
-          label: 'Sessiz kalan süreç',
-          description: 'Dönüş yapılmadığı belirtilen deneyimler',
-        },
-        {
-          value: '%12',
-          label: 'Feedback oranı',
-          description: 'Olumsuz süreçte anlamlı feedback alan adaylar',
-        },
-        {
-          value: '18',
-          label: 'Başvuru / mülakat',
-          description: 'Mock veriye göre ilk görüşme ortalaması',
-        },
-      ],
+        'Örnek veriler / gerçek topluluk ölçümü değildir',
     },
     surveyIndex: {
       eyebrow: 'Anketler',
@@ -478,11 +474,15 @@ const messages = {
     },
     home: {
       hero: {
-        badge: 'Share your experiences anonymously',
         title: 'Are your applications falling into a black hole?',
-        description:
-          'Automated rejections, ghosting, and processes without feedback now become data. Interview Memory collects application and interview experiences anonymously to make hiring processes visible.',
-        slogan: 'Companies evaluate you. Now measure the process.',
+        subtitle: 'Companies evaluate you. Now measure the process.',
+        signalsLabel: 'Application response statuses',
+        signals: responseStatuses.en.map(({ label }) => label),
+        descriptionParts: {
+          pre: 'Interview Memory collects application and interview experiences ',
+          highlight: 'anonymously',
+          post: ' to make hiring processes visible.',
+        },
         explore: 'Explore surveys',
         benchmark: 'How many applications lead to an interview?',
       },
@@ -498,6 +498,7 @@ const messages = {
         benchmarkDescription:
           'How many applications lead to a response, HR call, or technical interview?',
         panelLabel: 'Community data summary',
+        panelType: 'Data file',
         sampleData: 'Sample data',
         sampleSize: '1,248 contributions',
         methodology:
@@ -507,11 +508,31 @@ const messages = {
         viewCta: 'View details and survey',
         views: [
           {
+            id: 'response-speed',
+            type: 'comparison',
+            path: '/surveys/company-experience',
+            tabLabel: 'Promise / Reality',
+            eyebrow: 'Comparison / Promise and reality',
+            title: 'The stated timeline and lived timeline do not match',
+            description:
+              'We compare the response time stated by the company with the timeline candidates actually experienced.',
+            comparison: {
+              promiseLabel: 'Promise',
+              promiseValue: '3 days',
+              promiseDescription: 'The first-response timeline stated by the company during the application.',
+              realityLabel: 'Reality',
+              realityValue: '9 days',
+              realityDescription: 'The median actual first-response time reported by candidates.',
+              deltaLabel: 'Gap between promise and reality',
+              deltaValue: '+6 days',
+            },
+          },
+          {
             id: 'application-benchmark',
             type: 'funnel',
             path: '/surveys/application-benchmark',
             tabLabel: 'Application benchmark',
-            eyebrow: 'Survey 02 / Application benchmark',
+            eyebrow: 'Signal / Application benchmark',
             title: 'The narrowing path to a technical interview',
             description:
               'Community data makes the narrowing path from application to technical interview visible.',
@@ -532,26 +553,23 @@ const messages = {
             type: 'signal',
             path: '/surveys/company-experience',
             tabLabel: 'Company experience',
-            eyebrow: 'Survey 01 / Company experience',
+            eyebrow: 'Signal / Company experience',
             title: 'Silent processes become visible',
             description:
               'Unanswered applications and low feedback rates become a shared signal instead of disappearing one by one.',
             primaryValue: '41%',
-            primaryLabel: 'Silent processes',
+            primaryLabel: 'No response',
             secondaryValue: '12%',
-            secondaryLabel: 'Feedback rate',
+            secondaryLabel: 'Automated rejection',
             chartLabel: 'Response status',
-            distribution: [
-              { label: 'Silent', value: '41%', width: '41%' },
-              { label: 'Received response', value: '59%', width: '59%' },
-            ],
+            distribution: responseStatuses.en,
           },
           {
             id: 'feedback-quality',
             type: 'signal',
             path: '/surveys/company-experience',
             tabLabel: 'Feedback quality',
-            eyebrow: 'Survey 01 / Feedback quality',
+            eyebrow: 'Signal / Feedback quality',
             title: 'Meaningful feedback remains the exception',
             description:
               'Only a small share of candidates report receiving actionable feedback that explains why they were rejected.',
@@ -563,25 +581,6 @@ const messages = {
             distribution: [
               { label: 'Meaningful feedback', value: '12%', width: '12%' },
               { label: 'Insufficient or none', value: '88%', width: '88%' },
-            ],
-          },
-          {
-            id: 'response-speed',
-            type: 'signal',
-            path: '/surveys/company-experience',
-            tabLabel: 'Response time',
-            eyebrow: 'Survey 01 / Response time',
-            title: 'The first response often takes more than a week',
-            description:
-              'The speed of the first response shows how long candidates remain uncertain after applying.',
-            primaryValue: '9 days',
-            primaryLabel: 'Median first response',
-            secondaryValue: '27 days',
-            secondaryLabel: 'Median process',
-            chartLabel: 'First response window',
-            distribution: [
-              { label: 'Within 7 days', value: '34%', width: '34%' },
-              { label: 'Later or no response', value: '66%', width: '66%' },
             ],
           },
         ],
@@ -682,34 +681,12 @@ const messages = {
       },
     ],
     community: {
-      eyebrow: 'Sample community data',
-      title: 'Silent applications may not be happening only to you.',
+      eyebrow: '04 / Community signals',
+      title: 'One experience becomes a collective signal.',
       description:
-        'Do not let automated rejections, ghosting, and missing feedback disappear one by one. Together, they become signals that reveal company hiring behavior.',
+        'Shared experiences reveal application rates, company behavior, feedback quality, and the gap between what was promised and what happened.',
       note:
-        'The values in this prototype are representative mock data, not real community metrics.',
-      stats: [
-        {
-          value: '1,248',
-          label: 'Anonymous contributions',
-          description: 'Application and interview process signals',
-        },
-        {
-          value: '41%',
-          label: 'Silent processes',
-          description: 'Experiences reported without a response',
-        },
-        {
-          value: '12%',
-          label: 'Feedback rate',
-          description: 'Candidates receiving meaningful feedback after rejection',
-        },
-        {
-          value: '18',
-          label: 'Applications / interview',
-          description: 'Mock average before the first interview',
-        },
-      ],
+        'Sample data / not real community measurements',
     },
     surveyIndex: {
       eyebrow: 'Surveys',

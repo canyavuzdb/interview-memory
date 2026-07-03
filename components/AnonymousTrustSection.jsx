@@ -25,9 +25,9 @@ export default function AnonymousTrustSection({ items }) {
           return (
             <div
               key={item.title}
-              className="rounded-[1.5rem] border border-line bg-surface p-5 shadow-sm"
+              className="rounded-[1.5rem] border border-line bg-surface p-5 shadow-sm transition hover:border-[var(--accent-border)]"
             >
-              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-surfaceMuted text-accentDark">
+              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl border border-[var(--accent-border)] bg-[var(--accent-soft)] text-accentDark">
                 <Icon size={21} />
               </div>
               <h3 className="text-base font-semibold tracking-tight text-ink">

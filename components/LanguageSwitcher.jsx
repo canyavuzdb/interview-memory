@@ -16,7 +16,7 @@ export default function LanguageSwitcher({
       aria-label={`${label}: ${nextLocale.toUpperCase()}`}
       title={`${label}: ${nextLocale.toUpperCase()}`}
       scroll={false}
-      className={`inline-flex h-9 min-w-12 items-center justify-center px-3 font-mono text-xs font-bold uppercase tracking-[0.1em] text-ink transition hover:bg-[var(--surface-hover)] hover:text-accentDark ${
+      className={`brand-control inline-flex h-9 min-w-12 items-center justify-center px-3 font-mono text-xs font-bold uppercase tracking-[0.1em] text-ink transition ${
         embedded
           ? 'bg-transparent'
           : 'border border-[var(--line-strong)] bg-[var(--nav-surface)]'
