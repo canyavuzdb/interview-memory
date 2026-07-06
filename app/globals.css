@@ -119,6 +119,81 @@ body {
   text-decoration: none;
 }
 
+.hero-fold-cta {
+  display: block;
+  overflow: hidden;
+  isolation: isolate;
+  perspective: 820px;
+}
+
+.hero-fold-reveal,
+.hero-fold-panel-content {
+  position: absolute;
+  inset-block: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-inline: 1.75rem;
+}
+
+.hero-fold-reveal {
+  inset-inline: 0;
+  z-index: 0;
+}
+
+.hero-fold-panel {
+  position: absolute;
+  inset-block: 0;
+  z-index: 1;
+  width: 50%;
+  overflow: hidden;
+  background: var(--ink);
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  transition: transform 2.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-fold-panel-left {
+  left: 0;
+  transform-origin: left center;
+}
+
+.hero-fold-panel-right {
+  right: 0;
+  transform-origin: right center;
+}
+
+.hero-fold-panel-content {
+  width: 200%;
+}
+
+.hero-fold-panel-content-left {
+  left: 0;
+}
+
+.hero-fold-panel-content-right {
+  right: 0;
+}
+
+.hero-fold-cta:focus-visible .hero-fold-panel-left {
+  transform: rotateY(-108deg);
+}
+
+.hero-fold-cta:focus-visible .hero-fold-panel-right {
+  transform: rotateY(108deg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hero-fold-cta:hover .hero-fold-panel-left {
+    transform: rotateY(-108deg);
+  }
+
+  .hero-fold-cta:hover .hero-fold-panel-right {
+    transform: rotateY(108deg);
+  }
+}
+
 :where(a, button, input, select, textarea):focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
@@ -255,6 +330,17 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .hero-fold-panel {
+    transition: none;
+  }
+
+  .hero-fold-cta:hover .hero-fold-panel-left,
+  .hero-fold-cta:hover .hero-fold-panel-right,
+  .hero-fold-cta:focus-visible .hero-fold-panel-left,
+  .hero-fold-cta:focus-visible .hero-fold-panel-right {
+    transform: none;
+  }
+
   .analytics-tab-progress {
     animation: none;
   }

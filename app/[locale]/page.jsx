@@ -140,12 +140,36 @@ export default async function HomePage({ params }) {
           <div className="mt-9 grid gap-3 sm:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
             <Link
               href={`/${locale}/surveys/application-benchmark`}
-              className="inline-flex h-16 w-full items-center justify-between gap-4 rounded-sm bg-ink px-7 py-3 text-sm font-semibold text-surface shadow-sm transition hover:-translate-y-0.5 hover:bg-accentDark"
+              className="hero-fold-cta relative h-16 w-full rounded-sm bg-accentDark text-sm font-semibold text-surface shadow-sm"
             >
-              <StableLocalizedText reserve={alternateMessages.home.hero.explore}>
+              <span className="sr-only">
                 {messages.home.hero.explore}
-              </StableLocalizedText>
-              <ArrowRight size={17} />
+              </span>
+
+              <span className="hero-fold-reveal" aria-hidden="true">
+                <StableLocalizedText reserve={alternateMessages.home.hero.exploreHover}>
+                  {messages.home.hero.exploreHover}
+                </StableLocalizedText>
+                <ArrowRight size={17} />
+              </span>
+
+              <span className="hero-fold-panel hero-fold-panel-left" aria-hidden="true">
+                <span className="hero-fold-panel-content hero-fold-panel-content-left">
+                  <StableLocalizedText reserve={alternateMessages.home.hero.explore}>
+                    {messages.home.hero.explore}
+                  </StableLocalizedText>
+                  <ArrowRight size={17} />
+                </span>
+              </span>
+
+              <span className="hero-fold-panel hero-fold-panel-right" aria-hidden="true">
+                <span className="hero-fold-panel-content hero-fold-panel-content-right">
+                  <StableLocalizedText reserve={alternateMessages.home.hero.explore}>
+                    {messages.home.hero.explore}
+                  </StableLocalizedText>
+                  <ArrowRight size={17} />
+                </span>
+              </span>
             </Link>
 
             <a
