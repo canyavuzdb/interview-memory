@@ -32,6 +32,8 @@ const messages = {
       backHome: 'Ana sayfaya dön',
       themeToggle: 'Açık ve koyu tema arasında geçiş yap',
       themeTitle: 'Temayı değiştir',
+      surveyContext: 'Anonim süreç kaydı',
+      threeSteps: '3 kısa adım',
     },
     metadata: {
       home: {
@@ -592,8 +594,14 @@ const messages = {
             feedbackUseful: { label: 'Verilen feedback gelişimin için faydalı mıydı? (1-5)' },
             processTransparency: { label: 'Sürecin şeffaflığı (1-5)' },
             hrProfessionalism: { label: 'HR ekibinin profesyonelliği (1-5)' },
-            wouldRecommendProcess: { label: 'Bu şirketin mülakat sürecini başkalarına tavsiye eder misin?' },
-            freeNote: { label: 'Eklemek istediğin başka bir detay var mı?' },
+            wouldRecommendProcess: {
+              label: 'Bu şirketin mülakat sürecini başkalarına tavsiye eder misin?',
+              options: { yes: 'Evet', no: 'Hayır', unsure: 'Emin değilim' },
+            },
+            freeNote: {
+              label: 'Eklemek istediğin başka bir detay var mı?',
+              placeholder: 'Kişi adı veya tanımlayıcı bilgi paylaşmadan süreci kısaca anlatabilirsin.',
+            },
           },
         },
       },
@@ -628,6 +636,8 @@ const messages = {
       backHome: 'Back to homepage',
       themeToggle: 'Switch between light and dark themes',
       themeTitle: 'Change theme',
+      surveyContext: 'Anonymous process record',
+      threeSteps: '3 short steps',
     },
     metadata: {
       home: {
@@ -1188,8 +1198,14 @@ const messages = {
             feedbackUseful: { label: 'Was the feedback useful for your growth? (1-5)' },
             processTransparency: { label: 'Transparency of the process (1-5)' },
             hrProfessionalism: { label: 'Professionalism of the HR team (1-5)' },
-            wouldRecommendProcess: { label: 'Would you recommend this company’s interview process to others?' },
-            freeNote: { label: 'Any other details you want to add?' },
+            wouldRecommendProcess: {
+              label: 'Would you recommend this company’s interview process to others?',
+              options: { yes: 'Yes', no: 'No', unsure: 'Not sure' },
+            },
+            freeNote: {
+              label: 'Any other details you want to add?',
+              placeholder: 'Briefly describe the process without sharing names or identifying information.',
+            },
           },
         },
       },

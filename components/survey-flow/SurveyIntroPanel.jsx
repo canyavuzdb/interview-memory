@@ -3,7 +3,7 @@ import SampleDataBadge from '@/components/SampleDataBadge'
 
 const icons = [UserRoundX, EyeOff, ShieldCheck]
 
-export default function TrustPanel({ copy, sampleSize }) {
+export default function SurveyIntroPanel({ copy, sampleSize }) {
   return (
     <aside className="border border-[var(--line-strong)] bg-surface p-6 shadow-[var(--shadow-card)] lg:sticky lg:top-24 lg:p-8">
       <SampleDataBadge label={copy.dataLabel} value={sampleSize} />
@@ -17,7 +17,7 @@ export default function TrustPanel({ copy, sampleSize }) {
       <div className="mt-9 hidden border-t border-line pt-6 lg:block">
         <ul className="space-y-5">
           {copy.items.map((item, index) => {
-            const Icon = icons[index]
+            const Icon = icons[index] ?? ShieldCheck
 
             return (
               <li key={item} className="flex items-center gap-3 text-sm font-medium text-ink">
