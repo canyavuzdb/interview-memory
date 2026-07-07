@@ -9,7 +9,15 @@ import {
 const fieldClass =
   'mt-2 w-full border border-[var(--line-strong)] bg-canvas px-4 py-3 text-sm text-ink outline-none transition focus:border-accent'
 
-export default function StepProcessReview({ copy, errors, setField, state, warnings }) {
+export default function StepProcessReview({
+  booleanOptions,
+  copy,
+  errors,
+  selectPlaceholder,
+  setField,
+  state,
+  warnings,
+}) {
   return (
     <div className="space-y-7">
       <ChoiceGroup
@@ -41,38 +49,40 @@ export default function StepProcessReview({ copy, errors, setField, state, warni
         </div>
       )}
 
-      <div>
-        <label htmlFor="hr-actual-days" className="text-sm font-semibold text-ink">
-          {copy.fields.actualDays.label}
-        </label>
-        <input
-          id="hr-actual-days"
-          type="number"
-          inputMode="numeric"
-          min="0"
-          value={state.actualDays}
-          onChange={(event) => setField('actualDays', event.target.value)}
-          placeholder="0"
-          aria-invalid={Boolean(errors.actualDays)}
-          className={fieldClass}
-        />
-        <FieldError>{errors.actualDays}</FieldError>
-      </div>
-
-      {warnings.length > 0 && (
-        <div className="border-l-2 border-warning bg-[var(--surface-muted)] px-4 py-3 text-sm leading-6 text-muted">
-          {warnings[0]}
-        </div>
-      )}
-
       <ChoiceGroup
         name="was-ghosted"
         label={copy.fields.wasGhosted.label}
         value={state.wasGhosted}
         onChange={(value) => setField('wasGhosted', value)}
-        options={copy.booleanOptions}
+        options={booleanOptions}
         error={errors.wasGhosted}
       />
+
+      {state.wasGhosted === false && (
+        <div>
+          <label htmlFor="hr-actual-days" className="text-sm font-semibold text-ink">
+            {copy.fields.actualDays.label}
+          </label>
+          <input
+            id="hr-actual-days"
+            type="number"
+            inputMode="numeric"
+            min="0"
+            value={state.actualDays}
+            onChange={(event) => setField('actualDays', event.target.value)}
+            placeholder="0"
+            aria-invalid={Boolean(errors.actualDays)}
+            className={fieldClass}
+          />
+          <FieldError>{errors.actualDays}</FieldError>
+        </div>
+      )}
+
+      {state.wasGhosted === false && warnings.length > 0 && (
+        <div className="border-l-2 border-warning bg-[var(--surface-muted)] px-4 py-3 text-sm leading-6 text-muted">
+          {warnings[0]}
+        </div>
+      )}
 
       {state.wasGhosted === true && (
         <ChoiceGroup
@@ -98,7 +108,7 @@ export default function StepProcessReview({ copy, errors, setField, state, warni
           onChange={(event) => setField('interviewerPrepared', event.target.value)}
           className={fieldClass}
         >
-          <option value="">{copy.selectPlaceholder}</option>
+          <option value="">{selectPlaceholder}</option>
           {RATING_SCALE.map((n) => (
             <option key={n} value={n}>
               {n}
@@ -112,7 +122,7 @@ export default function StepProcessReview({ copy, errors, setField, state, warni
         label={copy.fields.wasAskedIrrelevant.label}
         value={state.wasAskedIrrelevant}
         onChange={(value) => setField('wasAskedIrrelevant', value)}
-        options={copy.booleanOptions}
+        options={booleanOptions}
         error={errors.wasAskedIrrelevant}
       />
 

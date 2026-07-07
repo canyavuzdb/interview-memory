@@ -18,6 +18,10 @@ function reducer(state, action) {
         nextState.ghostedAfterStage = ''
       }
 
+      if (action.field === 'wasGhosted' && action.value === true) {
+        nextState.actualDays = ''
+      }
+
       if (action.field === 'promisedTimeline' && action.value !== 'yes') {
         nextState.promisedDays = ''
       }

@@ -5,7 +5,7 @@ import { RATING_SCALE, REJECTION_DETAIL_LEVELS } from '@/lib/constants/hrProcess
 const fieldClass =
   'mt-2 w-full border border-[var(--line-strong)] bg-canvas px-4 py-3 text-sm text-ink outline-none transition focus:border-accent'
 
-export default function StepRatings({ copy, errors, setField, state }) {
+export default function StepRatings({ copy, errors, selectPlaceholder, setField, state }) {
   return (
     <div className="space-y-7">
       <ChoiceGroup
@@ -31,7 +31,7 @@ export default function StepRatings({ copy, errors, setField, state }) {
             onChange={(event) => setField('feedbackUseful', event.target.value)}
             className={fieldClass}
           >
-            <option value="">{copy.selectPlaceholder}</option>
+            <option value="">{selectPlaceholder}</option>
             {RATING_SCALE.map((n) => (
               <option key={n} value={n}>
                 {n}
@@ -52,7 +52,7 @@ export default function StepRatings({ copy, errors, setField, state }) {
           aria-invalid={Boolean(errors.processTransparency)}
           className={fieldClass}
         >
-          <option value="">{copy.selectPlaceholder}</option>
+          <option value="">{selectPlaceholder}</option>
           {RATING_SCALE.map((n) => (
             <option key={n} value={n}>
               {n}
@@ -73,7 +73,7 @@ export default function StepRatings({ copy, errors, setField, state }) {
           aria-invalid={Boolean(errors.hrProfessionalism)}
           className={fieldClass}
         >
-          <option value="">{copy.selectPlaceholder}</option>
+          <option value="">{selectPlaceholder}</option>
           {RATING_SCALE.map((n) => (
             <option key={n} value={n}>
               {n}
