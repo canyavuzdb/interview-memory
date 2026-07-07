@@ -109,7 +109,7 @@ function AnalyticsView({ copy, locale, onAnimationEnd, outgoing = false, view })
       aria-hidden={outgoing || undefined}
       inert={outgoing || undefined}
       onAnimationEnd={onAnimationEnd}
-      className={`flex flex-col px-6 py-6 sm:px-8 sm:py-7 ${outgoing ? 'analytics-view-out pointer-events-none absolute inset-0 z-10' : 'analytics-view-in relative z-0 w-full'}`}
+      className={`flex h-full min-h-0 w-full flex-col px-6 py-6 sm:px-8 sm:py-7 ${outgoing ? 'analytics-view-out pointer-events-none absolute inset-0 z-10' : 'analytics-view-in relative z-0'}`}
     >
       <p className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-accent">
         {view.eyebrow}
@@ -193,7 +193,7 @@ export default function HeroAnalyticsPanel({ copy, locale }) {
     <section
       id="hero-signals"
       aria-label={copy.panelLabel}
-      className="hero-analytics-panel relative flex min-h-[640px] scroll-mt-24 flex-col overflow-hidden border border-[var(--line-strong)] bg-surface shadow-[var(--shadow-card)] [overflow-anchor:none] xl:h-[680px]"
+      className="hero-analytics-panel relative flex h-[720px] w-full min-w-0 scroll-mt-24 flex-col overflow-hidden border border-[var(--line-strong)] bg-surface shadow-[var(--shadow-card)] [overflow-anchor:none] sm:h-[680px]"
     >
       <header className="flex items-center justify-between gap-4 px-6 pb-5 pt-6 sm:px-8">
         <SampleDataBadge label={`${copy.panelType} / ${copy.eyebrow}`} />
@@ -237,7 +237,7 @@ export default function HeroAnalyticsPanel({ copy, locale }) {
       <div
         id="hero-analytics-panel"
         role="tabpanel"
-        className="relative flex flex-1"
+        className="relative flex min-h-0 w-full flex-1 overflow-hidden"
       >
         {previousIndex !== null && (
           <AnalyticsView
