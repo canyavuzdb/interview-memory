@@ -102,40 +102,37 @@ export default async function HomePage({ params }) {
 
       <section className="mx-auto grid max-w-7xl items-stretch gap-12 px-5 py-16 sm:px-6 md:py-20 lg:px-8 lg:py-24 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
         <div className="min-w-0 flex flex-col justify-center">
-          <h1 className="min-h-[200px] max-w-4xl text-5xl font-semibold tracking-[-0.055em] text-ink sm:min-h-[188px] sm:text-6xl lg:min-h-[152px] lg:text-7xl xl:min-h-[224px]">
-            {messages.home.hero.title}
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-accent">
+            {messages.home.hero.eyebrow}
+          </p>
+
+          <h1 className="mt-5 max-w-4xl text-5xl font-semibold tracking-[-0.06em] text-ink sm:text-6xl lg:text-7xl">
+            {messages.home.hero.title}{' '}
+            <span className="font-mono text-[0.82em] tracking-[-0.075em] text-accentDark">
+              {messages.home.hero.titleHighlight}
+            </span>
           </h1>
 
-          <p className="mt-6 max-w-xl text-xl font-semibold tracking-tight text-ink">
+          <p className="mt-7 max-w-xl text-xl font-semibold leading-8 tracking-tight text-ink">
             {messages.home.hero.subtitle}
           </p>
 
-          <ul
-            aria-label={messages.home.hero.signalsLabel}
-            className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-2"
-          >
-            {messages.home.hero.signals.map((signal, index) => (
-              <li
-                key={signal}
-                className="flex cursor-default select-none items-center gap-3 font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-muted"
-              >
-                {index > 0 && <span aria-hidden="true">·</span>}
-                {signal}
-              </li>
-            ))}
-          </ul>
-
-          <p className="mt-7 max-w-2xl text-lg font-semibold leading-8 text-ink">
-            {messages.home.hero.problem}
-          </p>
-
-          <p className="mt-3 max-w-2xl text-lg leading-8 text-muted">
+          <p className="mt-4 max-w-xl text-lg leading-8 text-muted">
             {messages.home.hero.descriptionParts.pre}
             <span className="hero-body-highlight whitespace-nowrap font-mono">
               {messages.home.hero.descriptionParts.highlight}
             </span>
             {messages.home.hero.descriptionParts.post}
           </p>
+
+          <ul className="mt-7 flex flex-wrap gap-x-6 gap-y-2" aria-label={messages.home.hero.detailsLabel}>
+            {messages.home.hero.details.map((detail) => (
+              <li key={detail} className="flex items-center gap-2 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-muted">
+                <span className="h-1.5 w-1.5 bg-accent" aria-hidden="true" />
+                {detail}
+              </li>
+            ))}
+          </ul>
 
           <div className="mt-9 grid gap-3 sm:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
             <Link
