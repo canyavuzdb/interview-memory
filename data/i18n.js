@@ -483,6 +483,99 @@ const messages = {
         yourApplicationsLabel: 'Senin başvurun',
       },
     },
+    companyExperienceForm: {
+      trustPanel: {
+        dataLabel: 'Anonim Anket',
+        title: 'Mülakat sürecinde neler yaşadın?',
+        description:
+          'İyi ya da kötü, yaşadığın süreci paylaşarak şirketlerin aday deneyimi karnesini oluşturmamıza yardım et.',
+        items: [
+          'Kayıt gerekmiyor',
+          'İsim veya e-posta istenmiyor',
+          'Şirket adı doğrudan ifşa edilmez, genel topluluk verisine ve skorlara katılır',
+        ],
+      },
+      stepIndicator: {
+        progressLabel: 'Form ilerlemesi',
+        items: ['Şirket ve rol', 'Süreç sonucu', 'Değerlendirme'],
+      },
+      privacyRow: 'Anonim · İsim toplanmaz · Belge istenmez',
+      selectPlaceholder: 'Seçiniz',
+      booleanOptions: [
+        { value: true, label: 'Evet' },
+        { value: false, label: 'Hayır' },
+      ],
+      steps: {
+        step1: {
+          title: 'Şirket ve rol',
+          description: 'Hangi şirkette ve hangi rol için sürece girdiğini belirt.',
+          fields: {
+            companyName: { label: 'Şirket adı', placeholder: 'Örn. Tech Corp' },
+            appliedRole: { label: 'Pozisyon / rol', placeholder: 'Örn. Frontend Developer' },
+            companySector: {
+              label: 'Şirket sektörü',
+              options: { technology: 'Teknoloji / Yazılım', finance: 'Finans', ecommerce: 'E-ticaret', consulting: 'Danışmanlık', healthcare: 'Sağlık', manufacturing: 'Üretim', education: 'Eğitim', media: 'Medya', telecom: 'Telekomünikasyon', other: 'Diğer' },
+            },
+            companySize: {
+              label: 'Şirket büyüklüğü',
+              options: { '1-50': '1-50 çalışan', '50-200': '50-200 çalışan', '200-1000': '200-1000 çalışan', '1000+': '1000+ çalışan' },
+            },
+            applicationChannel: {
+              label: 'Başvuru kanalı',
+              options: { linkedin: 'LinkedIn', kariyer_net: 'Kariyer.net', referral: 'Referans (Referral)', company_site: 'Şirket websitesi', other: 'Diğer' },
+            },
+          },
+        },
+        step2: {
+          title: 'Süreç sonucu',
+          description: 'Süreç nasıl ve hangi aşamada sonlandı?',
+          fields: {
+            lastStage: {
+              label: 'Süreç hangi aşamada kaldı/sonlandı?',
+              options: { no_response: 'Hiç dönüş olmadı', auto_rejected: 'Otomatik red', hr_rejected: 'HR aşamasında red', hr_interview: 'HR Mülakatı sonrası iptal/red', technical_interview: 'Teknik Mülakat sonrası iptal/red', final_interview: 'Final görüşme sonrası iptal/red', offer_declined: 'Teklif aldım, ben reddettim', offer_accepted: 'Teklif aldım, kabul ettim' },
+            },
+            gotResponse: { label: 'Başvuru sonrasında herhangi bir dönüş (red dahil) aldın mı?' },
+            responseTimeDays: { label: 'Kaç gün sonra dönüş yaptılar?', suffix: 'gün' },
+          },
+        },
+        step3: {
+          title: 'Değerlendirme',
+          description: 'Sürecin genelini nasıl puanlarsın?',
+          fields: {
+            overallExperience: {
+              label: 'Genel mülakat deneyimi puanın',
+              minLabel: 'Çok Kötü',
+              maxLabel: 'Çok İyi',
+            },
+            wouldReapply: { label: 'İleride bu şirkete tekrar başvurmayı düşünür müsün?' },
+            freeNote: { label: 'Süreç hakkında paylaşmak istediğin spesifik bir not var mı? (Opsiyonel)', placeholder: 'Örn: Teknik mülakattaki case çok uzundu...' },
+          },
+        },
+      },
+      navigation: {
+        back: 'Geri',
+        next: 'Devam et',
+        complete: 'Tamamla ve sonucu gör',
+        loading: 'Hazırlanıyor…',
+      },
+      validation: {
+        required: 'Bu alan gerekli.',
+        nonNegativeNumber: '0 veya daha büyük tam sayı gir.',
+        noteTooLong: 'Not en fazla 500 karakter olabilir.',
+        ghostingWarning: 'Mülakat aşamasına gelip hiç dönüş almadığınızı belirttiniz. Bu ciddi bir ghosting vakasıdır.',
+        summary: 'Devam etmeden önce işaretli alanları kontrol et.',
+      },
+      submitError: 'Önizleme hazırlanamadı. Lütfen tekrar dene.',
+      success: {
+        mockLabel: 'Örnek veri · Gerçek karşılaştırma değil',
+        title: 'Deneyim değerlendirmen hazır.',
+        description: 'Bilgilerin kaydedilmedi. Gerçek sistemde bu veri, şirketin genel aday deneyimi karnesini oluşturmak için kullanılacaktır.',
+        experienceLabel: 'Verdiğin Puan',
+        recommendLabel: 'Tekrar Başvuru',
+        recommendYes: 'Evet',
+        recommendNo: 'Hayır',
+      },
+    },
   },
   en: {
     localeName: 'English',
@@ -941,6 +1034,99 @@ const messages = {
         medianLabel: 'Illustrative median days',
         ongoingLabel: 'Processes ongoing',
         yourApplicationsLabel: 'Your applications',
+      },
+    },
+    companyExperienceForm: {
+      trustPanel: {
+        dataLabel: 'Anonymous Survey',
+        title: 'What was your interview experience like?',
+        description:
+          'Good or bad, share your process to help us build a candidate experience report card for companies.',
+        items: [
+          'No registration required',
+          'No name or email asked',
+          'Company name is not directly exposed, it contributes to aggregate scores',
+        ],
+      },
+      stepIndicator: {
+        progressLabel: 'Form progress',
+        items: ['Company and role', 'Process outcome', 'Evaluation'],
+      },
+      privacyRow: 'Anonymous · No names collected · No documents required',
+      selectPlaceholder: 'Select',
+      booleanOptions: [
+        { value: true, label: 'Yes' },
+        { value: false, label: 'No' },
+      ],
+      steps: {
+        step1: {
+          title: 'Company and role',
+          description: 'Specify the company and the role you interviewed for.',
+          fields: {
+            companyName: { label: 'Company name', placeholder: 'e.g. Tech Corp' },
+            appliedRole: { label: 'Position / role', placeholder: 'e.g. Frontend Developer' },
+            companySector: {
+              label: 'Company sector',
+              options: { technology: 'Technology / Software', finance: 'Finance', ecommerce: 'E-commerce', consulting: 'Consulting', healthcare: 'Healthcare', manufacturing: 'Manufacturing', education: 'Education', media: 'Media', telecom: 'Telecommunications', other: 'Other' },
+            },
+            companySize: {
+              label: 'Company size',
+              options: { '1-50': '1-50 employees', '50-200': '50-200 employees', '200-1000': '200-1000 employees', '1000+': '1000+ employees' },
+            },
+            applicationChannel: {
+              label: 'Application channel',
+              options: { linkedin: 'LinkedIn', kariyer_net: 'Kariyer.net', referral: 'Referral', company_site: 'Company website', other: 'Other' },
+            },
+          },
+        },
+        step2: {
+          title: 'Process outcome',
+          description: 'How and at what stage did the process end?',
+          fields: {
+            lastStage: {
+              label: 'At what stage did the process end?',
+              options: { no_response: 'No response', auto_rejected: 'Auto rejection', hr_rejected: 'Rejected at HR stage', hr_interview: 'Rejected/cancelled after HR Interview', technical_interview: 'Rejected/cancelled after Technical Interview', final_interview: 'Rejected/cancelled after Final Interview', offer_declined: 'Received offer, I declined', offer_accepted: 'Received offer, I accepted' },
+            },
+            gotResponse: { label: 'Did you receive any response (including rejection) after applying?' },
+            responseTimeDays: { label: 'How many days later did they respond?', suffix: 'days' },
+          },
+        },
+        step3: {
+          title: 'Evaluation',
+          description: 'How would you rate the overall process?',
+          fields: {
+            overallExperience: {
+              label: 'Overall interview experience rating',
+              minLabel: 'Very Bad',
+              maxLabel: 'Very Good',
+            },
+            wouldReapply: { label: 'Would you consider applying to this company again in the future?' },
+            freeNote: { label: 'Any specific note you want to share about the process? (Optional)', placeholder: 'e.g. The case study in the technical interview was too long...' },
+          },
+        },
+      },
+      navigation: {
+        back: 'Back',
+        next: 'Continue',
+        complete: 'Complete and view result',
+        loading: 'Preparing…',
+      },
+      validation: {
+        required: 'This field is required.',
+        nonNegativeNumber: 'Enter a whole number equal to or greater than 0.',
+        noteTooLong: 'The note must be 500 characters or fewer.',
+        ghostingWarning: 'You indicated you reached the interview stage but received no response. This is a severe case of ghosting.',
+        summary: 'Check the highlighted fields before continuing.',
+      },
+      submitError: 'The preview could not be prepared. Please try again.',
+      success: {
+        mockLabel: 'Sample data · Not a real comparison',
+        title: 'Your experience evaluation is ready.',
+        description: 'Your information was not saved. In the real system, this data will be used to build the company’s candidate experience report card.',
+        experienceLabel: 'Your Rating',
+        recommendLabel: 'Would Apply Again',
+        recommendYes: 'Yes',
+        recommendNo: 'No',
       },
     },
   },
