@@ -1,9 +1,11 @@
 import Link from 'next/link'
-import { ArrowRight, BarChart3, Building2, Clock } from 'lucide-react'
+import { ArrowRight, BarChart3, Building2, Clock, UserSearch, Wallet } from 'lucide-react'
 
 const iconMap = {
   building: Building2,
   chart: BarChart3,
+  userSearch: UserSearch,
+  wallet: Wallet,
 }
 
 export default function SurveyCard({ survey }) {
