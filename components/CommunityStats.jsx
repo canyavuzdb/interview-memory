@@ -191,10 +191,10 @@ export default function CommunityStats({ copy, signalCopy }) {
       </div>
 
       <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <PromiseRealityCard code="01 /" view={views['response-speed']} />
-        <BenchmarkCard code="02 /" view={views['application-benchmark']} />
-        <ResponseDistributionCard code="03 /" view={views['company-experience']} />
-        <FeedbackChartCard code="04 /" view={views['feedback-quality']} />
+        <BenchmarkCard code="01 /" view={views['application-marathon']} />
+        <BenchmarkCard code="02 /" view={views['company-report']} />
+        <ResponseDistributionCard code="03 /" view={views['silent-processes']} />
+        <PromiseRealityCard code="04 /" view={views['salary-reality']} />
       </div>
     </section>
   )
