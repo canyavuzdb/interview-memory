@@ -523,6 +523,102 @@ const messages = {
         yourApplicationsLabel: 'Senin başvurun',
       },
     },
+    hrProcessForm: {
+      trustPanel: {
+        dataLabel: 'Anonim Anket',
+        title: 'Söz verdikleri sürede döndüler mi?',
+        description:
+          'Süreci değerlendirmen yaklaşık 3 dakika sürecek. Şirket adı gizli tutularak HR şeffaflık skoru topluluk verisine eklenecektir.',
+        items: [
+          'Kayıt gerekmiyor',
+          'İsim veya e-posta istenmiyor',
+          'Şirket adı doğrudan yayınlanmaz, anonim kalır',
+        ],
+      },
+      stepIndicator: {
+        progressLabel: 'Form ilerlemesi',
+        items: ['Şirket ve rol', 'Süreç ve ghosting', 'Değerlendirme'],
+      },
+      privacyRow: 'Anonim · İsim toplanmaz · Belge istenmez',
+      selectPlaceholder: 'Seçiniz',
+      booleanOptions: [
+        { value: true, label: 'Evet' },
+        { value: false, label: 'Hayır' },
+      ],
+      steps: {
+        step1: {
+          title: 'Şirket ve rol',
+          description: 'Hangi şirket ve rol için mülakat sürecine girdiğini belirt.',
+          fields: {
+            companyName: { label: 'Şirket adı', placeholder: 'Örn. Tech Corp' },
+            appliedRole: { label: 'Pozisyon / rol', placeholder: 'Örn. Frontend Developer' },
+            processYear: {
+              label: 'Süreç hangi yıl gerçekleşti?',
+              options: { '2024': '2024', '2025': '2025', '2026': '2026' },
+            },
+          },
+        },
+        step2: {
+          title: 'Süreç ve ghosting',
+          description: 'Söylenen süreyle gerçekleşen süreyi karşılaştır.',
+          fields: {
+            promisedTimeline: {
+              label: 'Süreç başında geri dönüş süresi taahhüt edildi mi?',
+              options: { yes: 'Evet, süre verdiler', no: 'Hayır, belirtilmedi', not_specified: 'Hatırlamıyorum' },
+            },
+            promisedDays: { label: 'Kaç gün içinde döneceklerini söylediler?' },
+            actualDays: { label: 'Gerçekte kaç gün sonra döndüler?' },
+            wasGhosted: { label: 'Ghosting (habersiz iletişimi kesme) yaşandı mı?' },
+            ghostedAfterStage: {
+              label: 'Hangi aşamadan sonra ghosting yaşandı?',
+              options: { application: 'Başvuru', hr_screen: 'HR Görüşmesi', technical: 'Teknik Mülakat', final: 'Final Görüşmesi' },
+            },
+            interviewerPrepared: { label: 'Görüşmeciler mülakata hazırlıklı mıydı? (1-5)' },
+            wasAskedIrrelevant: { label: 'İlgisiz veya uygunsuz sorular soruldu mu?' },
+            irrelevantTypes: {
+              label: 'Hangi türde sorular soruldu?',
+              options: { age: 'Yaş', marital_status: 'Medeni durum', salary_history: 'Geçmiş maaş', personal_questions: 'Özel hayat', other: 'Diğer' },
+            },
+          },
+        },
+        step3: {
+          title: 'Değerlendirme',
+          description: 'HR ekibini ve sürecin şeffaflığını puanla.',
+          fields: {
+            rejectionShared: {
+              label: 'Elenme sebebi paylaşıldı mı?',
+              options: { yes_detailed: 'Evet, detaylı feedback verdiler', yes_generic: 'Evet ama standart formdu', no: 'Hayır, sebep belirtilmedi' },
+            },
+            feedbackUseful: { label: 'Verilen feedback gelişimin için faydalı mıydı? (1-5)' },
+            processTransparency: { label: 'Sürecin şeffaflığı (1-5)' },
+            hrProfessionalism: { label: 'HR ekibinin profesyonelliği (1-5)' },
+            wouldRecommendProcess: { label: 'Bu şirketin mülakat sürecini başkalarına tavsiye eder misin?' },
+            freeNote: { label: 'Eklemek istediğin başka bir detay var mı?' },
+          },
+        },
+      },
+      navigation: {
+        back: 'Geri',
+        next: 'Devam et',
+        complete: 'Tamamla ve sonucu gör',
+        loading: 'Hazırlanıyor…',
+      },
+      validation: {
+        required: 'Bu alan gerekli.',
+        nonNegativeNumber: '0 veya daha büyük tam sayı gir.',
+        noteTooLong: 'Not en fazla 500 karakter olabilir.',
+        timelineGapWarning: 'Gerçekleşen süre söz verilenden çok daha uzun görünüyor. Doğru girdiğinize emin misiniz?',
+        summary: 'Devam etmeden önce işaretli alanları kontrol et.',
+      },
+      submitError: 'Önizleme hazırlanamadı. Lütfen tekrar dene.',
+      success: {
+        title: 'Süreç değerlendirmen hazır.',
+        description: 'Bilgilerin kaydedilmedi. Gerçek sistemde bu değerlendirme şirketin HR şeffaflık skoruna etki edecektir.',
+        ghostedLabel: 'Ghosting durumu',
+        transparencyLabel: 'Şeffaflık skoru',
+        professionalismLabel: 'Profesyonellik skoru',
+      },
+    },
   },
   en: {
     localeName: 'English',
@@ -1021,6 +1117,102 @@ const messages = {
         medianLabel: 'Illustrative median days',
         ongoingLabel: 'Processes ongoing',
         yourApplicationsLabel: 'Your applications',
+      },
+    },
+    hrProcessForm: {
+      trustPanel: {
+        dataLabel: 'Anonymous Survey',
+        title: 'Did they respond within the promised timeline?',
+        description:
+          'Evaluating the process will take about 3 minutes. HR transparency and response timelines will be added to community data.',
+        items: [
+          'No registration required',
+          'No name or email asked',
+          'Company name is kept anonymous and added to the aggregate score',
+        ],
+      },
+      stepIndicator: {
+        progressLabel: 'Form progress',
+        items: ['Company and role', 'Process and ghosting', 'Evaluation'],
+      },
+      privacyRow: 'Anonymous · No names collected · No documents required',
+      selectPlaceholder: 'Select',
+      booleanOptions: [
+        { value: true, label: 'Yes' },
+        { value: false, label: 'No' },
+      ],
+      steps: {
+        step1: {
+          title: 'Company and role',
+          description: 'Specify the company and the role you interviewed for.',
+          fields: {
+            companyName: { label: 'Company name', placeholder: 'e.g. Tech Corp' },
+            appliedRole: { label: 'Position / role', placeholder: 'e.g. Frontend Developer' },
+            processYear: {
+              label: 'In what year did the process take place?',
+              options: { '2024': '2024', '2025': '2025', '2026': '2026' },
+            },
+          },
+        },
+        step2: {
+          title: 'Process and ghosting',
+          description: 'Compare the promised timeline with the actual timeline.',
+          fields: {
+            promisedTimeline: {
+              label: 'Was a response timeline promised at the beginning of the process?',
+              options: { yes: 'Yes, a timeline was provided', no: 'No, it was not specified', not_specified: 'I don’t remember' },
+            },
+            promisedDays: { label: 'In how many days did they say they would respond?' },
+            actualDays: { label: 'How many days did it actually take them to respond?' },
+            wasGhosted: { label: 'Were you ghosted (communication cut off without notice)?' },
+            ghostedAfterStage: {
+              label: 'After which stage were you ghosted?',
+              options: { application: 'Application', hr_screen: 'HR Interview', technical: 'Technical Interview', final: 'Final Interview' },
+            },
+            interviewerPrepared: { label: 'Were the interviewers prepared for the interview? (1-5)' },
+            wasAskedIrrelevant: { label: 'Were you asked irrelevant or inappropriate questions?' },
+            irrelevantTypes: {
+              label: 'What kind of questions were asked?',
+              options: { age: 'Age', marital_status: 'Marital status', salary_history: 'Salary history', personal_questions: 'Private life', other: 'Other' },
+            },
+          },
+        },
+        step3: {
+          title: 'Evaluation',
+          description: 'Rate the HR team and the transparency of the process.',
+          fields: {
+            rejectionShared: {
+              label: 'Was a rejection reason shared?',
+              options: { yes_detailed: 'Yes, they gave detailed feedback', yes_generic: 'Yes, but it was a standard template', no: 'No, no reason was given' },
+            },
+            feedbackUseful: { label: 'Was the feedback useful for your growth? (1-5)' },
+            processTransparency: { label: 'Transparency of the process (1-5)' },
+            hrProfessionalism: { label: 'Professionalism of the HR team (1-5)' },
+            wouldRecommendProcess: { label: 'Would you recommend this company’s interview process to others?' },
+            freeNote: { label: 'Any other details you want to add?' },
+          },
+        },
+      },
+      navigation: {
+        back: 'Back',
+        next: 'Continue',
+        complete: 'Complete and view result',
+        loading: 'Preparing…',
+      },
+      validation: {
+        required: 'This field is required.',
+        nonNegativeNumber: 'Enter a whole number equal to or greater than 0.',
+        noteTooLong: 'The note must be 500 characters or fewer.',
+        timelineGapWarning: 'The actual timeline seems much longer than promised. Are you sure you entered it correctly?',
+        summary: 'Check the highlighted fields before continuing.',
+      },
+      submitError: 'The preview could not be prepared. Please try again.',
+      success: {
+        title: 'Your process evaluation is ready.',
+        description: 'Your information was not saved. In the real system, this evaluation will affect the company’s HR transparency score.',
+        ghostedLabel: 'Ghosting status',
+        transparencyLabel: 'Transparency score',
+        professionalismLabel: 'Professionalism score',
       },
     },
   },
