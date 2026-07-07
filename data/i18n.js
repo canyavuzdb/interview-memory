@@ -483,6 +483,100 @@ const messages = {
         yourApplicationsLabel: 'Senin başvurun',
       },
     },
+    salaryBenchmarkForm: {
+      trustPanel: {
+        dataLabel: 'Anonim Anket',
+        title: 'Maaş teklifi piyasaya uygun mu?',
+        description:
+          'Maaş aralıklarını ve teklifleri paylaşarak, şirketlerin pazarlık payını ve gerçekte ne kadar teklif ettiklerini görünür kıl.',
+        items: [
+          'Kayıt gerekmiyor',
+          'İsim veya e-posta istenmiyor',
+          'Kesin rakam değil, sadece genel bilgi toplanır',
+        ],
+      },
+      stepIndicator: {
+        progressLabel: 'Form ilerlemesi',
+        items: ['Genel bilgiler', 'Maaş detayları', 'Yan haklar'],
+      },
+      privacyRow: 'Anonim · İsim toplanmaz · Belge istenmez',
+      selectPlaceholder: 'Seçiniz',
+      booleanOptions: [
+        { value: true, label: 'Evet' },
+        { value: false, label: 'Hayır' },
+      ],
+      steps: {
+        step1: {
+          title: 'Rol ve sektör',
+          description: 'Hangi alan ve lokasyonda teklif aldın?',
+          fields: {
+            role: { label: 'Pozisyon / rol', placeholder: 'Örn. Backend Developer' },
+            sector: {
+              label: 'Sektör',
+              options: { technology: 'Teknoloji / Yazılım', finance: 'Finans', ecommerce: 'E-ticaret', consulting: 'Danışmanlık', healthcare: 'Sağlık', manufacturing: 'Üretim', education: 'Eğitim', media: 'Medya', telecom: 'Telekomünikasyon', other: 'Diğer' },
+            },
+            experienceBand: {
+              label: 'Deneyim yılın',
+              options: { '0-1': '0-1 yıl', '1-3': '1-3 yıl', '3-5': '3-5 yıl', '5-8': '5-8 yıl', '8+': '8+ yıl' },
+            },
+            city: {
+              label: 'Çalışma lokasyonu',
+              options: { istanbul: 'İstanbul', ankara: 'Ankara', izmir: 'İzmir', remote: 'Tamamen Remote', other: 'Diğer' },
+            },
+          },
+        },
+        step2: {
+          title: 'Maaş detayları',
+          description: 'Beklentin ve gerçekleşen rakamları net maaş (₺) olarak gir.',
+          fields: {
+            jobPostHadSalary: {
+              label: 'İlanda maaş belirtilmiş miydi?',
+              options: { yes_range: 'Evet, maaş aralığı vardı', yes_fixed: 'Evet, net tek rakam vardı', no: 'Hayır, belirtilmemişti' },
+            },
+            postedSalaryMin: { label: 'İlandaki taban maaş' },
+            postedSalaryMax: { label: 'İlandaki tavan maaş' },
+            expectedSalary: { label: 'Senin beklentin neydi?' },
+            offeredSalary: { label: 'Şirketin ilk teklifi ne oldu?' },
+            negotiated: { label: 'Teklif üzerinden pazarlık yapabildin mi?' },
+            afterNegotiation: { label: 'Pazarlık sonrası anlaşılan rakam (Varsa)' },
+          },
+        },
+        step3: {
+          title: 'Yan haklar ve adalet',
+          description: 'Net maaş dışındaki ek imkanları işaretle.',
+          fields: {
+            benefitsOffered: {
+              label: 'Teklif edilen yan haklar nelerdi?',
+              options: { meal_card: 'Yemek kartı', private_health: 'Özel sağlık sigortası', remote_work: 'Remote çalışma imkanı', flexible_hours: 'Esnek çalışma saatleri', stock_options: 'Hisse / Stock option', education_budget: 'Eğitim bütçesi', none: 'Hiçbiri' },
+            },
+            feltFairOffer: { label: 'Bu teklifin deneyimine ve piyasaya göre adil olduğunu düşünüyor musun?' },
+          },
+        },
+      },
+      navigation: {
+        back: 'Geri',
+        next: 'Devam et',
+        complete: 'Tamamla ve sonucu gör',
+        loading: 'Hazırlanıyor…',
+      },
+      validation: {
+        required: 'Bu alan gerekli.',
+        invalidNumber: 'Lütfen geçerli bir tutar (Örn: 45000) gir.',
+        invalidRange: 'Tavan maaş, taban maaştan büyük olmalıdır.',
+        summary: 'Devam etmeden önce işaretli alanları kontrol et.',
+      },
+      submitError: 'Önizleme hazırlanamadı. Lütfen tekrar dene.',
+      success: {
+        mockLabel: 'Örnek veri · Gerçek karşılaştırma değil',
+        title: 'Maaş karşılaştırman hazır.',
+        description: 'Bilgilerin kaydedilmedi. Gerçek sistemde bu veri piyasa ortalamalarını oluşturmak için kullanılacaktır.',
+        expectedLabel: 'Senin Beklentin',
+        offeredLabel: 'Sana Sunulan',
+        fairnessLabel: 'Adalet algısı',
+        fairYes: 'Adil hissettirdi',
+        fairNo: 'Adil değildi',
+      },
+    },
   },
   en: {
     localeName: 'English',
@@ -941,6 +1035,100 @@ const messages = {
         medianLabel: 'Illustrative median days',
         ongoingLabel: 'Processes ongoing',
         yourApplicationsLabel: 'Your applications',
+      },
+    },
+    salaryBenchmarkForm: {
+      trustPanel: {
+        dataLabel: 'Anonymous Survey',
+        title: 'Is the salary offer aligned with the market?',
+        description:
+          'Share salary ranges and offers to make negotiation margins and actual figures visible to the community.',
+        items: [
+          'No registration required',
+          'No name or email asked',
+          'No exact figures published, only aggregates',
+        ],
+      },
+      stepIndicator: {
+        progressLabel: 'Form progress',
+        items: ['Job details', 'Salary data', 'Benefits'],
+      },
+      privacyRow: 'Anonymous · No names collected · No documents required',
+      selectPlaceholder: 'Select',
+      booleanOptions: [
+        { value: true, label: 'Yes' },
+        { value: false, label: 'No' },
+      ],
+      steps: {
+        step1: {
+          title: 'Role and sector',
+          description: 'In what field and location did you receive the offer?',
+          fields: {
+            role: { label: 'Position / role', placeholder: 'e.g. Backend Developer' },
+            sector: {
+              label: 'Sector',
+              options: { technology: 'Technology / Software', finance: 'Finance', ecommerce: 'E-commerce', consulting: 'Consulting', healthcare: 'Healthcare', manufacturing: 'Manufacturing', education: 'Education', media: 'Media', telecom: 'Telecommunications', other: 'Other' },
+            },
+            experienceBand: {
+              label: 'Years of experience',
+              options: { '0-1': '0-1 years', '1-3': '1-3 years', '3-5': '3-5 years', '5-8': '5-8 years', '8+': '8+ years' },
+            },
+            city: {
+              label: 'Work location',
+              options: { istanbul: 'Istanbul', ankara: 'Ankara', izmir: 'Izmir', remote: 'Fully Remote', other: 'Other' },
+            },
+          },
+        },
+        step2: {
+          title: 'Salary data',
+          description: 'Enter your expectations and the actual figures as net salary (₺).',
+          fields: {
+            jobPostHadSalary: {
+              label: 'Did the job posting include a salary?',
+              options: { yes_range: 'Yes, it had a range', yes_fixed: 'Yes, it had a fixed number', no: 'No, it was not specified' },
+            },
+            postedSalaryMin: { label: 'Minimum posted salary' },
+            postedSalaryMax: { label: 'Maximum posted salary' },
+            expectedSalary: { label: 'What was your expectation?' },
+            offeredSalary: { label: 'What was the initial offer?' },
+            negotiated: { label: 'Were you able to negotiate the offer?' },
+            afterNegotiation: { label: 'Agreed figure after negotiation (If any)' },
+          },
+        },
+        step3: {
+          title: 'Benefits and fairness',
+          description: 'Select the perks offered in addition to the net salary.',
+          fields: {
+            benefitsOffered: {
+              label: 'What benefits were offered?',
+              options: { meal_card: 'Meal card', private_health: 'Private health insurance', remote_work: 'Remote work option', flexible_hours: 'Flexible hours', stock_options: 'Stock options', education_budget: 'Education budget', none: 'None' },
+            },
+            feltFairOffer: { label: 'Do you feel this offer was fair based on your experience and the market?' },
+          },
+        },
+      },
+      navigation: {
+        back: 'Back',
+        next: 'Continue',
+        complete: 'Complete and view result',
+        loading: 'Preparing…',
+      },
+      validation: {
+        required: 'This field is required.',
+        invalidNumber: 'Please enter a valid amount (e.g. 45000).',
+        invalidRange: 'Maximum salary must be greater than minimum salary.',
+        summary: 'Check the highlighted fields before continuing.',
+      },
+      submitError: 'The preview could not be prepared. Please try again.',
+      success: {
+        mockLabel: 'Sample data · Not a real comparison',
+        title: 'Your salary benchmark is ready.',
+        description: 'Your information was not saved. In the real system, this data will be used to generate market averages.',
+        expectedLabel: 'Your Expectation',
+        offeredLabel: 'Offered to You',
+        fairnessLabel: 'Perceived fairness',
+        fairYes: 'Felt fair',
+        fairNo: 'Did not feel fair',
       },
     },
   },
