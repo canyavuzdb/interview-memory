@@ -15,8 +15,9 @@ export default function SurveyNavigation({
         <button
           type="button"
           onClick={onBack}
-          className="h-12 border border-[var(--line-strong)] bg-canvas px-6 text-sm font-semibold text-ink transition hover:bg-[var(--surface-hover)]"
+          className="inline-flex h-12 items-center justify-center gap-2 border border-[var(--line-strong)] bg-canvas px-6 text-sm font-semibold text-ink transition-[border-color,background-color,color] duration-200 hover:border-[var(--line-emphasis)] hover:bg-[var(--surface-hover)]"
         >
+          <ArrowLeft size={16} strokeWidth={1.8} aria-hidden="true" />
           {labels.back}
         </button>
       ) : <span />}
@@ -27,7 +28,7 @@ export default function SurveyNavigation({
             type="button"
             onClick={onSkip}
             disabled={isSubmitting}
-            className="h-12 border border-[var(--line-strong)] bg-canvas px-5 text-sm font-semibold text-ink transition hover:bg-[var(--surface-hover)] disabled:cursor-wait disabled:opacity-60"
+            className="h-12 border border-[var(--line-strong)] bg-canvas px-5 text-sm font-semibold text-ink transition-[border-color,background-color,color] duration-200 hover:border-[var(--line-emphasis)] hover:bg-[var(--surface-hover)] disabled:cursor-wait disabled:opacity-60"
           >
             {labels.skip}
           </button>
@@ -36,11 +37,13 @@ export default function SurveyNavigation({
           type="button"
           onClick={onNext}
           disabled={isSubmitting}
-          className="h-12 min-w-36 bg-ink px-6 text-sm font-semibold text-surface transition hover:bg-accentDark disabled:cursor-wait disabled:opacity-60"
+          className="inline-flex h-12 min-w-36 items-center justify-center gap-2 bg-ink px-6 text-sm font-semibold text-surface transition-[background-color,color] duration-200 hover:bg-accentDark disabled:cursor-wait disabled:opacity-60"
         >
           {isSubmitting ? labels.loading : isFinal ? labels.complete : labels.next}
+          {!isSubmitting && <ArrowRight size={16} strokeWidth={1.8} aria-hidden="true" />}
         </button>
       </div>
     </div>
   )
 }
+import { ArrowLeft, ArrowRight } from 'lucide-react'

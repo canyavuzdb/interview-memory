@@ -1,13 +1,10 @@
-import ChoiceGroup from '@/components/application-benchmark/ChoiceGroup'
-import FieldError from '@/components/application-benchmark/FieldError'
+import SurveyChoiceGroup from '@/components/survey-flow/SurveyChoiceGroup'
+import { SurveyField, SurveySelect, surveyControlClass } from '@/components/survey-flow/SurveyField'
 import {
   GHOSTED_AFTER_STAGES,
   IRRELEVANT_QUESTION_TYPES,
   RATING_SCALE,
 } from '@/lib/constants/hrProcess'
-
-const fieldClass =
-  'mt-2 w-full border border-[var(--line-strong)] bg-canvas px-4 py-3 text-sm text-ink outline-none transition focus:border-accent'
 
 export default function StepProcessReview({
   booleanOptions,
@@ -20,7 +17,7 @@ export default function StepProcessReview({
 }) {
   return (
     <div className="space-y-7">
-      <ChoiceGroup
+      <SurveyChoiceGroup
         name="promised-timeline"
         label={copy.fields.promisedTimeline.label}
         value={state.promisedTimeline}
@@ -30,10 +27,7 @@ export default function StepProcessReview({
       />
 
       {state.promisedTimeline === 'yes' && (
-        <div>
-          <label htmlFor="hr-promised-days" className="text-sm font-semibold text-ink">
-            {copy.fields.promisedDays.label}
-          </label>
+        <SurveyField id="hr-promised-days" label={copy.fields.promisedDays.label} error={errors.promisedDays}>
           <input
             id="hr-promised-days"
             type="number"
@@ -43,13 +37,12 @@ export default function StepProcessReview({
             onChange={(event) => setField('promisedDays', event.target.value)}
             placeholder="0"
             aria-invalid={Boolean(errors.promisedDays)}
-            className={fieldClass}
+            className={surveyControlClass}
           />
-          <FieldError>{errors.promisedDays}</FieldError>
-        </div>
+        </SurveyField>
       )}
 
-      <ChoiceGroup
+      <SurveyChoiceGroup
         name="was-ghosted"
         label={copy.fields.wasGhosted.label}
         value={state.wasGhosted}
@@ -59,10 +52,7 @@ export default function StepProcessReview({
       />
 
       {state.wasGhosted === false && (
-        <div>
-          <label htmlFor="hr-actual-days" className="text-sm font-semibold text-ink">
-            {copy.fields.actualDays.label}
-          </label>
+        <SurveyField id="hr-actual-days" label={copy.fields.actualDays.label} error={errors.actualDays}>
           <input
             id="hr-actual-days"
             type="number"
@@ -72,10 +62,9 @@ export default function StepProcessReview({
             onChange={(event) => setField('actualDays', event.target.value)}
             placeholder="0"
             aria-invalid={Boolean(errors.actualDays)}
-            className={fieldClass}
+            className={surveyControlClass}
           />
-          <FieldError>{errors.actualDays}</FieldError>
-        </div>
+        </SurveyField>
       )}
 
       {state.wasGhosted === false && warnings.length > 0 && (
@@ -85,7 +74,7 @@ export default function StepProcessReview({
       )}
 
       {state.wasGhosted === true && (
-        <ChoiceGroup
+        <SurveyChoiceGroup
           name="ghosted-after-stage"
           label={copy.fields.ghostedAfterStage.label}
           value={state.ghostedAfterStage}
@@ -98,15 +87,11 @@ export default function StepProcessReview({
         />
       )}
 
-      <div>
-        <label htmlFor="hr-interviewer-prepared" className="text-sm font-semibold text-ink">
-          {copy.fields.interviewerPrepared.label}
-        </label>
-        <select
+      <SurveyField id="hr-interviewer-prepared" label={copy.fields.interviewerPrepared.label}>
+        <SurveySelect
           id="hr-interviewer-prepared"
           value={state.interviewerPrepared}
           onChange={(event) => setField('interviewerPrepared', event.target.value)}
-          className={fieldClass}
         >
           <option value="">{selectPlaceholder}</option>
           {RATING_SCALE.map((n) => (
@@ -114,10 +99,10 @@ export default function StepProcessReview({
               {n}
             </option>
           ))}
-        </select>
-      </div>
+        </SurveySelect>
+      </SurveyField>
 
-      <ChoiceGroup
+      <SurveyChoiceGroup
         name="was-asked-irrelevant"
         label={copy.fields.wasAskedIrrelevant.label}
         value={state.wasAskedIrrelevant}
@@ -135,9 +120,9 @@ export default function StepProcessReview({
             {IRRELEVANT_QUESTION_TYPES.map((type) => {
               const checked = state.irrelevantTypes.includes(type)
               return (
-                <label
-                  key={type}
-                  className={`cursor-pointer border px-4 py-3 text-center text-sm font-medium transition ${checked ? 'border-accent bg-[var(--accent-soft)] text-accentDark' : 'border-[var(--line-strong)] bg-canvas text-muted hover:border-[var(--accent-border)] hover:text-ink'}`}
+              <label
+                key={type}
+                className={`cursor-pointer border px-4 py-3 text-center text-sm font-medium leading-5 transition-[border-color,background-color,color,box-shadow] duration-200 focus-within:border-accent focus-within:ring-4 focus-within:ring-[var(--accent-ring)] ${checked ? 'border-accent bg-[var(--accent-soft)] text-accentDark' : 'border-[var(--line-strong)] bg-canvas text-muted hover:border-[var(--line-emphasis)] hover:bg-surface hover:text-ink'}`}
                 >
                   <input
                     type="checkbox"

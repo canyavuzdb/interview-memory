@@ -1,46 +1,33 @@
-import ChoiceGroup from '@/components/application-benchmark/ChoiceGroup'
-import FieldError from '@/components/application-benchmark/FieldError'
+import SurveyChoiceGroup from '@/components/survey-flow/SurveyChoiceGroup'
+import { SurveyField, surveyControlClass } from '@/components/survey-flow/SurveyField'
 import { PROCESS_YEARS } from '@/lib/constants/hrProcess'
-
-const fieldClass =
-  'mt-2 w-full border border-[var(--line-strong)] bg-canvas px-4 py-3 text-sm text-ink outline-none transition focus:border-accent'
 
 export default function StepCompanyInfo({ copy, errors, setField, state }) {
   return (
     <div className="space-y-6">
-      <div>
-        <label htmlFor="hr-company-name" className="text-sm font-semibold text-ink">
-          {copy.fields.companyName.label}
-        </label>
+      <SurveyField id="hr-company-name" label={copy.fields.companyName.label} error={errors.companyName}>
         <input
           id="hr-company-name"
           value={state.companyName}
           onChange={(event) => setField('companyName', event.target.value)}
           placeholder={copy.fields.companyName.placeholder}
           aria-invalid={Boolean(errors.companyName)}
-          aria-describedby={errors.companyName ? 'hr-company-name-error' : undefined}
-          className={fieldClass}
+          className={surveyControlClass}
         />
-        <FieldError id="hr-company-name-error">{errors.companyName}</FieldError>
-      </div>
+      </SurveyField>
 
-      <div>
-        <label htmlFor="hr-applied-role" className="text-sm font-semibold text-ink">
-          {copy.fields.appliedRole.label}
-        </label>
+      <SurveyField id="hr-applied-role" label={copy.fields.appliedRole.label} error={errors.appliedRole}>
         <input
           id="hr-applied-role"
           value={state.appliedRole}
           onChange={(event) => setField('appliedRole', event.target.value)}
           placeholder={copy.fields.appliedRole.placeholder}
           aria-invalid={Boolean(errors.appliedRole)}
-          aria-describedby={errors.appliedRole ? 'hr-applied-role-error' : undefined}
-          className={fieldClass}
+          className={surveyControlClass}
         />
-        <FieldError id="hr-applied-role-error">{errors.appliedRole}</FieldError>
-      </div>
+      </SurveyField>
 
-      <ChoiceGroup
+      <SurveyChoiceGroup
         name="process-year"
         label={copy.fields.processYear.label}
         value={state.processYear}

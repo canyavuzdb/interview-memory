@@ -1,5 +1,5 @@
-import ChoiceGroup from '@/components/application-benchmark/ChoiceGroup'
-import FieldError from '@/components/application-benchmark/FieldError'
+import SurveyChoiceGroup from '@/components/survey-flow/SurveyChoiceGroup'
+import { SurveyField, surveyControlClass } from '@/components/survey-flow/SurveyField'
 
 export default function StepOptional({ copy, errors, setField, state }) {
   return (
@@ -8,7 +8,7 @@ export default function StepOptional({ copy, errors, setField, state }) {
         {copy.optionalNote}
       </div>
 
-      <ChoiceGroup
+      <SurveyChoiceGroup
         name="had-referral"
         label={copy.fields.hadReferral.label}
         value={state.hadReferral}
@@ -16,7 +16,7 @@ export default function StepOptional({ copy, errors, setField, state }) {
         options={copy.booleanOptions}
       />
 
-      <ChoiceGroup
+      <SurveyChoiceGroup
         name="shared-portfolio"
         label={copy.fields.sharedPortfolio.label}
         value={state.sharedPortfolio}
@@ -24,15 +24,12 @@ export default function StepOptional({ copy, errors, setField, state }) {
         options={copy.booleanOptions}
       />
 
-      <div>
-        <div className="flex items-baseline justify-between gap-3">
-          <label htmlFor="free-note" className="text-sm font-semibold text-ink">
-            {copy.fields.freeNote.label}
-          </label>
-          <span className="font-mono text-[9px] font-bold text-muted">
-            {state.freeNote.length}/300
-          </span>
-        </div>
+      <SurveyField
+        id="free-note"
+        label={copy.fields.freeNote.label}
+        error={errors.freeNote}
+        labelAccessory={<span className="font-mono text-[9px] font-bold text-muted">{state.freeNote.length}/300</span>}
+      >
         <textarea
           id="free-note"
           rows="5"
@@ -41,10 +38,9 @@ export default function StepOptional({ copy, errors, setField, state }) {
           onChange={(event) => setField('freeNote', event.target.value)}
           placeholder={copy.fields.freeNote.placeholder}
           aria-invalid={Boolean(errors.freeNote)}
-          className="mt-2 w-full resize-none border border-[var(--line-strong)] bg-canvas px-4 py-3 text-sm leading-6 text-ink outline-none transition focus:border-accent"
+          className={`${surveyControlClass} resize-none leading-6`}
         />
-        <FieldError>{errors.freeNote}</FieldError>
-      </div>
+      </SurveyField>
     </div>
   )
 }
