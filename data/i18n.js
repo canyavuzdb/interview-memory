@@ -32,8 +32,6 @@ const messages = {
       backHome: 'Ana sayfaya dön',
       themeToggle: 'Açık ve koyu tema arasında geçiş yap',
       themeTitle: 'Temayı değiştir',
-      surveyContext: 'Anonim süreç kaydı',
-      threeSteps: '3 kısa adım',
     },
     metadata: {
       home: {
@@ -412,7 +410,7 @@ const messages = {
         dataLabel: 'Veri dosyası · Örnek veri',
         title: 'Sürecin gerçekten bu kadar mı sürüyor?',
         description:
-          'Yaklaşık 30 saniyede iş arama sürecini tanımla ve temsili topluluk görünümüyle karşılaştır.',
+          'Yaklaşık 2 dakikada iş arama sürecini tanımla ve temsili topluluk görünümüyle karşılaştır.',
         items: [
           'Kayıt gerekmiyor',
           'İsim veya e-posta istenmiyor',
@@ -421,7 +419,7 @@ const messages = {
       },
       stepIndicator: {
         progressLabel: 'Form ilerlemesi',
-        items: ['Kim ve ne durumda', 'Sayılar ve maaş', 'Ek bilgi'],
+        items: ['Profil ve hedef', 'Süreç ve sayılar', 'Ek bilgi'],
       },
       privacyRow: 'Anonim · İsim toplanmaz · Belge istenmez',
       selectPlaceholder: 'Seçiniz',
@@ -431,8 +429,8 @@ const messages = {
       ],
       steps: {
         step1: {
-          title: 'Kim ve ne durumda',
-          description: 'İş arama sürecini anlamlandırmak için yalnızca gerekli bağlamı paylaş.',
+          title: 'Profil ve hedef',
+          description: 'Seni yalnızca benzer adaylarla karşılaştırabilmemiz için temel bağlamı paylaş.',
           selectPlaceholder: 'Seçiniz',
           booleanOptions: [
             { value: true, label: 'Evet' },
@@ -440,9 +438,38 @@ const messages = {
           ],
           fields: {
             role: { label: 'Pozisyon / rol', placeholder: 'Örn. Frontend Developer' },
+            sector: {
+              label: 'Hedef sektör',
+              options: {
+                technology: 'Teknoloji', finance: 'Finans', ecommerce: 'E-ticaret',
+                consulting: 'Danışmanlık', healthcare: 'Sağlık', manufacturing: 'Üretim',
+                education: 'Eğitim', media: 'Medya', telecom: 'Telekom', other: 'Diğer',
+              },
+            },
+            roleLevel: {
+              label: 'Pozisyon seviyesi',
+              options: {
+                intern: 'Stajyer', junior: 'Junior', mid: 'Mid-level',
+                senior: 'Senior', lead_manager: 'Lead / Yönetici',
+              },
+            },
             experienceBand: {
               label: 'Deneyim yılın',
               options: { '0-1': '0-1 yıl', '1-3': '1-3 yıl', '3-5': '3-5 yıl', '5-8': '5-8 yıl', '8+': '8+ yıl' },
+            },
+            targetRegion: {
+              label: 'Hedef pazar / bölge',
+              options: {
+                turkiye: 'Türkiye', europe: 'Avrupa Birliği', uk_ireland: 'Birleşik Krallık / İrlanda',
+                mena: 'Orta Doğu / Kuzey Afrika', north_america: 'Kuzey Amerika', other: 'Diğer',
+              },
+            },
+            employmentType: {
+              label: 'Çalışma türü',
+              options: {
+                full_time: 'Tam zamanlı', part_time: 'Yarı zamanlı',
+                freelance: 'Freelance / Sözleşmeli', internship: 'Staj',
+              },
             },
             workMode: {
               label: 'Hedef çalışma modeli',
@@ -463,18 +490,20 @@ const messages = {
           },
         },
         step2: {
-          title: 'Sayılar ve maaş',
-          description: 'Başvurudan teklife kadar geldiğin noktayı sayılarla özetle.',
+          title: 'Süreç ve sayılar',
+          description: 'Başvurudan teklife uzanan yolu şirket sayılarıyla özetle.',
           countFields: [
             { name: 'applicationsCount', label: 'Kaç başvuru yaptın?' },
             { name: 'responsesCount', label: 'Kaç dönüş aldın?' },
-            { name: 'interviewsCount', label: 'Kaç görüşmeye girdin?' },
+            { name: 'hrInterviewsCount', label: 'Kaç şirketle HR görüşmesi yaptın?' },
+            { name: 'technicalInterviewsCount', label: 'Kaç şirketle teknik görüşme yaptın?' },
             { name: 'offersCount', label: 'Kaç teklif aldın?' },
           ],
           salaryTitle: 'Maaş karşılaştırması',
           salaryNote: 'Aylık maaş bilgisini kesin rakam yerine yaklaşık bir bant olarak paylaşabilirsin.',
           optional: 'Opsiyonel',
           preferNotToSay: 'Boş bırak / belirtmek istemiyorum',
+          salaryCurrency: { label: 'Para birimi' },
           salaryFields: [
             { name: 'currentSalaryBand', label: 'Mevcut veya son maaş bandın' },
             { name: 'expectedSalaryBand', label: 'Beklediğin maaş bandı' },
@@ -510,6 +539,7 @@ const messages = {
         required: 'Bu alan gerekli.',
         endDateRequired: 'Süreç sonuçlandıysa bitiş ayı gerekli.',
         nonNegativeNumber: '0 veya daha büyük tam sayı gir.',
+        currencyRequired: 'Maaş bandı paylaşıyorsan para birimini seç.',
         noteTooLong: 'Not en fazla 300 karakter olabilir.',
         countOrder: 'Sayıların doğal sırası farklı görünüyor. Sıra dışı bir sürecin varsa devam edebilirsin.',
         summary: 'Devam etmeden önce işaretli alanları kontrol et.',
@@ -520,9 +550,58 @@ const messages = {
         title: 'İş arama süreci önizlemen hazır.',
         description:
           'Bilgilerin kaydedilmedi. Gerçek topluluk verisi oluştuğunda benzer profillerle karşılaştırman burada gösterilecek.',
-        medianLabel: 'Temsili medyan gün',
-        ongoingLabel: 'Devam eden süreç',
+        yourDurationLabel: 'Senin arama süren',
+        communityDurationLabel: 'Temsili topluluk medyanı',
         yourApplicationsLabel: 'Senin başvurun',
+        communityApplicationsLabel: 'Temsili başvuru medyanı',
+        conversionTitle: 'Senin başvuru akışın',
+        responseLabel: 'Dönüş',
+        hrLabel: 'HR',
+        technicalLabel: 'Teknik',
+        offerLabel: 'Teklif',
+        dayUnit: 'gün',
+        cohortLabel: 'Karşılaştırma grubu',
+      },
+      explainer: {
+        eyebrow: '04 / Anketin amacı',
+        title: 'İş arama eforunu ölçülebilir hale getiriyoruz.',
+        intro:
+          'Bu anket yalnızca kaç başvuru yaptığını sormaz. İş bulmak için harcadığın zamanı, başvuru hunisindeki daralmayı ve teklif alma eforunu benzer adayların süreçleriyle karşılaştırılabilir hale getirir.',
+        whyTitle: 'Neden iş arama sürecini karşılaştırmalısın?',
+        reasons: [
+          {
+            title: 'Süreci kişisel bir başarısızlık gibi görmemek için',
+            description: 'Benzer rol ve deneyimdeki adayların kaç başvuru yaptığını görmek, yaşadığın sessizliği gerçek piyasa bağlamına yerleştirir.',
+          },
+          {
+            title: 'Gerçekçi bir zaman çizelgesi kurmak için',
+            description: 'İlk başvurudan teklife kadar geçen medyan süre, iş değişikliği planını daha sağlam bir veriyle yapmana yardımcı olur.',
+          },
+          {
+            title: 'Başvurunun nerede daraldığını görmek için',
+            description: 'Dönüş, HR, teknik görüşme ve teklif oranları hangi aşamada zorlandığını görünür kılar.',
+          },
+        ],
+        measurementTitle: 'Bu ankette neyi ölçüyoruz?',
+        measurementDescription:
+          'Sonuçlar rol, sektör, deneyim, hedef bölge ve çalışma biçimi gibi bağlamlarla gruplanır; kişisel bilgi veya belge ölçümün parçası değildir.',
+        metrics: [
+          'Teklif başına başvuru',
+          'İş arama süresi',
+          'Başvurudan dönüşe geçiş',
+          'HR ve teknik görüşme oranı',
+          'Teklif dönüşümü',
+          'Beklenti ve teklif bandı',
+        ],
+        howTitle: 'Nasıl çalışır?',
+        steps: [
+          { title: 'Sürecini tanımla', description: 'Rolünü ve temel başvuru sayılarını yaklaşık 2 dakikada paylaş.' },
+          { title: 'Benzer profille eşleş', description: 'Sonucun aynı bağlamdaki temsili aday verileriyle karşılaştırılır.' },
+          { title: 'Daralmayı gör', description: 'Süreni, eforunu ve başvuru hunini tek bir sonuçta incele.' },
+        ],
+        transparencyTitle: 'Şu an temsili önizleme',
+        transparencyText:
+          'Bu prototipte yanıtların kaydedilmez ve topluluk karşılaştırması örnek değerlerle hazırlanır. Gerçek veri altyapısı devreye alındığında yalnızca yeterli örneklem oluşan gruplar yayınlanacaktır.',
       },
     },
     hrProcessForm: {
@@ -626,6 +705,47 @@ const messages = {
         transparencyLabel: 'Şeffaflık skoru',
         professionalismLabel: 'Profesyonellik skoru',
       },
+      explainer: {
+        eyebrow: '04 / Anketin amacı',
+        title: 'Şirket süreçlerini tekil şikâyetlerden çıkarıp ortak sinyale dönüştürüyoruz.',
+        intro:
+          'Bu anket, bir şirketle yaşanan başvuru veya mülakat sürecinin nasıl ilerlediğini anonim bir süreç kaydı olarak toplar. Amaç tek bir kişiyi ya da tek bir olayı büyütmek değil; tekrar eden HR davranışlarını görünür kılmaktır.',
+        whyTitle: 'Neden şirket deneyimini paylaşmalısın?',
+        reasons: [
+          {
+            title: 'Söz verilenle gerçekten yaşananı ayırmak için',
+            description: '“Döneceğiz” denilen sürenin tutulup tutulmadığı, aday deneyiminin en net ölçülebilen sinyallerinden biridir.',
+          },
+          {
+            title: 'Ghosting ve sessizliği görünür kılmak için',
+            description: 'Bir adayın yanıtsız kalması kişisel bir belirsizliktir; aynı davranış tekrarlandığında şirketin süreç kalitesine dair veri olur.',
+          },
+          {
+            title: 'Feedback ve profesyonellik standardını ölçmek için',
+            description: 'Elenme sebebi, görüşmeci hazırlığı ve uygunsuz soru sinyalleri işe alım sürecinin aday tarafındaki gerçek kalitesini gösterir.',
+          },
+        ],
+        measurementTitle: 'Bu ankette neyi ölçüyoruz?',
+        measurementDescription:
+          'Yanıtlar şirket, rol ve süreç yılı bağlamında değerlendirilir; kişi isimleri, özel belgeler ve tanımlayıcı detaylar ölçümün parçası değildir.',
+        metrics: [
+          'Söz verilen dönüş süresi',
+          'Gerçekleşen dönüş süresi',
+          'Ghosting aşaması',
+          'Feedback kalitesi',
+          'HR profesyonelliği',
+          'Süreç tavsiye skoru',
+        ],
+        howTitle: 'Nasıl çalışır?',
+        steps: [
+          { title: 'Süreci konumlandır', description: 'Şirket, rol ve yıl bilgisini paylaşarak deneyimi doğru bağlama yerleştir.' },
+          { title: 'Söz ve gerçeği karşılaştır', description: 'Vaat edilen dönüş süresiyle gerçekten yaşanan akışı yan yana ölç.' },
+          { title: 'Sinyali güçlendir', description: 'Feedback, ghosting ve profesyonellik verisi topluluk skoruna dönüşür.' },
+        ],
+        transparencyTitle: 'Moderasyon ve örneklem eşiği',
+        transparencyText:
+          'Bu prototipte yanıtların kaydedilmez. Gerçek veri katmanında şirket sinyalleri moderasyon ve yeterli örneklem eşiği olmadan herkese açık gösterilmez.',
+      },
     },
   },
   en: {
@@ -636,8 +756,6 @@ const messages = {
       backHome: 'Back to homepage',
       themeToggle: 'Switch between light and dark themes',
       themeTitle: 'Change theme',
-      surveyContext: 'Anonymous process record',
-      threeSteps: '3 short steps',
     },
     metadata: {
       home: {
@@ -1016,7 +1134,7 @@ const messages = {
         dataLabel: 'Data file · Sample data',
         title: 'Does the process really take this long?',
         description:
-          'Describe your job search in about 30 seconds and compare it with an illustrative community view.',
+          'Describe your job search in about 2 minutes and compare it with an illustrative community view.',
         items: [
           'No account required',
           'No name or email requested',
@@ -1025,7 +1143,7 @@ const messages = {
       },
       stepIndicator: {
         progressLabel: 'Form progress',
-        items: ['Context and status', 'Numbers and salary', 'Additional details'],
+        items: ['Profile and target', 'Journey and numbers', 'Additional details'],
       },
       privacyRow: 'Anonymous · No names · No documents',
       selectPlaceholder: 'Select',
@@ -1035,8 +1153,8 @@ const messages = {
       ],
       steps: {
         step1: {
-          title: 'Context and status',
-          description: 'Share only the context needed to understand your job-search timeline.',
+          title: 'Profile and target',
+          description: 'Share the basic context needed to compare you only with similar candidates.',
           selectPlaceholder: 'Select',
           booleanOptions: [
             { value: true, label: 'Yes' },
@@ -1044,9 +1162,38 @@ const messages = {
           ],
           fields: {
             role: { label: 'Position / role', placeholder: 'e.g. Frontend Developer' },
+            sector: {
+              label: 'Target industry',
+              options: {
+                technology: 'Technology', finance: 'Finance', ecommerce: 'E-commerce',
+                consulting: 'Consulting', healthcare: 'Healthcare', manufacturing: 'Manufacturing',
+                education: 'Education', media: 'Media', telecom: 'Telecom', other: 'Other',
+              },
+            },
+            roleLevel: {
+              label: 'Position level',
+              options: {
+                intern: 'Intern', junior: 'Junior', mid: 'Mid-level',
+                senior: 'Senior', lead_manager: 'Lead / Manager',
+              },
+            },
             experienceBand: {
               label: 'Years of experience',
               options: { '0-1': '0-1 years', '1-3': '1-3 years', '3-5': '3-5 years', '5-8': '5-8 years', '8+': '8+ years' },
+            },
+            targetRegion: {
+              label: 'Target market / region',
+              options: {
+                turkiye: 'Türkiye', europe: 'European Union', uk_ireland: 'United Kingdom / Ireland',
+                mena: 'Middle East / North Africa', north_america: 'North America', other: 'Other',
+              },
+            },
+            employmentType: {
+              label: 'Employment type',
+              options: {
+                full_time: 'Full-time', part_time: 'Part-time',
+                freelance: 'Freelance / Contract', internship: 'Internship',
+              },
             },
             workMode: {
               label: 'Target work model',
@@ -1067,18 +1214,20 @@ const messages = {
           },
         },
         step2: {
-          title: 'Numbers and salary',
-          description: 'Summarize your path from applications to offers with a few numbers.',
+          title: 'Journey and numbers',
+          description: 'Summarize the path from applications to offers using company counts.',
           countFields: [
             { name: 'applicationsCount', label: 'How many applications did you submit?' },
             { name: 'responsesCount', label: 'How many responses did you receive?' },
-            { name: 'interviewsCount', label: 'How many interviews did you attend?' },
+            { name: 'hrInterviewsCount', label: 'How many companies invited you to an HR interview?' },
+            { name: 'technicalInterviewsCount', label: 'How many companies invited you to a technical interview?' },
             { name: 'offersCount', label: 'How many offers did you receive?' },
           ],
           salaryTitle: 'Salary comparison',
           salaryNote: 'Share an approximate monthly range instead of an exact salary.',
           optional: 'Optional',
           preferNotToSay: 'Leave blank / prefer not to say',
+          salaryCurrency: { label: 'Currency' },
           salaryFields: [
             { name: 'currentSalaryBand', label: 'Current or most recent salary range' },
             { name: 'expectedSalaryBand', label: 'Expected salary range' },
@@ -1114,6 +1263,7 @@ const messages = {
         required: 'This field is required.',
         endDateRequired: 'An end month is required when the process has ended.',
         nonNegativeNumber: 'Enter a whole number equal to or greater than 0.',
+        currencyRequired: 'Select a currency when sharing a salary range.',
         noteTooLong: 'The note must be 300 characters or fewer.',
         countOrder: 'These counts follow an unusual order. You can continue if this reflects your process.',
         summary: 'Check the highlighted fields before continuing.',
@@ -1124,9 +1274,58 @@ const messages = {
         title: 'Your job-search preview is ready.',
         description:
           'Your information was not saved. Once real community data is available, your comparison with similar profiles will appear here.',
-        medianLabel: 'Illustrative median days',
-        ongoingLabel: 'Processes ongoing',
+        yourDurationLabel: 'Your search duration',
+        communityDurationLabel: 'Illustrative community median',
         yourApplicationsLabel: 'Your applications',
+        communityApplicationsLabel: 'Illustrative application median',
+        conversionTitle: 'Your application flow',
+        responseLabel: 'Responses',
+        hrLabel: 'HR',
+        technicalLabel: 'Technical',
+        offerLabel: 'Offers',
+        dayUnit: 'days',
+        cohortLabel: 'Comparison cohort',
+      },
+      explainer: {
+        eyebrow: '04 / Survey purpose',
+        title: 'We turn job-search effort into something measurable.',
+        intro:
+          'This survey does more than count applications. It makes the time you spend searching, the narrowing inside your application funnel, and the effort required to reach an offer comparable with similar candidates.',
+        whyTitle: 'Why compare your job-search journey?',
+        reasons: [
+          {
+            title: 'To stop treating the process as a personal failure',
+            description: 'Seeing how many applications similar candidates submit puts prolonged silence into real market context.',
+          },
+          {
+            title: 'To build a realistic timeline',
+            description: 'The median time from first application to offer helps you plan a job change using stronger evidence.',
+          },
+          {
+            title: 'To see where your applications narrow',
+            description: 'Response, HR, technical interview, and offer rates reveal the stage where the process becomes difficult.',
+          },
+        ],
+        measurementTitle: 'What does this survey measure?',
+        measurementDescription:
+          'Results are grouped by role, industry, experience, target region, and work model. Personal information and documents are not part of the measurement.',
+        metrics: [
+          'Applications per offer',
+          'Job-search duration',
+          'Application-to-response rate',
+          'HR and technical interview rate',
+          'Offer conversion',
+          'Expectation and offer range',
+        ],
+        howTitle: 'How does it work?',
+        steps: [
+          { title: 'Describe your journey', description: 'Share your role and core application numbers in about 2 minutes.' },
+          { title: 'Match with similar profiles', description: 'Your result is compared with illustrative candidates in the same context.' },
+          { title: 'See the funnel', description: 'Review your timeline, effort, and application funnel in one result.' },
+        ],
+        transparencyTitle: 'Illustrative preview for now',
+        transparencyText:
+          'This prototype does not save responses and uses sample values for community comparisons. Once the real data layer is available, only groups with a sufficient sample size will be published.',
       },
     },
     hrProcessForm: {
@@ -1229,6 +1428,47 @@ const messages = {
         ghostedLabel: 'Ghosting status',
         transparencyLabel: 'Transparency score',
         professionalismLabel: 'Professionalism score',
+      },
+      explainer: {
+        eyebrow: '04 / Survey purpose',
+        title: 'We turn company processes from isolated complaints into shared signals.',
+        intro:
+          'This survey captures how an application or interview process with a company actually unfolded. The goal is not to amplify a single incident, but to make repeated HR behaviors visible through anonymous process records.',
+        whyTitle: 'Why share a company experience?',
+        reasons: [
+          {
+            title: 'To separate what was promised from what happened',
+            description: 'Whether a promised response timeline was kept is one of the clearest signals of candidate experience.',
+          },
+          {
+            title: 'To make ghosting and silence visible',
+            description: 'One unanswered candidate is uncertainty; repeated silence becomes a signal about the quality of a hiring process.',
+          },
+          {
+            title: 'To measure feedback and professionalism',
+            description: 'Rejection reasons, interviewer preparation, and inappropriate-question signals show the real candidate-side quality of the process.',
+          },
+        ],
+        measurementTitle: 'What does this survey measure?',
+        measurementDescription:
+          'Responses are interpreted through company, role, and process-year context. Personal names, private documents, and identifying details are not part of the measurement.',
+        metrics: [
+          'Promised response timeline',
+          'Actual response timeline',
+          'Ghosting stage',
+          'Feedback quality',
+          'HR professionalism',
+          'Process recommendation score',
+        ],
+        howTitle: 'How does it work?',
+        steps: [
+          { title: 'Place the process in context', description: 'Share the company, role, and year so the experience can be read in the right frame.' },
+          { title: 'Compare promise and reality', description: 'Measure the promised response timeline against what actually happened.' },
+          { title: 'Strengthen the signal', description: 'Feedback, ghosting, and professionalism data become part of the community signal.' },
+        ],
+        transparencyTitle: 'Moderation and sample threshold',
+        transparencyText:
+          'This prototype does not save responses. In the real data layer, company signals will not be published publicly without moderation and a sufficient sample size.',
       },
     },
   },

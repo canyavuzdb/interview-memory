@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import HRProcessWizard from '@/components/hr-process/HRProcessWizard'
 import SurveyPageHeader from '@/components/survey-flow/SurveyPageHeader'
+import SurveyPurposeSection from '@/components/survey-flow/SurveyPurposeSection'
 import { getMessages, isSupportedLocale } from '@/data/i18n'
 
 export async function generateMetadata({ params }) {
@@ -29,6 +30,7 @@ export default async function CompanyExperienceSurveyPage({ params }) {
           copy={messages.hrProcessForm}
           sampleSize={messages.home.signal.sampleSize}
         />
+        <SurveyPurposeSection copy={messages.hrProcessForm.explainer} />
       </div>
     </main>
   )
