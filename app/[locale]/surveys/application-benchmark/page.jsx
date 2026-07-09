@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import ApplicationBenchmarkWizard from '@/components/application-benchmark/ApplicationBenchmarkWizard'
 import SurveyPageHeader from '@/components/survey-flow/SurveyPageHeader'
+import SurveyPurposeSection from '@/components/survey-flow/SurveyPurposeSection'
 import { getMessages, isSupportedLocale } from '@/data/i18n'
 
 export async function generateMetadata({ params }) {
@@ -31,6 +32,7 @@ export default async function ApplicationBenchmarkSurveyPage({ params }) {
           copy={messages.benchmarkForm}
           sampleSize={messages.home.signal.sampleSize}
         />
+        <SurveyPurposeSection copy={messages.benchmarkForm.explainer} />
       </div>
     </main>
   )

@@ -5,7 +5,7 @@ const icons = [UserRoundX, EyeOff, ShieldCheck]
 
 export default function SurveyIntroPanel({ copy, sampleSize }) {
   return (
-    <aside className="border border-[var(--line-strong)] bg-surface p-6 shadow-[var(--shadow-card)] lg:sticky lg:top-24 lg:p-8">
+    <aside className="py-4 lg:sticky lg:top-24 lg:py-8">
       <SampleDataBadge label={copy.dataLabel} value={sampleSize} />
       <h1 className="mt-7 max-w-xl text-4xl font-semibold tracking-[-0.05em] text-ink sm:text-5xl lg:text-6xl">
         {copy.title}

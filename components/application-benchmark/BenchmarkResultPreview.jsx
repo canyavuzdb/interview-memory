@@ -1,6 +1,46 @@
 import { Check } from 'lucide-react'
 
+function monthIndex(value) {
+  if (!value) return null
+  const [year, month] = value.split('-').map(Number)
+  if (!year || !month) return null
+  return year * 12 + month
+}
+
+function getDurationDays(state) {
+  const start = monthIndex(state.searchStartedAt)
+  const now = new Date()
+  const currentMonth = now.getFullYear() * 12 + now.getMonth() + 1
+  const end = monthIndex(state.searchEndedAt) ?? currentMonth
+
+  if (start === null || end < start) return '—'
+  return Math.max(1, end - start) * 30
+}
+
+function Metric({ label, suffix, value }) {
+  return (
+    <div className="px-4 py-5">
+      <p className="font-mono text-3xl font-bold tracking-[-0.08em] text-ink">
+        {value}{value !== '—' && suffix ? <span className="ml-1 text-sm tracking-normal text-muted">{suffix}</span> : null}
+      </p>
+      <p className="mt-2 font-mono text-[9px] font-bold uppercase leading-4 tracking-[0.08em] text-muted">
+        {label}
+      </p>
+    </div>
+  )
+}
+
 export default function BenchmarkResultPreview({ copy, state }) {
+  const applications = Number(state.applicationsCount) || 0
+  const stages = [
+    { label: copy.yourApplicationsLabel, value: applications },
+    { label: copy.responseLabel, value: Number(state.responsesCount) || 0 },
+    { label: copy.hrLabel, value: Number(state.hrInterviewsCount) || 0 },
+    { label: copy.technicalLabel, value: Number(state.technicalInterviewsCount) || 0 },
+    { label: copy.offerLabel, value: Number(state.offersCount) || 0 },
+  ]
+  const durationDays = getDurationDays(state)
+
   return (
     <div className="flex min-h-[520px] flex-col justify-center" role="status">
       <div className="grid h-12 w-12 place-items-center border border-[var(--accent-border)] bg-[var(--accent-soft)] text-accentDark">
@@ -16,26 +56,39 @@ export default function BenchmarkResultPreview({ copy, state }) {
         {copy.description}
       </p>
 
-      <div className="mt-8 grid grid-cols-2 border-y border-[var(--line-strong)] sm:grid-cols-3">
-        <div className="px-4 py-5">
-          <p className="font-mono text-3xl font-bold tracking-[-0.08em] text-ink">84</p>
-          <p className="mt-2 font-mono text-[9px] font-bold uppercase leading-4 tracking-[0.08em] text-muted">
-            {copy.medianLabel}
-          </p>
-        </div>
-        <div className="border-l border-[var(--line-strong)] px-4 py-5">
-          <p className="font-mono text-3xl font-bold tracking-[-0.08em] text-ink">%41</p>
-          <p className="mt-2 font-mono text-[9px] font-bold uppercase leading-4 tracking-[0.08em] text-muted">
-            {copy.ongoingLabel}
-          </p>
-        </div>
-        <div className="col-span-2 border-t border-[var(--line-strong)] px-4 py-5 sm:col-span-1 sm:border-l sm:border-t-0">
-          <p className="font-mono text-3xl font-bold tracking-[-0.08em] text-ink">
-            {state.applicationsCount || '—'}
-          </p>
-          <p className="mt-2 font-mono text-[9px] font-bold uppercase leading-4 tracking-[0.08em] text-muted">
-            {copy.yourApplicationsLabel}
-          </p>
+      <p className="mt-6 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-accentDark">
+        {copy.cohortLabel}: {state.role} · {state.experienceBand} · {state.workMode}
+      </p>
+
+      <div className="mt-5 grid grid-cols-2 divide-x divide-y divide-[var(--line-strong)] border border-[var(--line-strong)] sm:grid-cols-4 sm:divide-y-0">
+        <Metric label={copy.yourDurationLabel} suffix={copy.dayUnit} value={durationDays} />
+        <Metric label={copy.communityDurationLabel} suffix={copy.dayUnit} value="72" />
+        <Metric label={copy.yourApplicationsLabel} value={applications || '—'} />
+        <Metric label={copy.communityApplicationsLabel} value="46" />
+      </div>
+
+      <div className="mt-7 border-t border-[var(--line-strong)] pt-5">
+        <p className="font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-muted">
+          {copy.conversionTitle}
+        </p>
+        <div className="mt-4 grid grid-cols-5 gap-2">
+          {stages.map((stage, index) => {
+            const width = applications > 0 ? Math.min(100, Math.round((stage.value / applications) * 100)) : 0
+            return (
+              <div key={stage.label}>
+                <div className="h-1 bg-[var(--line)]">
+                  <span
+                    className={`block h-full ${index === stages.length - 1 ? 'bg-accent' : 'bg-ink'}`}
+                    style={{ width: `${stage.value > 0 ? Math.max(4, width) : 0}%` }}
+                  />
+                </div>
+                <p className="mt-2 font-mono text-lg font-bold text-ink">{stage.value}</p>
+                <p className="mt-1 font-mono text-[8px] font-bold uppercase leading-3 tracking-[0.05em] text-muted">
+                  {stage.label}
+                </p>
+              </div>
+            )
+          })}
         </div>
       </div>
     </div>

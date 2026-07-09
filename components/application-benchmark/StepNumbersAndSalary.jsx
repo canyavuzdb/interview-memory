@@ -1,5 +1,5 @@
 import FieldError from '@/components/application-benchmark/FieldError'
-import { SALARY_BANDS } from '@/lib/constants/applicationBenchmark'
+import { SALARY_BANDS, SALARY_CURRENCIES } from '@/lib/constants/applicationBenchmark'
 
 const fieldClass =
   'mt-2 w-full border border-[var(--line-strong)] bg-canvas px-4 py-3 text-sm text-ink outline-none transition focus:border-accent'
@@ -43,6 +43,25 @@ export default function StepNumbersAndSalary({ copy, errors, setField, state, wa
           </span>
         </div>
         <p className="mt-2 text-sm leading-6 text-muted">{copy.salaryNote}</p>
+
+        <div className="mt-5 max-w-xs">
+          <label htmlFor="salaryCurrency" className="text-sm font-semibold text-ink">
+            {copy.salaryCurrency.label}
+          </label>
+          <select
+            id="salaryCurrency"
+            value={state.salaryCurrency}
+            onChange={(event) => setField('salaryCurrency', event.target.value)}
+            aria-invalid={Boolean(errors.salaryCurrency)}
+            className={fieldClass}
+          >
+            <option value="">{copy.preferNotToSay}</option>
+            {SALARY_CURRENCIES.map((currency) => (
+              <option key={currency} value={currency}>{currency}</option>
+            ))}
+          </select>
+          <FieldError>{errors.salaryCurrency}</FieldError>
+        </div>
 
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           {copy.salaryFields

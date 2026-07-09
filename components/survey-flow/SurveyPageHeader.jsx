@@ -4,8 +4,8 @@ import PreferenceControls from '@/components/PreferenceControls'
 
 export default function SurveyPageHeader({ copy, locale, path }) {
   return (
-    <header className="sticky top-0 z-30 border-b border-[var(--line-strong)] bg-[var(--nav-surface)] backdrop-blur-xl">
-      <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto] items-center gap-4 px-5 py-3 sm:px-6 lg:grid-cols-[1fr_auto_1fr] lg:px-8">
+    <header className="sticky top-0 z-30 border-b border-[var(--line-strong)] bg-transparent">
+      <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto] items-center gap-4 px-5 py-3 sm:px-6 lg:px-8">
         <Link
           href={`/${locale}`}
           aria-label={copy.homeAria}
@@ -23,13 +23,6 @@ export default function SurveyPageHeader({ copy, locale, path }) {
             </span>
           </span>
         </Link>
-
-        <div className="hidden items-center gap-3 font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-muted lg:flex">
-          <span className="h-1.5 w-1.5 bg-accent" aria-hidden="true" />
-          {copy.surveyContext}
-          <span aria-hidden="true">·</span>
-          {copy.threeSteps}
-        </div>
 
         <PreferenceControls
           locale={locale}

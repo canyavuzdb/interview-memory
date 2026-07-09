@@ -1,8 +1,12 @@
 import ChoiceGroup from '@/components/application-benchmark/ChoiceGroup'
 import FieldError from '@/components/application-benchmark/FieldError'
 import {
+  EMPLOYMENT_TYPES,
   EXPERIENCE_BANDS,
+  ROLE_LEVELS,
   SEARCH_STATUSES,
+  SECTORS,
+  TARGET_REGIONS,
   WORK_MODES,
 } from '@/lib/constants/applicationBenchmark'
 
@@ -30,6 +34,44 @@ export default function StepContext({ copy, errors, setField, state }) {
 
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
+          <label htmlFor="benchmark-sector" className="text-sm font-semibold text-ink">
+            {copy.fields.sector.label}
+          </label>
+          <select
+            id="benchmark-sector"
+            value={state.sector}
+            onChange={(event) => setField('sector', event.target.value)}
+            aria-invalid={Boolean(errors.sector)}
+            className={fieldClass}
+          >
+            <option value="">{copy.selectPlaceholder}</option>
+            {SECTORS.map((sector) => (
+              <option key={sector} value={sector}>{copy.fields.sector.options[sector]}</option>
+            ))}
+          </select>
+          <FieldError>{errors.sector}</FieldError>
+        </div>
+
+        <div>
+          <label htmlFor="benchmark-role-level" className="text-sm font-semibold text-ink">
+            {copy.fields.roleLevel.label}
+          </label>
+          <select
+            id="benchmark-role-level"
+            value={state.roleLevel}
+            onChange={(event) => setField('roleLevel', event.target.value)}
+            aria-invalid={Boolean(errors.roleLevel)}
+            className={fieldClass}
+          >
+            <option value="">{copy.selectPlaceholder}</option>
+            {ROLE_LEVELS.map((level) => (
+              <option key={level} value={level}>{copy.fields.roleLevel.options[level]}</option>
+            ))}
+          </select>
+          <FieldError>{errors.roleLevel}</FieldError>
+        </div>
+
+        <div>
           <label htmlFor="experience-band" className="text-sm font-semibold text-ink">
             {copy.fields.experienceBand.label}
           </label>
@@ -46,6 +88,46 @@ export default function StepContext({ copy, errors, setField, state }) {
             ))}
           </select>
           <FieldError>{errors.experienceBand}</FieldError>
+        </div>
+
+        <div>
+          <label htmlFor="benchmark-target-region" className="text-sm font-semibold text-ink">
+            {copy.fields.targetRegion.label}
+          </label>
+          <select
+            id="benchmark-target-region"
+            value={state.targetRegion}
+            onChange={(event) => setField('targetRegion', event.target.value)}
+            aria-invalid={Boolean(errors.targetRegion)}
+            className={fieldClass}
+          >
+            <option value="">{copy.selectPlaceholder}</option>
+            {TARGET_REGIONS.map((region) => (
+              <option key={region} value={region}>{copy.fields.targetRegion.options[region]}</option>
+            ))}
+          </select>
+          <FieldError>{errors.targetRegion}</FieldError>
+        </div>
+      </div>
+
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div>
+          <label htmlFor="benchmark-employment-type" className="text-sm font-semibold text-ink">
+            {copy.fields.employmentType.label}
+          </label>
+          <select
+            id="benchmark-employment-type"
+            value={state.employmentType}
+            onChange={(event) => setField('employmentType', event.target.value)}
+            aria-invalid={Boolean(errors.employmentType)}
+            className={fieldClass}
+          >
+            <option value="">{copy.selectPlaceholder}</option>
+            {EMPLOYMENT_TYPES.map((type) => (
+              <option key={type} value={type}>{copy.fields.employmentType.options[type]}</option>
+            ))}
+          </select>
+          <FieldError>{errors.employmentType}</FieldError>
         </div>
 
         <div>

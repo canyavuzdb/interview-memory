@@ -39,7 +39,11 @@ export default function ApplicationBenchmarkWizard({ copy, sampleSize }) {
     dispatch({ type: 'SUBMIT_START' })
     const payload = {
       role: state.role,
+      sector: state.sector,
+      roleLevel: state.roleLevel,
       experienceBand: state.experienceBand,
+      targetRegion: state.targetRegion,
+      employmentType: state.employmentType,
       workMode: state.workMode,
       isCurrentlyEmployed: state.isCurrentlyEmployed,
       searchStartedAt: state.searchStartedAt,
@@ -47,8 +51,10 @@ export default function ApplicationBenchmarkWizard({ copy, sampleSize }) {
       searchEndedAt: state.searchStatus === 'ongoing' ? null : state.searchEndedAt || null,
       applicationsCount: Number(state.applicationsCount),
       responsesCount: Number(state.responsesCount),
-      interviewsCount: Number(state.interviewsCount),
+      hrInterviewsCount: Number(state.hrInterviewsCount),
+      technicalInterviewsCount: Number(state.technicalInterviewsCount),
       offersCount: Number(state.offersCount),
+      salaryCurrency: state.salaryCurrency || null,
       currentSalaryBand: state.currentSalaryBand || null,
       expectedSalaryBand: state.expectedSalaryBand || null,
       highestOfferBand: Number(state.offersCount) > 0 ? state.highestOfferBand || null : null,
