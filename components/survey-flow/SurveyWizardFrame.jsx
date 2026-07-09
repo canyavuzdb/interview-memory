@@ -17,11 +17,11 @@ export default function SurveyWizardFrame({
   return (
     <form onSubmit={(event) => event.preventDefault()} noValidate>
       <SurveyStepIndicator current={current} labels={copy.stepIndicator} />
-      <p className="mt-5 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-muted">
+      <p className="mt-5 font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-muted">
         {copy.privacyRow}
       </p>
 
-      <div className="mt-8 border-t border-line pt-7">
+      <div className="mt-8 border-t border-line pt-7 sm:mt-10 sm:pt-8">
         <p className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-accent">
           {String(current).padStart(2, '0')} / 03
         </p>
@@ -35,11 +35,14 @@ export default function SurveyWizardFrame({
         <p className="mt-3 max-w-xl text-sm leading-6 text-muted">{stepCopy.description}</p>
       </div>
 
-      <div className="mt-8">{children}</div>
+      <div className="mt-8 sm:mt-9">{children}</div>
 
-      <div aria-live="polite" className="mt-7 min-h-5 text-sm text-danger">
-        {errorMessage}
-        {submitStatus === 'error' ? submitError : ''}
+      <div aria-live="polite" className="mt-7 min-h-5">
+        {(errorMessage || submitStatus === 'error') && (
+          <p role="alert" className="border-l-2 border-danger bg-[rgba(155,74,69,0.06)] px-4 py-3 text-sm leading-6 text-danger">
+            {errorMessage || submitError}
+          </p>
+        )}
       </div>
 
       <SurveyNavigation

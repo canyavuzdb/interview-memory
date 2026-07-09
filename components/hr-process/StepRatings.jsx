@@ -1,14 +1,11 @@
-import ChoiceGroup from '@/components/application-benchmark/ChoiceGroup'
-import FieldError from '@/components/application-benchmark/FieldError'
+import SurveyChoiceGroup from '@/components/survey-flow/SurveyChoiceGroup'
+import { SurveyField, SurveySelect, surveyControlClass } from '@/components/survey-flow/SurveyField'
 import { RATING_SCALE, REJECTION_DETAIL_LEVELS } from '@/lib/constants/hrProcess'
-
-const fieldClass =
-  'mt-2 w-full border border-[var(--line-strong)] bg-canvas px-4 py-3 text-sm text-ink outline-none transition focus:border-accent'
 
 export default function StepRatings({ copy, errors, selectPlaceholder, setField, state }) {
   return (
     <div className="space-y-7">
-      <ChoiceGroup
+      <SurveyChoiceGroup
         name="rejection-shared"
         label={copy.fields.rejectionShared.label}
         value={state.rejectionShared}
@@ -21,15 +18,11 @@ export default function StepRatings({ copy, errors, selectPlaceholder, setField,
       />
 
       {state.rejectionShared && state.rejectionShared !== 'no' && (
-        <div>
-          <label htmlFor="hr-feedback-useful" className="text-sm font-semibold text-ink">
-            {copy.fields.feedbackUseful.label}
-          </label>
-          <select
+        <SurveyField id="hr-feedback-useful" label={copy.fields.feedbackUseful.label}>
+          <SurveySelect
             id="hr-feedback-useful"
             value={state.feedbackUseful}
             onChange={(event) => setField('feedbackUseful', event.target.value)}
-            className={fieldClass}
           >
             <option value="">{selectPlaceholder}</option>
             {RATING_SCALE.map((n) => (
@@ -37,20 +30,20 @@ export default function StepRatings({ copy, errors, selectPlaceholder, setField,
                 {n}
               </option>
             ))}
-          </select>
-        </div>
+          </SurveySelect>
+        </SurveyField>
       )}
 
-      <div>
-        <label htmlFor="hr-process-transparency" className="text-sm font-semibold text-ink">
-          {copy.fields.processTransparency.label}
-        </label>
-        <select
+      <SurveyField
+        id="hr-process-transparency"
+        label={copy.fields.processTransparency.label}
+        error={errors.processTransparency}
+      >
+        <SurveySelect
           id="hr-process-transparency"
           value={state.processTransparency}
           onChange={(event) => setField('processTransparency', event.target.value)}
           aria-invalid={Boolean(errors.processTransparency)}
-          className={fieldClass}
         >
           <option value="">{selectPlaceholder}</option>
           {RATING_SCALE.map((n) => (
@@ -58,20 +51,15 @@ export default function StepRatings({ copy, errors, selectPlaceholder, setField,
               {n}
             </option>
           ))}
-        </select>
-        <FieldError>{errors.processTransparency}</FieldError>
-      </div>
+        </SurveySelect>
+      </SurveyField>
 
-      <div>
-        <label htmlFor="hr-professionalism" className="text-sm font-semibold text-ink">
-          {copy.fields.hrProfessionalism.label}
-        </label>
-        <select
+      <SurveyField id="hr-professionalism" label={copy.fields.hrProfessionalism.label} error={errors.hrProfessionalism}>
+        <SurveySelect
           id="hr-professionalism"
           value={state.hrProfessionalism}
           onChange={(event) => setField('hrProfessionalism', event.target.value)}
           aria-invalid={Boolean(errors.hrProfessionalism)}
-          className={fieldClass}
         >
           <option value="">{selectPlaceholder}</option>
           {RATING_SCALE.map((n) => (
@@ -79,11 +67,10 @@ export default function StepRatings({ copy, errors, selectPlaceholder, setField,
               {n}
             </option>
           ))}
-        </select>
-        <FieldError>{errors.hrProfessionalism}</FieldError>
-      </div>
+        </SurveySelect>
+      </SurveyField>
 
-      <ChoiceGroup
+      <SurveyChoiceGroup
         name="would-recommend-process"
         label={copy.fields.wouldRecommendProcess.label}
         value={state.wouldRecommendProcess}
@@ -91,15 +78,12 @@ export default function StepRatings({ copy, errors, selectPlaceholder, setField,
         options={copy.fields.wouldRecommendProcess.options}
       />
 
-      <div>
-        <div className="flex items-baseline justify-between gap-3">
-          <label htmlFor="hr-free-note" className="text-sm font-semibold text-ink">
-            {copy.fields.freeNote.label}
-          </label>
-          <span className="font-mono text-[9px] font-bold text-muted">
-            {state.freeNote.length}/500
-          </span>
-        </div>
+      <SurveyField
+        id="hr-free-note"
+        label={copy.fields.freeNote.label}
+        error={errors.freeNote}
+        labelAccessory={<span className="font-mono text-[9px] font-bold text-muted">{state.freeNote.length}/500</span>}
+      >
         <textarea
           id="hr-free-note"
           rows="5"
@@ -108,10 +92,9 @@ export default function StepRatings({ copy, errors, selectPlaceholder, setField,
           onChange={(event) => setField('freeNote', event.target.value)}
           placeholder={copy.fields.freeNote.placeholder}
           aria-invalid={Boolean(errors.freeNote)}
-          className="mt-2 w-full resize-none border border-[var(--line-strong)] bg-canvas px-4 py-3 text-sm leading-6 text-ink outline-none transition focus:border-accent"
+          className={`${surveyControlClass} resize-none leading-6`}
         />
-        <FieldError>{errors.freeNote}</FieldError>
-      </div>
+      </SurveyField>
     </div>
   )
 }
