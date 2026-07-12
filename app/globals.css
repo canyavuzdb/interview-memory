@@ -316,6 +316,15 @@ body {
   animation-play-state: paused;
 }
 
+.survey-launch-progress {
+  transform-origin: left;
+  animation: analytics-tab-fill 10s linear forwards;
+}
+
+.survey-launch-banner:hover .survey-launch-progress {
+  animation-play-state: paused;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-color-sweep-cta,
   .hero-color-sweep-cta::before {
@@ -326,7 +335,8 @@ body {
     transform: none;
   }
 
-  .analytics-tab-progress {
+  .analytics-tab-progress,
+  .survey-launch-progress {
     animation: none;
   }
 

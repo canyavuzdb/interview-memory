@@ -1,12 +1,11 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowRight, LogIn, Search } from 'lucide-react'
-import AnonymousTrustSection from '@/components/AnonymousTrustSection'
 import CommunityStats from '@/components/CommunityStats'
 import HeroAnalyticsPanel from '@/components/HeroAnalyticsPanel'
 import PreferenceControls from '@/components/PreferenceControls'
 import StableLocalizedText from '@/components/StableLocalizedText'
-import SurveyCarousel from '@/components/SurveyCarousel'
+import SurveyLaunchBanner from '@/components/SurveyLaunchBanner'
 import { getMessages, isSupportedLocale } from '@/data/i18n'
 
 export async function generateMetadata({ params }) {
@@ -29,10 +28,6 @@ export default async function HomePage({ params }) {
 
   const messages = getMessages(locale)
   const alternateMessages = getMessages(locale === 'tr' ? 'en' : 'tr')
-  const surveys = messages.surveyCards.map((survey) => ({
-    ...survey,
-    href: `/${locale}${survey.path}`,
-  }))
 
   return (
     <main className="landing-grid min-h-screen text-ink">
@@ -56,12 +51,12 @@ export default async function HomePage({ params }) {
             aria-label={messages.header.navLabel}
             className="hidden justify-self-center divide-x divide-[var(--line-strong)] border border-[var(--line-strong)] bg-[var(--nav-surface)] font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--ink-soft)] lg:flex"
           >
-            <a href="#surveys" className="brand-nav-item inline-flex items-center justify-center whitespace-nowrap px-5 py-2.5 transition hover:bg-[var(--surface-hover)] hover:text-accentDark">
+            <Link href={`/${locale}/surveys`} className="brand-nav-item inline-flex items-center justify-center whitespace-nowrap px-5 py-2.5 transition hover:bg-[var(--surface-hover)] hover:text-accentDark">
               <span className="mr-2 text-muted">01/</span>
               <StableLocalizedText reserve={alternateMessages.header.surveys}>
                 {messages.header.surveys}
               </StableLocalizedText>
-            </a>
+            </Link>
             <a href="#how-it-works" className="brand-nav-item inline-flex items-center justify-center whitespace-nowrap px-5 py-2.5 transition hover:bg-[var(--surface-hover)] hover:text-accentDark">
               <span className="mr-2 text-muted">02/</span>
               <StableLocalizedText reserve={alternateMessages.header.howItWorks}>
@@ -162,33 +157,10 @@ export default async function HomePage({ params }) {
         </div>
       </section>
 
-      <AnonymousTrustSection items={messages.trustItems} />
-
-      <SurveyCarousel copy={messages.surveyCarousel} surveys={surveys} />
-
-      <section
-        id="how-it-works"
-        className="mx-auto max-w-7xl px-5 py-14 sm:px-6 lg:px-8"
-      >
-        <div className="grid gap-5 md:grid-cols-3">
-          {messages.home.howItWorks.map((step, index) => (
-            <div
-              key={step.title}
-              className="min-h-[210px] rounded-[1.75rem] border border-line bg-surface p-6 shadow-sm md:min-h-[238px] xl:min-h-[210px]"
-            >
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-                {String(index + 1).padStart(2, '0')}
-              </p>
-              <h3 className="mt-4 text-xl font-semibold tracking-tight">
-                {step.title}
-              </h3>
-              <p className="mt-3 text-sm leading-7 text-muted">
-                {step.description}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
+      <SurveyLaunchBanner
+        copy={messages.home.surveyPrompt}
+        href={`/${locale}/surveys`}
+      />
 
       <div id="stats">
         <CommunityStats copy={messages.community} signalCopy={messages.home.signal} />
