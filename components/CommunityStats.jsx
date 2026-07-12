@@ -137,7 +137,7 @@ export default function CommunityStats({ copy, locale }) {
 
   return (
     <section className="mx-auto max-w-7xl px-5 py-12 sm:px-6 lg:px-8 lg:py-14">
-      <div className="flex items-center justify-between gap-5 border-b border-[var(--line-strong)] pb-5">
+      <div className="flex items-center justify-between gap-5 pb-2">
         <div className="flex items-baseline gap-3">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-accent">
             {copy.eyebrow}

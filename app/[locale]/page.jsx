@@ -157,27 +157,31 @@ export default async function HomePage({ params }) {
         </div>
       </section>
 
-      <SurveyLaunchBanner
-        copy={messages.home.surveyPrompt}
-        href={`/${locale}/surveys`}
-      />
+      <div className="landing-puzzle-flow">
+        <div className="landing-survey-zone">
+          <SurveyLaunchBanner
+            copy={messages.home.surveyPrompt}
+            href={`/${locale}/surveys`}
+          />
+        </div>
 
-      <div id="stats">
-        <CommunityStats copy={messages.community} locale={locale} />
+        <div id="stats" className="landing-data-zone scroll-mt-16">
+          <CommunityStats copy={messages.community} locale={locale} />
+        </div>
       </div>
 
-      <section className="mx-auto max-w-7xl px-5 py-14 pb-20 sm:px-6 lg:px-8">
-        <div className="rounded-[2rem] border border-line bg-surface p-6 text-center shadow-sm md:p-10">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
+      <section className="landing-closing-zone px-5 py-14 pb-20 sm:px-6 lg:px-8">
+        <div className="landing-closing-panel mx-auto max-w-7xl border border-ink bg-ink p-6 text-center text-surface md:p-10">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--inverse-muted)]">
             {messages.home.finalCta.eyebrow}
           </p>
-          <h2 className="mx-auto mt-3 min-h-[180px] max-w-3xl text-3xl font-semibold tracking-[-0.04em] sm:text-4xl md:min-h-0">
+          <h2 className="mx-auto mt-3 min-h-[180px] max-w-3xl text-3xl font-semibold tracking-[-0.04em] text-surface sm:text-4xl md:min-h-0">
             {messages.home.finalCta.title}
           </h2>
           <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
             <Link
               href={`/${locale}/surveys/company-experience`}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-semibold text-surface transition hover:-translate-y-0.5 hover:bg-accentDark sm:w-[280px]"
+              className="inline-flex w-full items-center justify-center gap-2 border border-surface bg-surface px-6 py-3 text-sm font-semibold text-ink transition hover:-translate-y-0.5 hover:border-accent hover:bg-accent sm:w-[280px]"
             >
               <StableLocalizedText reserve={alternateMessages.home.finalCta.company}>
                 {messages.home.finalCta.company}
@@ -187,12 +191,12 @@ export default async function HomePage({ params }) {
 
             <Link
               href={`/${locale}/surveys/application-benchmark`}
-              className="group inline-flex w-full items-center justify-center gap-2 rounded-full border border-[var(--line-strong)] bg-canvas px-6 py-3 text-sm font-semibold text-ink transition hover:-translate-y-0.5 hover:border-[var(--accent-border)] sm:w-[280px]"
+              className="group inline-flex w-full items-center justify-center gap-2 border border-[var(--inverse-subtle)] bg-transparent px-6 py-3 text-sm font-semibold text-surface transition hover:-translate-y-0.5 hover:border-[var(--inverse-muted)] hover:bg-[var(--inverse-overlay)] sm:w-[280px]"
             >
               <StableLocalizedText reserve={alternateMessages.home.finalCta.benchmark}>
                 {messages.home.finalCta.benchmark}
               </StableLocalizedText>
-              <ArrowRight size={17} className="transition group-hover:translate-x-0.5 group-hover:text-accentDark" />
+              <ArrowRight size={17} className="transition group-hover:translate-x-0.5 group-hover:text-[var(--inverse-muted)]" />
             </Link>
           </div>
         </div>

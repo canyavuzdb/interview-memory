@@ -293,6 +293,206 @@ body {
   background-size: 32px 32px;
 }
 
+.landing-puzzle-flow {
+  --landing-puzzle-depth: 24px;
+  position: relative;
+}
+
+.landing-survey-zone {
+  position: relative;
+  isolation: isolate;
+}
+
+.landing-survey-zone::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  content: '';
+  pointer-events: none;
+  background-color: color-mix(in srgb, var(--status-rejected) 6%, var(--grid-canvas));
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-position: -1px -1px;
+  background-size: 32px 32px;
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 24px),
+    82% calc(100% - 24px),
+    82% 100%,
+    72% 100%,
+    72% calc(100% - 24px),
+    55% calc(100% - 24px),
+    55% 100%,
+    45% 100%,
+    45% calc(100% - 24px),
+    28% calc(100% - 24px),
+    28% 100%,
+    18% 100%,
+    18% calc(100% - 24px),
+    0 calc(100% - 24px)
+  );
+  transition: background-color 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.landing-survey-zone > * {
+  position: relative;
+  z-index: 1;
+}
+
+.landing-survey-zone:focus-within::before {
+  background-color: color-mix(in srgb, var(--status-rejected) 13%, var(--grid-canvas));
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .landing-survey-zone:hover::before {
+    background-color: color-mix(in srgb, var(--status-rejected) 13%, var(--grid-canvas));
+  }
+}
+
+.landing-data-zone {
+  position: relative;
+  isolation: isolate;
+  margin-top: calc(0px - var(--landing-puzzle-depth));
+}
+
+.landing-data-zone::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  content: '';
+  pointer-events: none;
+  background-color: color-mix(in srgb, var(--accent) 14%, var(--grid-canvas));
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-position: -1px -1px;
+  background-size: 32px 32px;
+  clip-path: polygon(
+    0 0,
+    18% 0,
+    18% 24px,
+    28% 24px,
+    28% 0,
+    45% 0,
+    45% 24px,
+    55% 24px,
+    55% 0,
+    72% 0,
+    72% 24px,
+    82% 24px,
+    82% 0,
+    100% 0,
+    100% 100%,
+    0 100%
+  );
+}
+
+.landing-data-zone > * {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes landing-puzzle-lock {
+  from {
+    margin-top: clamp(72px, 8vw, 128px);
+  }
+  to {
+    margin-top: calc(0px - var(--landing-puzzle-depth));
+  }
+}
+
+@supports (animation-timeline: view()) {
+  .landing-puzzle-flow {
+    view-timeline-name: --landing-puzzle;
+    view-timeline-axis: block;
+  }
+
+  .landing-data-zone {
+    animation: landing-puzzle-lock 1ms linear both;
+    animation-range: entry 12% cover 38%;
+    animation-timeline: --landing-puzzle;
+  }
+}
+
+.landing-closing-zone {
+  position: relative;
+}
+
+.landing-closing-panel {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 32px) 0,
+    100% 32px,
+    100% 100%,
+    32px 100%,
+    0 calc(100% - 32px)
+  );
+  filter: drop-shadow(0 20px 36px color-mix(in srgb, var(--ink) 16%, transparent));
+}
+
+@media (max-width: 639px) {
+  .landing-puzzle-flow {
+    --landing-puzzle-depth: 16px;
+  }
+
+  .landing-survey-zone::before {
+    inset: 0;
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% calc(100% - 16px),
+      82% calc(100% - 16px),
+      82% 100%,
+      72% 100%,
+      72% calc(100% - 16px),
+      55% calc(100% - 16px),
+      55% 100%,
+      45% 100%,
+      45% calc(100% - 16px),
+      28% calc(100% - 16px),
+      28% 100%,
+      18% 100%,
+      18% calc(100% - 16px),
+      0 calc(100% - 16px)
+    );
+  }
+
+  .landing-data-zone::before {
+    inset: 0;
+    clip-path: polygon(
+      0 0,
+      18% 0,
+      18% 16px,
+      28% 16px,
+      28% 0,
+      45% 0,
+      45% 16px,
+      55% 16px,
+      55% 0,
+      72% 0,
+      72% 16px,
+      82% 16px,
+      82% 0,
+      100% 0,
+      100% 100%,
+      0 100%
+    );
+  }
+
+  .landing-closing-panel {
+    clip-path: polygon(
+      0 0,
+      calc(100% - 16px) 0,
+      100% 16px,
+      100% 100%,
+      16px 100%,
+      0 calc(100% - 16px)
+    );
+  }
+}
+
 @keyframes analytics-tab-fill {
   from {
     transform: scaleX(0);
@@ -358,6 +558,11 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .landing-data-zone {
+    margin-top: calc(0px - var(--landing-puzzle-depth));
+    animation: none;
+  }
+
   .hero-color-sweep-cta,
   .hero-color-sweep-cta::before {
     transition: none;
