@@ -7,11 +7,14 @@ import { validateApplicationBenchmarkStep } from '@/lib/validation/applicationBe
 function reducer(state, action) {
   switch (action.type) {
     case 'SET_FIELD': {
+      const remainingErrors = { ...state.errors }
+      delete remainingErrors[action.field]
+
       const nextState = {
         ...state,
         [action.field]: action.value,
         dirty: true,
-        errors: { ...state.errors, [action.field]: undefined },
+        errors: remainingErrors,
       }
 
       if (action.field === 'searchStatus' && action.value === 'ongoing') {

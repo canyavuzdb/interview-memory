@@ -30,16 +30,31 @@ function Metric({ label, suffix, value }) {
   )
 }
 
-export default function BenchmarkResultPreview({ copy, state }) {
+export default function BenchmarkResultPreview({ contextCopy, copy, state }) {
   const applications = Number(state.applicationsCount) || 0
+  const responses = Number(state.responsesCount) || 0
+  const technicalInterviews = Number(state.technicalInterviewsCount) || 0
   const stages = [
     { label: copy.yourApplicationsLabel, value: applications },
-    { label: copy.responseLabel, value: Number(state.responsesCount) || 0 },
+    { label: copy.responseLabel, value: responses },
     { label: copy.hrLabel, value: Number(state.hrInterviewsCount) || 0 },
-    { label: copy.technicalLabel, value: Number(state.technicalInterviewsCount) || 0 },
+    { label: copy.technicalLabel, value: technicalInterviews },
     { label: copy.offerLabel, value: Number(state.offersCount) || 0 },
   ]
   const durationDays = getDurationDays(state)
+  const applicationsPerTechnicalInterview = technicalInterviews > 0
+    ? Math.ceil(applications / technicalInterviews)
+    : null
+  const responseRate = applications > 0 ? Math.round((responses / applications) * 100) : null
+  const personalSignal = applicationsPerTechnicalInterview !== null
+    ? `${applicationsPerTechnicalInterview} ${copy.applicationsPerTechnicalSuffix}`
+    : copy.noTechnicalInterviewSignal
+  const cohort = [
+    contextCopy.fields.role.options[state.role],
+    contextCopy.fields.roleLevel.options[state.roleLevel],
+    contextCopy.fields.experienceBand.options[state.experienceBand],
+    contextCopy.fields.targetRegion.options[state.targetRegion],
+  ].filter(Boolean).join(' · ')
 
   return (
     <div className="flex min-h-[520px] flex-col justify-center" role="status">
@@ -57,14 +72,30 @@ export default function BenchmarkResultPreview({ copy, state }) {
       </p>
 
       <p className="mt-6 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-accentDark">
-        {copy.cohortLabel}: {state.role} · {state.experienceBand} · {state.workMode}
+        {copy.cohortLabel}: {cohort}
       </p>
 
       <div className="mt-5 grid grid-cols-2 divide-x divide-y divide-[var(--line-strong)] border border-[var(--line-strong)] sm:grid-cols-4 sm:divide-y-0">
         <Metric label={copy.yourDurationLabel} suffix={copy.dayUnit} value={durationDays} />
         <Metric label={copy.communityDurationLabel} suffix={copy.dayUnit} value="72" />
-        <Metric label={copy.yourApplicationsLabel} value={applications || '—'} />
-        <Metric label={copy.communityApplicationsLabel} value="46" />
+        <Metric
+          label={copy.yourTechnicalEffortLabel}
+          suffix={applicationsPerTechnicalInterview !== null ? copy.applicationUnit : undefined}
+          value={applicationsPerTechnicalInterview ?? '—'}
+        />
+        <Metric label={copy.communityTechnicalEffortLabel} suffix={copy.applicationUnit} value="14" />
+      </div>
+
+      <div className="mt-7 border-l-2 border-accent bg-[var(--accent-soft)] px-5 py-4">
+        <p className="font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-accentDark">
+          {copy.personalSignalLabel}
+        </p>
+        <p className="mt-2 text-lg font-semibold tracking-[-0.02em] text-ink">{personalSignal}</p>
+        {responseRate !== null && (
+          <p className="mt-2 text-sm leading-6 text-muted">
+            {copy.responseRatePrefix} <span className="font-semibold text-ink">%{responseRate}</span> {copy.responseRateSuffix}
+          </p>
+        )}
       </div>
 
       <div className="mt-7 border-t border-[var(--line-strong)] pt-5">
@@ -91,6 +122,8 @@ export default function BenchmarkResultPreview({ copy, state }) {
           })}
         </div>
       </div>
+
+      <p className="mt-6 max-w-2xl text-xs leading-5 text-muted">{copy.previewNote}</p>
     </div>
   )
 }
