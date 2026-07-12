@@ -137,36 +137,12 @@ export default async function HomePage({ params }) {
           <div className="mt-9 grid gap-3 sm:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
             <Link
               href={`/${locale}/surveys/application-benchmark`}
-              className="hero-fold-cta relative h-16 w-full rounded-sm bg-accentDark text-sm font-semibold text-surface shadow-sm"
+              className="hero-color-sweep-cta group relative flex h-16 w-full items-center justify-between gap-4 px-7 text-sm font-semibold"
             >
-              <span className="sr-only">
+              <StableLocalizedText reserve={alternateMessages.home.hero.explore}>
                 {messages.home.hero.explore}
-              </span>
-
-              <span className="hero-fold-reveal" aria-hidden="true">
-                <StableLocalizedText reserve={alternateMessages.home.hero.exploreHover}>
-                  {messages.home.hero.exploreHover}
-                </StableLocalizedText>
-                <ArrowRight size={17} />
-              </span>
-
-              <span className="hero-fold-panel hero-fold-panel-left" aria-hidden="true">
-                <span className="hero-fold-panel-content hero-fold-panel-content-left">
-                  <StableLocalizedText reserve={alternateMessages.home.hero.explore}>
-                    {messages.home.hero.explore}
-                  </StableLocalizedText>
-                  <ArrowRight size={17} />
-                </span>
-              </span>
-
-              <span className="hero-fold-panel hero-fold-panel-right" aria-hidden="true">
-                <span className="hero-fold-panel-content hero-fold-panel-content-right">
-                  <StableLocalizedText reserve={alternateMessages.home.hero.explore}>
-                    {messages.home.hero.explore}
-                  </StableLocalizedText>
-                  <ArrowRight size={17} />
-                </span>
-              </span>
+              </StableLocalizedText>
+              <ArrowRight size={17} className="shrink-0 transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
             </Link>
 
             <a

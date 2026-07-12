@@ -119,7 +119,6 @@ const messages = {
           post: ' olarak paylaş; iş arama sürenin topluluk ortalamasında nerede durduğunu gör.',
         },
         explore: 'İş arama süreni karşılaştır',
-        exploreHover: 'Yerini Belirle',
         benchmark: 'Topluluk verilerini incele',
       },
       signal: {
@@ -875,7 +874,6 @@ const messages = {
           post: ' and see where your job-search timeline stands against the community benchmark.',
         },
         explore: 'Compare your job-search timeline',
-        exploreHover: 'See Where You Stand',
         benchmark: 'Explore community data',
       },
       signal: {
