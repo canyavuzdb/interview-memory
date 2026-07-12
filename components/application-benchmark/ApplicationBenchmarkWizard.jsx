@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import BenchmarkResultPreview from '@/components/application-benchmark/BenchmarkResultPreview'
 import StepContext from '@/components/application-benchmark/StepContext'
-import StepNumbersAndSalary from '@/components/application-benchmark/StepNumbersAndSalary'
+import StepFunnel from '@/components/application-benchmark/StepFunnel'
 import StepOptional from '@/components/application-benchmark/StepOptional'
 import SurveyFlowLayout from '@/components/survey-flow/SurveyFlowLayout'
 import SurveyWizardFrame from '@/components/survey-flow/SurveyWizardFrame'
@@ -71,7 +71,7 @@ export default function ApplicationBenchmarkWizard({ copy, sampleSize }) {
   return (
     <SurveyFlowLayout introCopy={copy.trustPanel} sampleSize={sampleSize}>
       {state.submitStatus === 'success' ? (
-        <BenchmarkResultPreview copy={copy.success} state={state} />
+        <BenchmarkResultPreview copy={copy.success} contextCopy={copy.steps.step1} state={state} />
       ) : (
         <SurveyWizardFrame
           copy={copy}
@@ -89,7 +89,7 @@ export default function ApplicationBenchmarkWizard({ copy, sampleSize }) {
             <StepContext copy={stepCopy} errors={state.errors} setField={setField} state={state} />
           )}
           {state.step === 2 && (
-            <StepNumbersAndSalary
+            <StepFunnel
               copy={stepCopy}
               errors={state.errors}
               setField={setField}
