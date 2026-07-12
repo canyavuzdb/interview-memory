@@ -225,6 +225,22 @@ const messages = {
         bottomText:
           'Bir adayın yaşadığı belirsizlik, toplulukla birleşince işe alım süreçlerinin gerçek sinyaline dönüşür.',
       },
+      surveyPrompt: {
+        meta: 'Kısa form · anonim katkı',
+        cta: 'Anketleri incele',
+        items: [
+          {
+            eyebrow: '02 / İş arama karşılaştırması',
+            title: 'İş arama eforunu benzer adayların süreçleriyle karşılaştır.',
+            description: 'Başvuru, dönüş, HR, teknik görüşme ve teklif sayılarını paylaş; sürecinin nerede daraldığını gör.',
+          },
+          {
+            eyebrow: '02 / Şirket ve mülakat deneyimi',
+            title: 'Şirketlerin adaylara yaşattığı süreci görünür kıl.',
+            description: 'Geri dönüş, ghosting, feedback ve mülakatta gerçekten sorulanları anonim deneyim verisine dönüştür.',
+          },
+        ],
+      },
       howItWorks: [
         {
           title: 'Anket seç',
@@ -272,16 +288,17 @@ const messages = {
       },
     ],
     surveyCarousel: {
-      eyebrow: 'Anonim anketler',
-      title: 'Kayıt olmadan katıl. Deneyimini veriye dönüştür.',
+      eyebrow: 'Anket seçimi',
+      title: 'Yaşadığın sürece en yakın kaydı seç.',
       description:
-        'Seçtiğin ankete göre ayrı bir sayfaya yönlendirilirsin. İsim, e-posta veya üyelik zorunluluğu yok.',
+        'Her akış üç kısa adımdan oluşur. Paylaştığın deneyim kişisel bir hikâye olarak değil, ortak bir işe alım sinyali olarak işlenmek üzere tasarlanır.',
+      includesLabel: 'Bu kayıtta neleri paylaşacaksın?',
     },
     surveyCards: [
       {
         id: 'company-experience',
         path: '/surveys/company-experience',
-        eyebrow: 'Anket 01',
+        eyebrow: 'Şirket ve mülakat deneyimi',
         title: 'Şirketin ile deneyimini paylaş',
         description:
           'Başvurdun, otomatik red aldın, hiç dönüş alamadın ya da mülakata girdin. Bu şirketle geldiğin son noktayı anonim paylaş.',
@@ -300,7 +317,7 @@ const messages = {
       {
         id: 'application-benchmark',
         path: '/surveys/application-benchmark',
-        eyebrow: 'Anket 02',
+        eyebrow: 'İş arama karşılaştırması',
         title: 'İş arama sürecini karşılaştır',
         description:
           'Rolünü, deneyimini ve iş arama sürecindeki temel sayıları paylaş; süreni temsili topluluk görünümüyle karşılaştır.',
@@ -364,10 +381,11 @@ const messages = {
         'Örnek veriler / gerçek topluluk ölçümü değildir',
     },
     surveyIndex: {
-      eyebrow: 'Anketler',
-      title: 'Kayıt olmadan anonim katkı ver.',
+      eyebrow: 'Araştırma kayıtları',
+      title: 'İşe alım sürecinin iki görünmeyen yüzünü kayda geçir.',
+      activeCount: 'İki aktif anket',
       description:
-        'Şirket deneyimini veya başvuru/mülakat oranını paylaşarak adayların işe alım süreçlerini daha görünür hale getirmesine katkı sağlayabilirsin.',
+        'Kendi iş arama eforunu karşılaştır veya bir şirketle yaşadığın başvuru ve mülakat sürecini görünür kıl.',
     },
     companyForm: {
       eyebrow: 'Anket 01',
@@ -980,6 +998,22 @@ const messages = {
         bottomText:
           'One candidate’s uncertainty becomes a real hiring-process signal when combined with the community.',
       },
+      surveyPrompt: {
+        meta: 'Short form · anonymous contribution',
+        cta: 'Explore surveys',
+        items: [
+          {
+            eyebrow: '02 / Job-search comparison',
+            title: 'Compare your job-search effort with similar candidates.',
+            description: 'Share applications, responses, HR calls, technical interviews, and offers to see where your journey narrows.',
+          },
+          {
+            eyebrow: '02 / Company and interview experience',
+            title: 'Make the candidate experience companies create visible.',
+            description: 'Turn responses, ghosting, feedback, and real interview questions into anonymous experience data.',
+          },
+        ],
+      },
       howItWorks: [
         {
           title: 'Choose a survey',
@@ -1027,16 +1061,17 @@ const messages = {
       },
     ],
     surveyCarousel: {
-      eyebrow: 'Anonymous surveys',
-      title: 'Join without registering. Turn your experience into data.',
+      eyebrow: 'Choose a survey',
+      title: 'Choose the record that best matches your experience.',
       description:
-        'Your survey opens on a dedicated page. No name, email address, or membership is required.',
+        'Each flow takes three short steps. Your experience is designed to become a shared hiring signal, not a personal story.',
+      includesLabel: 'What will you share in this record?',
     },
     surveyCards: [
       {
         id: 'company-experience',
         path: '/surveys/company-experience',
-        eyebrow: 'Survey 01',
+        eyebrow: 'Company and interview experience',
         title: 'Share your experience with a company',
         description:
           'Whether you received an automated rejection, heard nothing, or reached an interview, anonymously share where the process ended.',
@@ -1055,7 +1090,7 @@ const messages = {
       {
         id: 'application-benchmark',
         path: '/surveys/application-benchmark',
-        eyebrow: 'Survey 02',
+        eyebrow: 'Job-search comparison',
         title: 'Compare your job-search process',
         description:
           'Share your role, experience, and core job-search numbers, then compare your timeline with an illustrative community view.',
@@ -1119,10 +1154,11 @@ const messages = {
         'Sample data / not real community measurements',
     },
     surveyIndex: {
-      eyebrow: 'Surveys',
-      title: 'Contribute anonymously without registering.',
+      eyebrow: 'Research records',
+      title: 'Record the two hidden sides of the hiring process.',
+      activeCount: 'Two active surveys',
       description:
-        'Share a company experience or your application-to-interview rate to help candidates make hiring processes more visible.',
+        'Compare your job-search effort or make an application and interview process with a company visible.',
     },
     companyForm: {
       eyebrow: 'Survey 01',
