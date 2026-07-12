@@ -163,7 +163,7 @@ export default async function HomePage({ params }) {
       />
 
       <div id="stats">
-        <CommunityStats copy={messages.community} signalCopy={messages.home.signal} />
+        <CommunityStats copy={messages.community} locale={locale} />
       </div>
 
       <section className="mx-auto max-w-7xl px-5 py-14 pb-20 sm:px-6 lg:px-8">
