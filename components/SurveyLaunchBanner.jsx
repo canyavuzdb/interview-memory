@@ -30,7 +30,7 @@ export default function SurveyLaunchBanner({ copy, href }) {
       <Link
         id="surveys"
         href={href}
-        className="survey-launch-banner group relative grid overflow-hidden border-y border-[var(--line-strong)] py-7 transition-colors duration-300 hover:bg-[var(--accent-soft)] md:grid-cols-[11rem_minmax(0,1fr)_auto] md:items-center md:gap-10 md:px-5 lg:gap-14"
+        className="survey-launch-banner group relative grid overflow-hidden py-7 md:grid-cols-[11rem_minmax(0,1fr)_auto] md:items-center md:gap-10 md:px-5 lg:gap-14"
       >
         <span className="relative block min-h-10 overflow-hidden font-mono text-[10px] font-bold uppercase leading-5 tracking-[0.12em] text-accent md:min-h-0">
           {previousIndex !== null && (
@@ -85,7 +85,7 @@ export default function SurveyLaunchBanner({ copy, href }) {
         <span
           key={`progress-${activeIndex}-${cycleKey}`}
           aria-hidden="true"
-          className="survey-launch-progress absolute bottom-0 left-0 h-px w-full bg-accent"
+          className="survey-launch-progress absolute bottom-0 right-0 h-px w-24 bg-accent md:right-5"
           onAnimationEnd={advanceItem}
         />
       </Link>
