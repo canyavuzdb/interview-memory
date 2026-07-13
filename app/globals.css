@@ -23,6 +23,13 @@
   --status-late: #A69E91;
   --status-rejected: #A56F32;
   --status-silent: #191714;
+  --brand-black: #191714;
+  --brand-cream: #FFF8F0;
+  --brand-sage: #9CAF9F;
+  --brand-dark-muted: #C4D0C6;
+  --brand-dark-line: rgba(255, 248, 240, 0.18);
+  --brand-dark-overlay: rgba(255, 248, 240, 0.08);
+  --brand-dark-grid: rgba(255, 248, 240, 0.035);
   --grid-canvas: #FFF8F0;
   --grid-line: rgba(49, 68, 58, 0.035);
   --nav-surface: rgba(238, 234, 224, 0.8);
@@ -295,6 +302,7 @@ body {
 
 .landing-puzzle-flow {
   --landing-puzzle-depth: 24px;
+  --landing-footer-gap: clamp(72px, 9vw, 128px);
   position: relative;
 }
 
@@ -384,8 +392,20 @@ body {
     82% 24px,
     82% 0,
     100% 0,
-    100% 100%,
-    0 100%
+    100% calc(100% - 24px),
+    82% calc(100% - 24px),
+    82% 100%,
+    72% 100%,
+    72% calc(100% - 24px),
+    55% calc(100% - 24px),
+    55% 100%,
+    45% 100%,
+    45% calc(100% - 24px),
+    28% calc(100% - 24px),
+    28% 100%,
+    18% 100%,
+    18% calc(100% - 24px),
+    0 calc(100% - 24px)
   );
 }
 
@@ -394,12 +414,70 @@ body {
   z-index: 1;
 }
 
+.landing-footer-zone {
+  position: relative;
+  isolation: isolate;
+  margin-top: calc(0px - var(--landing-puzzle-depth));
+}
+
+.landing-footer-zone::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  content: '';
+  pointer-events: none;
+  background-color: var(--brand-black);
+  background-image:
+    linear-gradient(var(--brand-dark-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--brand-dark-grid) 1px, transparent 1px);
+  background-position: -1px -1px;
+  background-size: 32px 32px;
+  clip-path: polygon(
+    0 0,
+    18% 0,
+    18% 24px,
+    28% 24px,
+    28% 0,
+    45% 0,
+    45% 24px,
+    55% 24px,
+    55% 0,
+    72% 0,
+    72% 24px,
+    82% 24px,
+    82% 0,
+    100% 0,
+    100% 100%,
+    0 100%
+  );
+}
+
+.landing-footer-zone > * {
+  position: relative;
+  z-index: 1;
+}
+
 @keyframes landing-puzzle-lock {
   from {
-    margin-top: clamp(72px, 8vw, 128px);
+    filter: drop-shadow(0 24px 22px color-mix(in srgb, var(--brand-black) 12%, transparent));
+    transform: translate3d(0, clamp(56px, 7vw, 112px), 0);
   }
   to {
-    margin-top: calc(0px - var(--landing-puzzle-depth));
+    filter: drop-shadow(0 0 0 transparent);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes landing-footer-lock {
+  from {
+    transform: translate3d(
+      0,
+      calc(var(--landing-puzzle-depth) + var(--landing-footer-gap)),
+      0
+    );
+  }
+  to {
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -411,25 +489,19 @@ body {
 
   .landing-data-zone {
     animation: landing-puzzle-lock 1ms linear both;
-    animation-range: entry 12% cover 38%;
+    animation-range: entry 8% cover 40%;
     animation-timeline: --landing-puzzle;
+    will-change: transform, filter;
   }
-}
 
-.landing-closing-zone {
-  position: relative;
-}
-
-.landing-closing-panel {
-  clip-path: polygon(
-    0 0,
-    calc(100% - 32px) 0,
-    100% 32px,
-    100% 100%,
-    32px 100%,
-    0 calc(100% - 32px)
-  );
-  filter: drop-shadow(0 20px 36px color-mix(in srgb, var(--ink) 16%, transparent));
+  .landing-footer-zone {
+    view-timeline-name: --landing-footer-join;
+    view-timeline-axis: block;
+    animation: landing-footer-lock 1ms linear both;
+    animation-range: entry 0% cover 28%;
+    animation-timeline: --landing-footer-join;
+    will-change: transform;
+  }
 }
 
 @media (max-width: 639px) {
@@ -476,19 +548,42 @@ body {
       82% 16px,
       82% 0,
       100% 0,
-      100% 100%,
-      0 100%
+      100% calc(100% - 16px),
+      82% calc(100% - 16px),
+      82% 100%,
+      72% 100%,
+      72% calc(100% - 16px),
+      55% calc(100% - 16px),
+      55% 100%,
+      45% 100%,
+      45% calc(100% - 16px),
+      28% calc(100% - 16px),
+      28% 100%,
+      18% 100%,
+      18% calc(100% - 16px),
+      0 calc(100% - 16px)
     );
   }
 
-  .landing-closing-panel {
+  .landing-footer-zone::before {
+    inset: 0;
     clip-path: polygon(
       0 0,
-      calc(100% - 16px) 0,
-      100% 16px,
+      18% 0,
+      18% 16px,
+      28% 16px,
+      28% 0,
+      45% 0,
+      45% 16px,
+      55% 16px,
+      55% 0,
+      72% 0,
+      72% 16px,
+      82% 16px,
+      82% 0,
+      100% 0,
       100% 100%,
-      16px 100%,
-      0 calc(100% - 16px)
+      0 100%
     );
   }
 }
@@ -559,7 +654,15 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .landing-data-zone {
+    filter: none;
     margin-top: calc(0px - var(--landing-puzzle-depth));
+    transform: none;
+    animation: none;
+  }
+
+  .landing-footer-zone {
+    filter: none;
+    transform: none;
     animation: none;
   }
 

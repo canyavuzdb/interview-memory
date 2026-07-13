@@ -4,6 +4,7 @@ import { ArrowRight, LogIn, Search } from 'lucide-react'
 import CommunityStats from '@/components/CommunityStats'
 import HeroAnalyticsPanel from '@/components/HeroAnalyticsPanel'
 import PreferenceControls from '@/components/PreferenceControls'
+import SiteFooter from '@/components/SiteFooter'
 import StableLocalizedText from '@/components/StableLocalizedText'
 import SurveyLaunchBanner from '@/components/SurveyLaunchBanner'
 import { getMessages, isSupportedLocale } from '@/data/i18n'
@@ -57,16 +58,10 @@ export default async function HomePage({ params }) {
                 {messages.header.surveys}
               </StableLocalizedText>
             </Link>
-            <a href="#how-it-works" className="brand-nav-item inline-flex items-center justify-center whitespace-nowrap px-5 py-2.5 transition hover:bg-[var(--surface-hover)] hover:text-accentDark">
-              <span className="mr-2 text-muted">02/</span>
-              <StableLocalizedText reserve={alternateMessages.header.howItWorks}>
-                {messages.header.howItWorks}
-              </StableLocalizedText>
-            </a>
             <a href="#stats" className="brand-nav-item inline-flex items-center justify-center whitespace-nowrap px-5 py-2.5 transition hover:bg-[var(--surface-hover)] hover:text-accentDark">
-              <span className="mr-2 text-muted">03/</span>
-              <StableLocalizedText reserve={alternateMessages.header.data}>
-                {messages.header.data}
+              <span className="mr-2 text-muted">02/</span>
+              <StableLocalizedText reserve={alternateMessages.header.community}>
+                {messages.header.community}
               </StableLocalizedText>
             </a>
           </nav>
@@ -168,39 +163,11 @@ export default async function HomePage({ params }) {
         <div id="stats" className="landing-data-zone scroll-mt-16">
           <CommunityStats copy={messages.community} locale={locale} />
         </div>
-      </div>
 
-      <section className="landing-closing-zone px-5 py-14 pb-20 sm:px-6 lg:px-8">
-        <div className="landing-closing-panel mx-auto max-w-7xl border border-ink bg-ink p-6 text-center text-surface md:p-10">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--inverse-muted)]">
-            {messages.home.finalCta.eyebrow}
-          </p>
-          <h2 className="mx-auto mt-3 min-h-[180px] max-w-3xl text-3xl font-semibold tracking-[-0.04em] text-surface sm:text-4xl md:min-h-0">
-            {messages.home.finalCta.title}
-          </h2>
-          <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-            <Link
-              href={`/${locale}/surveys/company-experience`}
-              className="inline-flex w-full items-center justify-center gap-2 border border-surface bg-surface px-6 py-3 text-sm font-semibold text-ink transition hover:-translate-y-0.5 hover:border-accent hover:bg-accent sm:w-[280px]"
-            >
-              <StableLocalizedText reserve={alternateMessages.home.finalCta.company}>
-                {messages.home.finalCta.company}
-              </StableLocalizedText>
-              <ArrowRight size={17} />
-            </Link>
-
-            <Link
-              href={`/${locale}/surveys/application-benchmark`}
-              className="group inline-flex w-full items-center justify-center gap-2 border border-[var(--inverse-subtle)] bg-transparent px-6 py-3 text-sm font-semibold text-surface transition hover:-translate-y-0.5 hover:border-[var(--inverse-muted)] hover:bg-[var(--inverse-overlay)] sm:w-[280px]"
-            >
-              <StableLocalizedText reserve={alternateMessages.home.finalCta.benchmark}>
-                {messages.home.finalCta.benchmark}
-              </StableLocalizedText>
-              <ArrowRight size={17} className="transition group-hover:translate-x-0.5 group-hover:text-[var(--inverse-muted)]" />
-            </Link>
-          </div>
+        <div className="landing-footer-zone">
+          <SiteFooter copy={{ ...messages.footer, homeAria: messages.common.homeAria }} locale={locale} />
         </div>
-      </section>
+      </div>
 
       <a
         href="https://github.com/canyavuzdb/interview-memory/tree/master"
