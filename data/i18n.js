@@ -70,7 +70,25 @@ const messages = {
       surveys: 'Anketler',
       howItWorks: 'Nasıl çalışır?',
       data: 'Veriler',
+      community: 'Topluluk sinyalleri',
       signIn: 'Giriş yap',
+    },
+    footer: {
+      eyebrow: 'Açık kaynak topluluk ürünü',
+      description:
+        'Interview Memory, iş arama sürecinin görünmeyen emeğini ve şirketlerin aday deneyimini anonim veriye dönüştürür.',
+      productTitle: 'Ürün',
+      surveys: 'Anketler',
+      signals: 'Topluluk sinyalleri',
+      signIn: 'Giriş yap',
+      projectTitle: 'Proje',
+      repository: 'GitHub deposu',
+      creator: 'Can Yavuz',
+      plannedTitle: 'Planlanan sayfalar',
+      planned: ['Hakkımızda', 'Sık sorulan sorular', 'İletişim', 'Gizlilik', 'Kullanım koşulları', 'Çerez ayarları'],
+      plannedNote: 'Bu rotalar bilgi mimarisi tamamlandığında etkinleşecek.',
+      sourceNote: 'Açık kaynak · Frontend first',
+      copyright: 'Interview Memory',
     },
     login: {
       eyebrow: 'Hesap erişimi',
@@ -243,19 +261,19 @@ const messages = {
       },
       howItWorks: [
         {
-          title: 'Anket seç',
+          title: 'Anketini seç',
           description:
-            'Şirket deneyimini paylaşabilir ya da başvuru/mülakat oranını topluluk verisine ekleyebilirsin.',
+            'İş arama eforunu karşılaştır veya şirket ve mülakat deneyimini değerlendir.',
         },
         {
-          title: 'Anonim doldur',
+          title: 'Deneyimini paylaş',
           description:
-            'Kayıt olmadan sürecin nerede kaldığını, dönüş alıp almadığını ve feedback durumunu paylaş.',
+            'Sürecin nerede kaldığını, dönüş ve feedback durumunu kimliğin yayınlanmadan aktar.',
         },
         {
-          title: 'Veri oluşsun',
+          title: 'Sinyalini gör',
           description:
-            'Toplanan anonim veriler şirketlerin işe alım davranışlarını ve adayların başvuru gerçekliğini görünür kılar.',
+            'Katkın topluluk verisine dönüşsün; kendi sürecinin benzer adaylar arasındaki yerini gör.',
         },
       ],
       finalCta: {
@@ -907,7 +925,25 @@ const messages = {
       surveys: 'Surveys',
       howItWorks: 'How it works',
       data: 'Data',
+      community: 'Community signals',
       signIn: 'Sign in',
+    },
+    footer: {
+      eyebrow: 'Open-source community product',
+      description:
+        'Interview Memory turns the invisible effort of job searching and the candidate experience created by companies into anonymous data.',
+      productTitle: 'Product',
+      surveys: 'Surveys',
+      signals: 'Community signals',
+      signIn: 'Sign in',
+      projectTitle: 'Project',
+      repository: 'GitHub repository',
+      creator: 'Can Yavuz',
+      plannedTitle: 'Planned pages',
+      planned: ['About', 'Frequently asked questions', 'Contact', 'Privacy', 'Terms of use', 'Cookie settings'],
+      plannedNote: 'These routes will become active once the information architecture is complete.',
+      sourceNote: 'Open source · Frontend first',
+      copyright: 'Interview Memory',
     },
     login: {
       eyebrow: 'Account access',
@@ -1080,19 +1116,19 @@ const messages = {
       },
       howItWorks: [
         {
-          title: 'Choose a survey',
+          title: 'Choose your survey',
           description:
-            'Share a company experience or add your application-to-interview rate to the community data.',
+            'Compare your job-search effort or review a company and interview experience.',
         },
         {
-          title: 'Answer anonymously',
+          title: 'Share your experience',
           description:
-            'Without registering, share where the process stopped, whether you heard back, and whether you received feedback.',
+            'Share where the process stopped, whether you heard back, and whether you received feedback without publishing your identity.',
         },
         {
-          title: 'Create a signal',
+          title: 'See your signal',
           description:
-            'Anonymous contributions reveal company hiring behavior and the reality of candidates’ job searches.',
+            'Turn your contribution into community data and see where your journey stands among similar candidates.',
         },
       ],
       finalCta: {

@@ -26,9 +26,8 @@ export default function SurveyLaunchBanner({ copy, href }) {
   }
 
   return (
-    <section id="how-it-works" className="mx-auto max-w-7xl px-5 py-10 sm:px-6 lg:px-8">
+    <section id="surveys" className="mx-auto max-w-7xl px-5 py-10 sm:px-6 lg:px-8">
       <Link
-        id="surveys"
         href={href}
         className="survey-launch-banner group relative grid overflow-hidden py-7 md:grid-cols-[11rem_minmax(0,1fr)_auto] md:items-center md:gap-10 md:px-5 lg:gap-14"
       >
