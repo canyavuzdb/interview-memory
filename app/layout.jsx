@@ -1,4 +1,19 @@
+import { IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google';
 import './globals.css';
+
+const plexSans = IBM_Plex_Sans({
+  subsets: ['latin', 'latin-ext'],
+  weight: 'variable',
+  variable: '--font-plex-sans',
+  display: 'swap',
+});
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ['latin', 'latin-ext'],
+  weight: ['400', '600', '700'],
+  variable: '--font-plex-mono',
+  display: 'swap',
+});
 
 const themeScript = `
   (() => {
@@ -28,7 +43,7 @@ export const metadata = {
     template: '%s | Interview Memory',
   },
   description:
-    'Adayların anonim başvuru ve mülakat deneyimlerini topluluk verisine dönüştüren platform.',
+    'Adayların başvuru ve mülakat deneyimlerini anonim, karşılaştırılabilir işe alım verilerine dönüştüren platform.',
 };
 
 export default function RootLayout({ children }) {
@@ -38,7 +53,9 @@ export default function RootLayout({ children }) {
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <script dangerouslySetInnerHTML={{ __html: localeScript }} />
       </head>
-      <body>{children}</body>
+      <body className={`${plexSans.variable} ${plexMono.variable} font-sans`}>
+        {children}
+      </body>
     </html>
   );
 }

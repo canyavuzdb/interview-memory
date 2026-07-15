@@ -14,19 +14,18 @@ export default function SiteFooter({ copy, locale }) {
       id="site-footer"
       className="mx-auto max-w-7xl px-5 pb-16 pt-24 text-[var(--brand-cream)] sm:px-6 sm:pb-8 sm:pt-28 md:pt-32 lg:px-8"
     >
-      <div className="grid gap-12 lg:grid-cols-[minmax(0,1.25fr)_0.65fr_0.75fr_minmax(18rem,1fr)] lg:gap-10">
+      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--brand-sage)]">
+        {copy.eyebrow}
+      </p>
+
+      <div className="mt-8 grid gap-12 lg:grid-cols-[minmax(0,1.25fr)_0.65fr_0.75fr_minmax(18rem,1fr)] lg:gap-10">
         <div>
           <Link href={`/${locale}`} className="inline-flex items-center gap-4" aria-label={copy.homeAria}>
             <span className="grid h-16 w-16 place-items-center border border-[var(--brand-dark-line)] font-mono text-sm font-bold tracking-[-0.08em]">
               IM
             </span>
-            <span>
-              <span className="block font-mono text-[9px] font-bold uppercase tracking-[0.13em] text-[var(--brand-sage)]">
-                {copy.eyebrow}
-              </span>
-              <span className="mt-2 block font-mono text-sm font-bold uppercase tracking-[0.1em]">
-                Interview Memory
-              </span>
+            <span className="block font-mono text-sm font-bold uppercase tracking-[0.1em]">
+              Interview Memory
             </span>
           </Link>
           <p className="mt-6 max-w-md text-sm leading-7 text-[var(--brand-dark-muted)]">

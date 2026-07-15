@@ -49,10 +49,10 @@ export default function NotFoundContent() {
         <div className="grid w-full items-center gap-6 sm:gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-0">
           <div className="relative flex min-h-[220px] items-center justify-center py-4 sm:min-h-[300px] sm:py-8 lg:min-h-[520px] lg:justify-start lg:pr-14">
             <div className="absolute left-0 top-0 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted">
-              ERR / 04
+              ERR / 404
             </div>
             <div className="absolute bottom-0 right-0 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-muted lg:right-14">
-              NO SIGNAL
+              NOT FOUND
             </div>
 
             <div className="relative">
@@ -77,7 +77,7 @@ export default function NotFoundContent() {
 
           <div className="flex flex-col justify-center border-t border-[var(--line-strong)] pt-7 sm:pt-10 lg:min-h-[520px] lg:border-l lg:border-t-0 lg:py-10 lg:pl-14 xl:pl-20">
             <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-accent">
-              04/ {copy.eyebrow}
+              {copy.eyebrow}
             </p>
             <h1 className="mt-4 max-w-2xl text-[2.35rem] font-semibold leading-[1.05] tracking-[-0.05em] sm:mt-5 sm:text-5xl lg:text-6xl">
               {copy.title}
