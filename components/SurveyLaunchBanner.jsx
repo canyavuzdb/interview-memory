@@ -29,7 +29,7 @@ export default function SurveyLaunchBanner({ copy, href }) {
     <section className="mx-auto max-w-7xl px-5 py-10 sm:px-6 lg:px-8">
       <Link
         href={href}
-        className="survey-launch-banner group relative grid overflow-hidden py-7 md:grid-cols-[11rem_minmax(0,1fr)_auto] md:items-center md:gap-10 md:px-5 lg:gap-14"
+        className="survey-launch-banner group relative grid overflow-hidden py-7 md:grid-cols-[11rem_minmax(0,1fr)_auto] md:items-center md:gap-10 lg:gap-14"
       >
         <span className="relative block min-h-10 overflow-hidden font-mono text-[10px] font-bold uppercase leading-5 tracking-[0.12em] text-accent md:min-h-0">
           {previousIndex !== null && (
