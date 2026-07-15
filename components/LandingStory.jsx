@@ -21,7 +21,6 @@ export default function LandingStory({ children }) {
     let alignedScrollY = null
     let footerBoundaryFrame = null
     const scheduledFrames = new Set()
-    const scheduledTimers = new Set()
 
     function updateHeaderHeight() {
       const flow = document.querySelector('.landing-puzzle-flow')
@@ -57,7 +56,24 @@ export default function LandingStory({ children }) {
       })
     }
 
-    function alignChapter(hash = window.location.hash) {
+    function scrollToPosition(top, behavior = 'auto') {
+      const root = document.documentElement
+      const previousBehavior = root.style.scrollBehavior
+      const shouldAnimate = behavior === 'smooth'
+        && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+      if (shouldAnimate) {
+        window.scrollTo({ top, behavior: 'smooth' })
+      } else {
+        root.style.scrollBehavior = 'auto'
+        window.scrollTo(0, top)
+        root.style.scrollBehavior = previousBehavior
+      }
+
+      return shouldAnimate
+    }
+
+    function alignChapter(hash = window.location.hash, behavior = 'auto') {
       if (cancelled || !hash) return
 
       const target = document.getElementById(hash.slice(1))
@@ -70,35 +86,32 @@ export default function LandingStory({ children }) {
       const puzzleDepth = Number.parseFloat(
         window.getComputedStyle(flow).getPropertyValue('--landing-puzzle-depth'),
       ) || 0
-      const storyTop = window.scrollY + story.getBoundingClientRect().top
-      const targetTop = storyTop + target.offsetTop
-      const destination = targetTop - headerHeight - puzzleDepth
-      const root = document.documentElement
-      const previousBehavior = root.style.scrollBehavior
+      const storyChildren = Array.from(story.children)
+      const targetIndex = storyChildren.indexOf(target)
 
-      root.style.scrollBehavior = 'auto'
-      window.scrollTo(0, Math.max(0, destination))
-      root.style.scrollBehavior = previousBehavior
-      alignedScrollY = window.scrollY
+      if (targetIndex < 0) return
+
+      const storyTop = window.scrollY + story.getBoundingClientRect().top
+      const chapterOffset = storyChildren
+        .slice(0, targetIndex)
+        .reduce((offset, element) => offset + element.offsetHeight, 0)
+      const targetTop = storyTop + chapterOffset
+      const destination = targetTop - headerHeight - puzzleDepth
+      const shouldAnimate = scrollToPosition(Math.max(0, destination), behavior)
+
+      alignedScrollY = shouldAnimate ? null : window.scrollY
     }
 
-    function queueAlignment(hash) {
+    function queueAlignment(hash, behavior = 'auto') {
       scheduledFrames.forEach((scheduledFrame) => window.cancelAnimationFrame(scheduledFrame))
-      scheduledTimers.forEach((timer) => window.clearTimeout(timer))
       scheduledFrames.clear()
-      scheduledTimers.clear()
 
       const frame = window.requestAnimationFrame(() => {
         scheduledFrames.delete(frame)
-        alignChapter(hash)
+        alignChapter(hash, behavior)
       })
-      const timer = window.setTimeout(() => {
-        scheduledTimers.delete(timer)
-        alignChapter(hash)
-      }, 80)
 
       scheduledFrames.add(frame)
-      scheduledTimers.add(timer)
     }
 
     function handleHashNavigation() {
@@ -120,14 +133,40 @@ export default function LandingStory({ children }) {
       if (!anchor) return
 
       const url = new URL(anchor.href, window.location.href)
+      const isSamePage = url.origin === window.location.origin
+        && url.pathname === window.location.pathname
       const target = url.hash ? document.getElementById(url.hash.slice(1)) : null
 
+      if (isSamePage && !url.hash) {
+        event.preventDefault()
+
+        const nextLocation = `${url.pathname}${url.search}`
+
+        if (window.location.hash || window.location.search !== url.search) {
+          window.history.pushState(window.history.state, '', nextLocation)
+        } else {
+          window.history.replaceState(window.history.state, '', nextLocation)
+        }
+
+        alignedScrollY = scrollToPosition(0, 'smooth') ? null : window.scrollY
+        return
+      }
+
       if (
-        url.origin === window.location.origin
-        && url.pathname === window.location.pathname
+        isSamePage
         && target?.classList.contains('landing-story-chapter')
       ) {
-        queueAlignment(url.hash)
+        event.preventDefault()
+
+        const nextLocation = `${url.pathname}${url.search}${url.hash}`
+
+        if (window.location.hash === url.hash) {
+          window.history.replaceState(window.history.state, '', nextLocation)
+        } else {
+          window.history.pushState(window.history.state, '', nextLocation)
+        }
+
+        queueAlignment(url.hash, 'smooth')
       }
     }
 
@@ -157,7 +196,6 @@ export default function LandingStory({ children }) {
       window.cancelAnimationFrame(frame)
       if (footerBoundaryFrame !== null) window.cancelAnimationFrame(footerBoundaryFrame)
       scheduledFrames.forEach((scheduledFrame) => window.cancelAnimationFrame(scheduledFrame))
-      scheduledTimers.forEach((timer) => window.clearTimeout(timer))
       document.querySelector('.landing-puzzle-flow')?.classList.remove('landing-footer-at-header')
       window.removeEventListener('hashchange', handleHashNavigation)
       window.removeEventListener('popstate', handleHashNavigation)
