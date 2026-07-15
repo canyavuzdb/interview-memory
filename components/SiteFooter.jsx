@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
+import BinaryMaidenTower from './BinaryMaidenTower'
 
 export default function SiteFooter({ copy, locale }) {
   const productLinks = [
@@ -11,7 +12,7 @@ export default function SiteFooter({ copy, locale }) {
   return (
     <footer
       id="site-footer"
-      className="mx-auto max-w-7xl px-5 pb-16 pt-16 text-[var(--brand-cream)] sm:px-6 sm:pb-8 md:pt-20 lg:px-8"
+      className="mx-auto max-w-7xl px-5 pb-16 pt-24 text-[var(--brand-cream)] sm:px-6 sm:pb-8 sm:pt-28 md:pt-32 lg:px-8"
     >
       <div className="grid gap-12 lg:grid-cols-[minmax(0,1.25fr)_0.65fr_0.75fr_minmax(18rem,1fr)] lg:gap-10">
         <div>
@@ -101,6 +102,10 @@ export default function SiteFooter({ copy, locale }) {
       <div className="mt-14 flex flex-col gap-3 border-t border-[var(--brand-dark-line)] pt-6 font-mono text-[8px] font-bold uppercase tracking-[0.09em] text-[var(--brand-dark-muted)] sm:flex-row sm:items-center sm:justify-between sm:pl-24">
         <p>© {new Date().getFullYear()} {copy.copyright}</p>
         <p>{copy.sourceNote}</p>
+      </div>
+
+      <div className="footer-binary-maiden" aria-hidden="true">
+        <BinaryMaidenTower />
       </div>
     </footer>
   )

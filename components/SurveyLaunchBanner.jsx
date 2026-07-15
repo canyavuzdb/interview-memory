@@ -26,7 +26,7 @@ export default function SurveyLaunchBanner({ copy, href }) {
   }
 
   return (
-    <section id="surveys" className="mx-auto max-w-7xl px-5 py-10 sm:px-6 lg:px-8">
+    <section className="mx-auto max-w-7xl px-5 py-10 sm:px-6 lg:px-8">
       <Link
         href={href}
         className="survey-launch-banner group relative grid overflow-hidden py-7 md:grid-cols-[11rem_minmax(0,1fr)_auto] md:items-center md:gap-10 md:px-5 lg:gap-14"
@@ -79,14 +79,17 @@ export default function SurveyLaunchBanner({ copy, href }) {
           <span className="whitespace-nowrap font-mono text-[9px] font-bold uppercase tracking-[0.08em] text-muted">
             {copy.meta}
           </span>
+          <span
+            aria-hidden="true"
+            className="relative mt-0.5 block h-px w-24 overflow-hidden bg-[var(--line-strong)]"
+          >
+            <span
+              key={`progress-${activeIndex}-${cycleKey}`}
+              className="survey-launch-progress absolute inset-y-0 left-0 w-full bg-accent"
+              onAnimationEnd={advanceItem}
+            />
+          </span>
         </span>
-
-        <span
-          key={`progress-${activeIndex}-${cycleKey}`}
-          aria-hidden="true"
-          className="survey-launch-progress absolute bottom-0 right-0 h-px w-24 bg-accent md:right-5"
-          onAnimationEnd={advanceItem}
-        />
       </Link>
     </section>
   )

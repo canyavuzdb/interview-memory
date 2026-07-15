@@ -7,6 +7,24 @@ import ResponseStatusBar from '@/components/ResponseStatusBar'
 
 const ROTATION_MS = 10000
 
+const COVERAGE_LAYOUT = [
+  'col-span-4 row-span-3',
+  'col-span-2 row-span-3',
+  'col-span-2 row-span-2',
+  'col-span-2 row-span-2',
+  'col-span-2',
+  'col-span-2',
+]
+
+const COVERAGE_TONES = [
+  { background: 'var(--ink)', color: 'var(--surface)' },
+  { background: 'color-mix(in srgb, var(--accent) 58%, var(--surface))', color: 'var(--ink)' },
+  { background: 'color-mix(in srgb, var(--accent) 44%, var(--surface))', color: 'var(--ink)' },
+  { background: 'color-mix(in srgb, var(--accent) 32%, var(--surface))', color: 'var(--ink)' },
+  { background: 'color-mix(in srgb, var(--accent) 22%, var(--surface))', color: 'var(--ink)' },
+  { background: 'var(--surface-muted)', color: 'var(--ink)' },
+]
+
 function EffortChart({ card }) {
   return (
     <div role="img" aria-label={card.chartAria}>
@@ -25,7 +43,7 @@ function EffortChart({ card }) {
                 className="h-full min-w-1 bg-ink transition-[width] duration-700"
                 style={{ width: stage.share }}
               />
-              <span className="absolute left-2 top-1/2 -translate-y-1/2 font-mono text-[9px] font-bold text-surface mix-blend-difference">
+              <span className="absolute left-2 top-1/2 -translate-y-1/2 font-mono text-[9px] font-bold text-surface">
                 {stage.share}
               </span>
             </div>
@@ -60,63 +78,67 @@ function ReliabilityChart({ card }) {
   )
 }
 
-function HeatmapChart({ card }) {
-  const values = card.rows.flatMap((row) => row.values)
-  const maxValue = Math.max(...values)
-
+function CoverageChart({ card }) {
   return (
-    <div role="img" aria-label={card.chartAria}>
+    <div>
       <div className="mb-4 flex items-end justify-between gap-4">
         <p className="font-mono text-[9px] font-bold uppercase tracking-[0.11em] text-muted">
           {card.chartLabel}
         </p>
-        <p className="text-right font-mono text-[8px] font-bold uppercase tracking-[0.08em] text-muted">
-          {card.columnLabel}
+        <p className="text-right font-mono text-[8px] font-bold uppercase tracking-[0.08em] text-accentDark">
+          {card.dataLabel}
         </p>
       </div>
 
-      <div className="grid grid-cols-[4.25rem_repeat(4,minmax(0,1fr))] gap-1.5">
-        <span aria-hidden="true" />
-        {card.columns.map((column) => (
-          <span key={column} className="text-center font-mono text-[8px] font-bold uppercase text-muted">
-            {column}
-          </span>
-        ))}
-
-        {card.rows.map((row) => (
-          <div key={row.label} className="contents">
-            <span className="flex items-center font-mono text-[9px] font-bold uppercase tracking-[0.04em] text-muted">
-              {row.label}
+      <ul
+        aria-label={card.chartAria}
+        className="hidden h-[280px] grid-flow-row grid-rows-3 gap-1 lg:grid"
+        style={{ gridTemplateColumns: 'repeat(10, minmax(0, 1fr))' }}
+      >
+        {card.items.map((item, index) => (
+          <li
+            key={item.label}
+            className={`${COVERAGE_LAYOUT[index]} flex min-w-0 flex-col justify-end overflow-hidden border border-[var(--line-strong)] p-3`}
+            style={COVERAGE_TONES[index]}
+          >
+            <span className="truncate font-mono text-[8px] font-bold uppercase tracking-[0.05em] sm:text-[9px]">
+              {item.label}
             </span>
-            {row.values.map((value, index) => {
-              const intensity = 12 + Math.round((value / maxValue) * 48)
-              return (
-                <span
-                  key={`${row.label}-${card.columns[index]}`}
-                  className="grid min-h-16 place-items-center border border-[var(--line-strong)] font-mono text-sm font-bold text-ink sm:min-h-20"
-                  style={{ backgroundColor: `color-mix(in srgb, var(--accent) ${intensity}%, var(--surface))` }}
-                  title={`${row.label}, ${card.columns[index]}: %${value}`}
-                >
-                  %{value}
-                </span>
-              )
-            })}
-          </div>
+            <span className="mt-1 font-mono text-lg font-bold tracking-[-0.05em]">
+              %{item.value}
+            </span>
+          </li>
         ))}
-      </div>
+      </ul>
 
-      <div className="mt-4 flex items-center justify-between gap-3 font-mono text-[8px] font-bold uppercase tracking-[0.06em] text-muted">
-        <span>{card.lowLabel}</span>
-        <span className="h-1 flex-1 bg-gradient-to-r from-[var(--surface-muted)] to-[var(--accent)]" aria-hidden="true" />
-        <span>{card.highLabel}</span>
-      </div>
+      <ul aria-label={card.chartAria} className="space-y-2 lg:hidden">
+        {card.items.map((item, index) => (
+          <li key={item.label}>
+            <div className="mb-1.5 flex items-center justify-between gap-3 font-mono text-[9px] font-bold uppercase tracking-[0.06em] text-muted">
+              <span>{item.label}</span>
+              <span className="text-ink">%{item.value}</span>
+            </div>
+            <div className="h-5 border border-[var(--line-strong)] bg-[var(--surface-muted)]">
+              <span
+                aria-hidden="true"
+                className="block h-full min-w-1"
+                style={{ ...COVERAGE_TONES[index], width: `${item.value}%` }}
+              />
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      <p className="mt-4 border-t border-line pt-4 font-mono text-[8px] font-bold uppercase leading-4 tracking-[0.06em] text-muted">
+        {card.note}
+      </p>
     </div>
   )
 }
 
 function Chart({ card }) {
   if (card.type === 'reliability') return <ReliabilityChart card={card} />
-  if (card.type === 'heatmap') return <HeatmapChart card={card} />
+  if (card.type === 'coverage') return <CoverageChart card={card} />
   return <EffortChart card={card} />
 }
 
@@ -137,16 +159,16 @@ export default function CommunityStats({ copy, locale }) {
 
   return (
     <section className="mx-auto max-w-7xl px-5 py-12 sm:px-6 lg:px-8 lg:py-14">
-      <div className="flex items-center justify-between gap-5 pb-2">
-        <div className="flex items-baseline gap-3">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-accent">
+      <div className="grid gap-3 pb-2 sm:flex sm:items-center sm:justify-between sm:gap-5">
+        <div className="flex flex-wrap items-baseline gap-3">
+          <p className="community-stats-zone-eyebrow font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-accent">
             {copy.eyebrow}
           </p>
           <h2 className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-ink sm:text-xs">
             {copy.title}
           </h2>
         </div>
-        <p className="text-right font-mono text-[8px] font-bold uppercase leading-4 tracking-[0.08em] text-muted sm:text-[9px]">
+        <p className="community-stats-zone-note font-mono text-[8px] font-bold uppercase leading-4 tracking-[0.08em] text-muted sm:text-right sm:text-[9px]">
           {copy.note}
         </p>
       </div>
@@ -181,7 +203,7 @@ export default function CommunityStats({ copy, locale }) {
 
         <div
           key={activeCard.code}
-          className="community-signal-panel grid min-h-[500px] lg:grid-cols-[0.36fr_0.64fr]"
+          className="community-signal-panel grid min-h-[46rem] lg:min-h-[500px] lg:grid-cols-[0.36fr_0.64fr]"
           role="tabpanel"
         >
           <div className="flex flex-col border-b border-line p-6 sm:p-8 lg:border-b-0 lg:border-r">
@@ -214,6 +236,7 @@ export default function CommunityStats({ copy, locale }) {
             </div>
           </div>
         </div>
+
       </div>
     </section>
   )
