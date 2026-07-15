@@ -543,13 +543,26 @@ body {
 
 .hero-analytics-panel {
   isolation: isolate;
+  transform: translate3d(-3px, -3px, 0);
   box-shadow:
-    2px 2px 0 color-mix(in srgb, var(--line-strong) 24%, transparent),
-    0 4px 12px color-mix(in srgb, var(--ink) 5%, transparent);
+    6px 6px 0 color-mix(in srgb, var(--line-strong) 42%, transparent),
+    0 16px 28px color-mix(in srgb, var(--ink) 9%, transparent);
+  transition:
+    transform 240ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hero-analytics-panel:hover .analytics-tab-progress {
   animation-play-state: paused;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hero-analytics-panel:hover {
+    transform: translate3d(-4px, -4px, 0);
+    box-shadow:
+      8px 8px 0 color-mix(in srgb, var(--line-strong) 46%, transparent),
+      0 20px 34px color-mix(in srgb, var(--ink) 11%, transparent);
+  }
 }
 
 .survey-launch-progress {
