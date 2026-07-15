@@ -67,10 +67,19 @@ const messages = {
     },
     header: {
       navLabel: 'Ana navigasyon',
+      mobileNavLabel: 'Mobil navigasyon',
       surveys: 'Anketler',
       howItWorks: 'Nasıl çalışır?',
       data: 'Veriler',
       community: 'Topluluk sinyalleri',
+      surveyMenuLabel: 'Anket seçenekleri',
+      surveyTypes: 'Anket türleri',
+      applicationBenchmark: 'İş arama sürecini karşılaştır',
+      applicationBenchmarkDescription: 'Başvuru eforunu ve süreyi benzer adaylarla ölç.',
+      companyExperience: 'Şirket deneyimini paylaş',
+      companyExperienceDescription: 'Başvuru ve mülakat sürecini anonim kayda dönüştür.',
+      menuOpen: 'Menüyü aç',
+      menuClose: 'Menüyü kapat',
       signIn: 'Giriş yap',
     },
     footer: {
@@ -439,26 +448,119 @@ const messages = {
           ],
         },
         {
-          type: 'heatmap',
+          type: 'coverage',
           code: '03 /',
-          label: 'Benzer adaylar',
-          eyebrow: 'Rol ve efor karşılaştırması',
-          title: 'Benzer adaylar hangi başvuru aralığında görüşmeye ulaşıyor?',
-          description: 'Deneyim seviyesi ve başvuru eforunu birlikte okuyarak benzer profillerin görüşmeye ulaşma olasılığını karşılaştırıyoruz.',
-          summary: 'Anketi tamamladığında kendi aralığını bu haritada görebileceksin.',
+          label: 'Veri kapsamı',
+          eyebrow: 'Rol dağılımı / temsili',
+          title: 'Hangi alanlarda daha fazla deneyim birikiyor?',
+          description: 'Rol ailelerinin topluluk içindeki temsilini göstererek hangi alanlarda daha güçlü bir karşılaştırma zemini oluştuğunu görünür kılıyoruz.',
+          summary: 'Katkı yoğunluğu iş ilanı talebini veya piyasa popülerliğini göstermez.',
           path: '/surveys/application-benchmark',
-          cta: 'Haritadaki yerini gör',
-          chartLabel: 'Teknik görüşmeye ulaşanların payı',
-          columnLabel: 'Başvuru sayısı',
-          chartAria: 'Deneyim seviyesi ve başvuru sayısına göre teknik görüşmeye ulaşma oranlarını gösteren ısı haritası.',
-          columns: ['0–25', '26–50', '51–100', '100+'],
-          rows: [
-            { label: 'Junior', values: [8, 17, 29, 38] },
-            { label: 'Mid', values: [16, 31, 44, 53] },
-            { label: 'Senior', values: [28, 47, 61, 69] },
+          cta: 'Alanındaki sinyali güçlendir',
+          chartLabel: 'Toplulukta temsil edilen rol aileleri',
+          dataLabel: 'Temsili dağılım',
+          chartAria: 'Temsili rol dağılımı: Yazılım yüzde 40, Ürün yüzde 20, Veri yüzde 14, Tasarım yüzde 12, Platform ve kalite yüzde 8, Diğer yüzde 6.',
+          note: 'Yeterli örneklem oluşmayan alanlar “Diğer” altında gruplanır.',
+          items: [
+            { label: 'Yazılım', value: 40 },
+            { label: 'Ürün', value: 20 },
+            { label: 'Veri', value: 14 },
+            { label: 'Tasarım', value: 12 },
+            { label: 'Platform + QA', value: 8 },
+            { label: 'Diğer', value: 6 },
           ],
-          lowLabel: 'Düşük oran',
-          highLabel: 'Yüksek oran',
+        },
+      ],
+    },
+    platformGuide: {
+      eyebrow: '04 /',
+      title: 'Platformu tanı',
+      note: 'Planlanan ürün akışı / frontend prototip',
+      controlsLabel: 'Platform bilgileri',
+      prototypeNote:
+        'Bu frontend prototip yanıtları kaydetmez; gösterilen topluluk verileri temsilidir.',
+      panels: [
+        {
+          id: 'how',
+          code: '01 /',
+          label: 'Nasıl çalışır?',
+          eyebrow: 'Deneyimden sinyale',
+          title: 'Tek bir süreç kaydı, karşılaştırılabilir topluluk sinyaline dönüşür.',
+          description:
+            'Kısa formlar kişisel hikâyeyi değil, işe alım sürecinin ölçülebilir parçalarını toplamak üzere tasarlandı.',
+          steps: [
+            {
+              code: '01 /',
+              title: 'Sürecini paylaş',
+              description: 'Rolünü, başvuru eforunu veya şirket deneyimini kısa formda aktar.',
+            },
+            {
+              code: '02 /',
+              title: 'Kayıtlar gruplansın',
+              description:
+                'Veri katmanı bağlandığında yanıtlar rol, deneyim ve süreç aşamasına göre anonim gruplara ayrılacak.',
+            },
+            {
+              code: '03 /',
+              title: 'Yerini gör',
+              description:
+                'Yeterli örneklem oluştuğunda kendi sürecini topluluk sinyalleriyle karşılaştır.',
+            },
+          ],
+        },
+        {
+          id: 'offerings',
+          code: '02 /',
+          label: 'Ne sunar?',
+          eyebrow: 'Platform çıktıları',
+          title: 'Tek katkı, üç farklı görünürlüğe dönüşür.',
+          description:
+            'Planlanan ürün yapısında aynı süreç kaydı hem kişisel takibe hem de ortak işe alım bilgisinin oluşmasına hizmet eder.',
+          items: [
+            {
+              code: '01 /',
+              title: 'Kişisel süreç özeti',
+              description: 'Başvuru eforunu, süreyi ve dönüşüm hattını tek görünümde takip et.',
+            },
+            {
+              code: '02 /',
+              title: 'Topluluk karşılaştırması',
+              description:
+                'Benzer rol ve deneyim gruplarındaki sürecini ortak sinyallerle karşılaştır.',
+            },
+            {
+              code: '03 /',
+              title: 'Şirket süreci görünürlüğü',
+              description:
+                'Tekrarlanan ghosting, gecikme ve feedback davranışlarını ortak sinyale dönüştür.',
+            },
+          ],
+        },
+        {
+          id: 'faq',
+          code: '03 /',
+          label: 'Merak edilenler',
+          eyebrow: 'Kısa yanıtlar',
+          title: 'Platformla ilgili en temel üç soru.',
+          description:
+            'Bu aşamada ürünün çalışma biçimini anlamak için gereken kısa ve doğrudan yanıtlar.',
+          faqs: [
+            {
+              question: 'Paylaşım gerçekten anonim mi?',
+              answer:
+                'Formlar ad, e-posta veya kişisel belge istemeyecek şekilde tasarlanır. Gerçek veri katmanında sonuçlar tekil kayıtlar yerine yeterli örnekleme ulaşan gruplar üzerinden sunulacaktır.',
+            },
+            {
+              question: 'Her kayıt doğrudan yayınlanır mı?',
+              answer:
+                'Hayır. Planlanan akışta moderasyon ve minimum örneklem eşiğini geçmeyen kayıtlar herkese açık sonuçlara dahil edilmeyecektir.',
+            },
+            {
+              question: 'Giriş yapmak neyi değiştirir?',
+              answer:
+                'Anonim katkı için giriş zorunlu olmayacak. Hesap altyapısı devreye girdiğinde giriş; süreçlerini saklama, karşılaştırmaları takip etme ve kişisel iş günlüğüne erişme imkânı verecek.',
+            },
+          ],
         },
       ],
     },
@@ -922,10 +1024,19 @@ const messages = {
     },
     header: {
       navLabel: 'Main navigation',
+      mobileNavLabel: 'Mobile navigation',
       surveys: 'Surveys',
       howItWorks: 'How it works',
       data: 'Data',
       community: 'Community signals',
+      surveyMenuLabel: 'Survey options',
+      surveyTypes: 'Survey types',
+      applicationBenchmark: 'Compare your job search',
+      applicationBenchmarkDescription: 'Measure your application effort and timeline against similar candidates.',
+      companyExperience: 'Share a company experience',
+      companyExperienceDescription: 'Turn an application or interview process into an anonymous record.',
+      menuOpen: 'Open menu',
+      menuClose: 'Close menu',
       signIn: 'Sign in',
     },
     footer: {
@@ -1294,26 +1405,117 @@ const messages = {
           ],
         },
         {
-          type: 'heatmap',
+          type: 'coverage',
           code: '03 /',
-          label: 'Similar candidates',
-          eyebrow: 'Role and effort comparison',
-          title: 'At what application range do similar candidates reach an interview?',
-          description: 'Experience level and application effort are combined to compare how often similar profiles reach an interview.',
-          summary: 'Complete the survey to see your own range on this map.',
+          label: 'Data coverage',
+          eyebrow: 'Role distribution / illustrative',
+          title: 'Where are more candidate experiences accumulating?',
+          description: 'Role-family representation shows where the community is building a stronger basis for comparison.',
+          summary: 'Contribution density does not represent job-market demand or role popularity.',
           path: '/surveys/application-benchmark',
-          cta: 'See your place on the map',
-          chartLabel: 'Share reaching a technical interview',
-          columnLabel: 'Application count',
-          chartAria: 'A heatmap showing technical interview rates by experience level and application count.',
-          columns: ['0–25', '26–50', '51–100', '100+'],
-          rows: [
-            { label: 'Junior', values: [8, 17, 29, 38] },
-            { label: 'Mid', values: [16, 31, 44, 53] },
-            { label: 'Senior', values: [28, 47, 61, 69] },
+          cta: 'Strengthen the signal in your field',
+          chartLabel: 'Role families represented in the community',
+          dataLabel: 'Illustrative distribution',
+          chartAria: 'Illustrative role distribution: Software 40 percent, Product 20 percent, Data 14 percent, Design 12 percent, Platform and quality 8 percent, Other 6 percent.',
+          note: 'Groups without a sufficient sample are combined under “Other”.',
+          items: [
+            { label: 'Software', value: 40 },
+            { label: 'Product', value: 20 },
+            { label: 'Data', value: 14 },
+            { label: 'Design', value: 12 },
+            { label: 'Platform + QA', value: 8 },
+            { label: 'Other', value: 6 },
           ],
-          lowLabel: 'Lower rate',
-          highLabel: 'Higher rate',
+        },
+      ],
+    },
+    platformGuide: {
+      eyebrow: '04 /',
+      title: 'Explore the platform',
+      note: 'Planned product flow / frontend prototype',
+      controlsLabel: 'Platform information',
+      prototypeNote:
+        'This frontend prototype does not save responses; the community data shown is illustrative.',
+      panels: [
+        {
+          id: 'how',
+          code: '01 /',
+          label: 'How it works',
+          eyebrow: 'Experience to signal',
+          title: 'One process record becomes a comparable community signal.',
+          description:
+            'Short forms are designed to capture measurable parts of hiring, rather than a personally identifiable story.',
+          steps: [
+            {
+              code: '01 /',
+              title: 'Share your process',
+              description: 'Add your role, application effort, or company experience in a short form.',
+            },
+            {
+              code: '02 /',
+              title: 'Group the records',
+              description:
+                'Once the data layer is connected, responses will be grouped anonymously by role, experience, and process stage.',
+            },
+            {
+              code: '03 /',
+              title: 'See where you stand',
+              description:
+                'Compare your process with community signals once a group reaches a sufficient sample.',
+            },
+          ],
+        },
+        {
+          id: 'offerings',
+          code: '02 /',
+          label: 'What it offers',
+          eyebrow: 'Platform outputs',
+          title: 'One contribution creates three kinds of visibility.',
+          description:
+            'In the planned product, the same process record supports both personal tracking and shared hiring knowledge.',
+          items: [
+            {
+              code: '01 /',
+              title: 'Personal process summary',
+              description: 'Track application effort, duration, and your conversion path in one view.',
+            },
+            {
+              code: '02 /',
+              title: 'Community comparison',
+              description: 'Compare your process with shared signals from similar role and experience groups.',
+            },
+            {
+              code: '03 /',
+              title: 'Company-process visibility',
+              description: 'Turn recurring ghosting, delays, and feedback behavior into a shared signal.',
+            },
+          ],
+        },
+        {
+          id: 'faq',
+          code: '03 /',
+          label: 'Common questions',
+          eyebrow: 'Short answers',
+          title: 'The three essential questions about the platform.',
+          description:
+            'Short, direct answers needed to understand how the product is intended to work at this stage.',
+          faqs: [
+            {
+              question: 'Is sharing really anonymous?',
+              answer:
+                'Forms are designed not to request names, email addresses, or personal documents. In the real data layer, results will be shown for groups with sufficient samples rather than as individual records.',
+            },
+            {
+              question: 'Is every record published immediately?',
+              answer:
+                'No. In the planned flow, records that do not pass moderation and minimum-sample thresholds will not enter public results.',
+            },
+            {
+              question: 'What changes when I sign in?',
+              answer:
+                'Sign-in will not be required for anonymous contributions. Once accounts are connected, signing in will let you save processes, follow comparisons, and access a personal job-search journal.',
+            },
+          ],
         },
       ],
     },

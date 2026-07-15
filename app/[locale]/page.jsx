@@ -1,9 +1,11 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowRight, LogIn, Search } from 'lucide-react'
+import { ArrowRight, Search } from 'lucide-react'
 import CommunityStats from '@/components/CommunityStats'
 import HeroAnalyticsPanel from '@/components/HeroAnalyticsPanel'
-import PreferenceControls from '@/components/PreferenceControls'
+import LandingStory, { LandingStoryChapter } from '@/components/LandingStory'
+import PlatformGuide from '@/components/PlatformGuide'
+import PublicHeader from '@/components/PublicHeader'
 import SiteFooter from '@/components/SiteFooter'
 import StableLocalizedText from '@/components/StableLocalizedText'
 import SurveyLaunchBanner from '@/components/SurveyLaunchBanner'
@@ -32,63 +34,12 @@ export default async function HomePage({ params }) {
 
   return (
     <main className="landing-grid min-h-screen text-ink">
-      <header className="sticky top-0 z-30 border-b border-[var(--line-strong)] bg-transparent">
-        <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto] items-center px-5 py-3 sm:px-6 lg:grid-cols-[1fr_auto_1fr] lg:px-8">
-          <Link href={`/${locale}`} className="flex items-center gap-3 justify-self-start" aria-label={messages.common.homeAria}>
-            <div className="brand-logo-mark grid h-9 w-9 place-items-center border bg-surfaceMuted font-mono text-[11px] font-bold tracking-[-0.08em] text-ink">
-              IM
-            </div>
-            <div>
-              <p className="text-xs font-bold uppercase leading-none tracking-[0.08em]">
-                <span className="text-accent">I</span>nterview
-              </p>
-              <p className="mt-1 text-xs font-bold uppercase leading-none tracking-[0.08em]">
-                <span className="text-accent">M</span>emory
-              </p>
-            </div>
-          </Link>
-
-          <nav
-            aria-label={messages.header.navLabel}
-            className="hidden justify-self-center divide-x divide-[var(--line-strong)] border border-[var(--line-strong)] bg-[var(--nav-surface)] font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--ink-soft)] lg:flex"
-          >
-            <Link href={`/${locale}/surveys`} className="brand-nav-item inline-flex items-center justify-center whitespace-nowrap px-5 py-2.5 transition hover:bg-[var(--surface-hover)] hover:text-accentDark">
-              <span className="mr-2 text-muted">01/</span>
-              <StableLocalizedText reserve={alternateMessages.header.surveys}>
-                {messages.header.surveys}
-              </StableLocalizedText>
-            </Link>
-            <a href="#stats" className="brand-nav-item inline-flex items-center justify-center whitespace-nowrap px-5 py-2.5 transition hover:bg-[var(--surface-hover)] hover:text-accentDark">
-              <span className="mr-2 text-muted">02/</span>
-              <StableLocalizedText reserve={alternateMessages.header.community}>
-                {messages.header.community}
-              </StableLocalizedText>
-            </a>
-          </nav>
-
-          <PreferenceControls
-            locale={locale}
-            languageLabel={messages.common.languageLabel}
-            themeLabel={messages.common.themeToggle}
-            themeTitle={messages.common.themeTitle}
-            className="justify-self-end"
-          >
-            <Link
-              href={`/${locale}/login`}
-              aria-label={messages.header.signIn}
-              className="inline-flex h-9 min-w-9 items-center justify-center gap-2 border border-ink bg-ink px-2 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-surface transition hover:-translate-y-px hover:bg-accentDark hover:text-surface md:px-4"
-            >
-              <LogIn size={15} aria-hidden="true" />
-              <StableLocalizedText
-                reserve={alternateMessages.header.signIn}
-                className="hidden md:grid"
-              >
-                {messages.header.signIn}
-              </StableLocalizedText>
-            </Link>
-          </PreferenceControls>
-        </div>
-      </header>
+      <PublicHeader
+        alternateCopy={alternateMessages.header}
+        common={messages.common}
+        copy={messages.header}
+        locale={locale}
+      />
 
       <section className="mx-auto grid max-w-7xl items-stretch gap-12 px-5 py-16 sm:px-6 md:py-20 lg:px-8 lg:py-24 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
         <div className="min-w-0 flex flex-col justify-center">
@@ -153,20 +104,26 @@ export default async function HomePage({ params }) {
       </section>
 
       <div className="landing-puzzle-flow">
-        <div className="landing-survey-zone">
-          <SurveyLaunchBanner
-            copy={messages.home.surveyPrompt}
-            href={`/${locale}/surveys`}
-          />
-        </div>
+        <LandingStory>
+          <LandingStoryChapter id="surveys" tone="survey">
+            <SurveyLaunchBanner
+              copy={messages.home.surveyPrompt}
+              href={`/${locale}/surveys`}
+            />
+          </LandingStoryChapter>
 
-        <div id="stats" className="landing-data-zone scroll-mt-16">
-          <CommunityStats copy={messages.community} locale={locale} />
-        </div>
+          <LandingStoryChapter id="stats" tone="data">
+            <CommunityStats copy={messages.community} locale={locale} />
+          </LandingStoryChapter>
 
-        <div className="landing-footer-zone">
-          <SiteFooter copy={{ ...messages.footer, homeAria: messages.common.homeAria }} locale={locale} />
-        </div>
+          <LandingStoryChapter id="how-it-works" tone="info">
+            <PlatformGuide copy={messages.platformGuide} />
+          </LandingStoryChapter>
+
+          <div className="landing-footer-zone">
+            <SiteFooter copy={{ ...messages.footer, homeAria: messages.common.homeAria }} locale={locale} />
+          </div>
+        </LandingStory>
       </div>
 
       <a
