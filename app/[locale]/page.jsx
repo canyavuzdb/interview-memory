@@ -41,24 +41,24 @@ export default async function HomePage({ params }) {
         locale={locale}
       />
 
-      <section className="mx-auto grid max-w-7xl items-stretch gap-12 px-5 py-16 sm:px-6 md:py-20 lg:px-8 lg:py-24 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+      <section className="mx-auto grid max-w-[1240px] items-stretch gap-12 px-5 py-16 sm:px-6 md:py-20 lg:px-8 lg:py-24 xl:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] xl:items-center xl:gap-10">
         <div className="min-w-0 flex flex-col justify-center">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-accent">
             {messages.home.hero.eyebrow}
           </p>
 
-          <h1 className="mt-5 max-w-4xl text-5xl font-semibold tracking-[-0.06em] text-ink sm:text-6xl lg:text-7xl">
+          <h1 className="mt-5 max-w-4xl text-5xl font-semibold leading-[0.96] tracking-[-0.065em] text-ink sm:text-6xl lg:text-[5rem] xl:text-[5.25rem]">
             {messages.home.hero.title}{' '}
-            <span className="font-mono text-[0.82em] tracking-[-0.075em] text-accentDark">
+            <span className="hero-title-highlight font-mono text-[0.82em] tracking-[-0.075em] text-accentDark">
               {messages.home.hero.titleHighlight}
             </span>
           </h1>
 
-          <p className="mt-7 max-w-xl text-xl font-semibold leading-8 tracking-tight text-ink">
+          <p className="mt-8 max-w-2xl text-xl font-semibold leading-8 tracking-tight text-ink sm:text-[1.35rem] xl:mt-6">
             {messages.home.hero.subtitle}
           </p>
 
-          <p className="mt-4 max-w-xl text-lg leading-8 text-muted">
+          <p className="mt-4 max-w-2xl text-lg leading-8 text-muted sm:text-[1.2rem]">
             {messages.home.hero.descriptionParts.pre}
             <span className="hero-body-highlight whitespace-nowrap font-mono">
               {messages.home.hero.descriptionParts.highlight}
@@ -66,16 +66,16 @@ export default async function HomePage({ params }) {
             {messages.home.hero.descriptionParts.post}
           </p>
 
-          <ul className="mt-7 flex flex-wrap gap-x-6 gap-y-2" aria-label={messages.home.hero.detailsLabel}>
+          <ul className="mt-7 flex flex-wrap gap-x-6 gap-y-2 xl:mt-5" aria-label={messages.home.hero.detailsLabel}>
             {messages.home.hero.details.map((detail) => (
-              <li key={detail} className="flex items-center gap-2 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-muted">
+              <li key={detail} className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.1em] text-muted">
                 <span className="h-1.5 w-1.5 bg-accent" aria-hidden="true" />
                 {detail}
               </li>
             ))}
           </ul>
 
-          <div className="mt-9 grid gap-3 sm:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+          <div className="mt-9 grid gap-3 sm:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] xl:mt-7 xl:translate-y-[31px]">
             <Link
               href={`/${locale}/surveys/application-benchmark`}
               className="hero-color-sweep-cta group relative flex h-16 w-full items-center justify-between gap-4 px-7 text-sm font-semibold"
@@ -88,17 +88,19 @@ export default async function HomePage({ params }) {
 
             <a
               href="#stats"
-              className="group inline-flex h-16 w-full items-center justify-center gap-3 rounded-sm border border-[var(--line-strong)] bg-surface px-5 py-3 text-center text-sm font-semibold text-ink shadow-sm transition hover:-translate-y-0.5 hover:border-[var(--accent-border)]"
+              className="group inline-flex h-16 w-full items-center justify-center rounded-sm border border-[var(--line-strong)] bg-surface px-5 py-3 text-center text-sm font-semibold text-ink shadow-sm"
             >
-              <StableLocalizedText reserve={alternateMessages.home.hero.benchmark}>
-                {messages.home.hero.benchmark}
-              </StableLocalizedText>
-              <Search size={17} className="text-accentDark transition-transform group-hover:scale-110" />
+              <span className="inline-flex items-center gap-3 transition-transform duration-200 group-hover:scale-[1.015]">
+                <StableLocalizedText reserve={alternateMessages.home.hero.benchmark}>
+                  {messages.home.hero.benchmark}
+                </StableLocalizedText>
+                <Search size={17} className="text-accentDark" />
+              </span>
             </a>
           </div>
         </div>
 
-        <div className="relative min-w-0">
+        <div className="hero-panel-shell relative min-w-0">
           <HeroAnalyticsPanel copy={messages.home.signal} locale={locale} />
         </div>
       </section>
