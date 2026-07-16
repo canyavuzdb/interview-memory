@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { ChevronDown, LogIn, Menu, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import BrandHomeLink from './brand/BrandHomeLink'
 import PreferenceControls from './PreferenceControls'
 import StableLocalizedText from './StableLocalizedText'
 
@@ -85,23 +86,11 @@ export default function PublicHeader({
       className="sticky top-0 z-30 border-b border-[var(--line-strong)] bg-transparent"
     >
       <div className="relative mx-auto grid max-w-7xl grid-cols-[auto_1fr] items-center gap-4 px-5 py-3 sm:px-6 lg:grid-cols-[1fr_auto_1fr] lg:px-8">
-        <Link
+        <BrandHomeLink
           href={`/${locale}`}
-          className="flex items-center gap-3 justify-self-start"
-          aria-label={common.homeAria}
-        >
-          <span className="brand-logo-mark grid h-9 w-9 place-items-center border bg-surfaceMuted font-mono text-[11px] font-bold tracking-[-0.08em] text-ink">
-            IM
-          </span>
-          <span className="hidden sm:block">
-            <span className="block text-xs font-bold uppercase leading-none tracking-[0.08em]">
-              <span className="text-accent">I</span>nterview
-            </span>
-            <span className="mt-1 block text-xs font-bold uppercase leading-none tracking-[0.08em]">
-              <span className="text-accent">M</span>emory
-            </span>
-          </span>
-        </Link>
+          label={common.homeAria}
+          className="justify-self-start"
+        />
 
         <nav
           aria-label={copy.navLabel}

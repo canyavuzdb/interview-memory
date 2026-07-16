@@ -131,6 +131,7 @@ const messages = {
       codeLabel: 'Sayfa bulunamadı',
     },
     home: {
+      tabTitleSuffix: 'Deneyimden Veriye',
       hero: {
         eyebrow: 'İş arama karşılaştırması',
         title: 'İş arama sürecinde',
@@ -1088,6 +1089,7 @@ const messages = {
       codeLabel: 'Page not found',
     },
     home: {
+      tabTitleSuffix: 'Experience, Measured',
       hero: {
         eyebrow: 'Job-search benchmark',
         title: 'Where do you stand in',

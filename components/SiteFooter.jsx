@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import BinaryMaidenTower from './BinaryMaidenTower'
+import BrandMark from './brand/BrandMark'
 
 export default function SiteFooter({ copy, locale }) {
   const productLinks = [
@@ -21,11 +22,12 @@ export default function SiteFooter({ copy, locale }) {
       <div className="mt-8 grid gap-12 lg:grid-cols-[minmax(0,1.25fr)_0.65fr_0.75fr_minmax(18rem,1fr)] lg:gap-10">
         <div>
           <Link href={`/${locale}`} className="inline-flex items-center gap-4" aria-label={copy.homeAria}>
-            <span className="grid h-16 w-16 place-items-center border border-[var(--brand-dark-line)] font-mono text-sm font-bold tracking-[-0.08em]">
-              IM
-            </span>
+            <BrandMark
+              accent="var(--brand-sage)"
+              className="h-16 w-16 text-[var(--brand-cream)]"
+            />
             <span className="block font-mono text-sm font-bold uppercase tracking-[0.1em]">
-              Interview Memory
+              Interview <span className="text-[var(--brand-sage)]">Memory</span>
             </span>
           </Link>
           <p className="mt-6 max-w-md text-sm leading-7 text-[var(--brand-dark-muted)]">
