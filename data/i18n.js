@@ -35,7 +35,7 @@ const messages = {
     },
     metadata: {
       home: {
-        title: 'Interview Memory',
+        title: 'Interview Memory — Anonim İşe Alım Verileri',
         description:
           'Adayların başvuru ve mülakat deneyimlerini anonim, karşılaştırılabilir işe alım verilerine dönüştüren platform.',
       },
@@ -131,7 +131,6 @@ const messages = {
       codeLabel: 'Sayfa bulunamadı',
     },
     home: {
-      tabTitleSuffix: 'Deneyimden Veriye',
       hero: {
         eyebrow: 'İş arama karşılaştırması',
         title: 'İş arama sürecinde',
@@ -993,7 +992,7 @@ const messages = {
     },
     metadata: {
       home: {
-        title: 'Interview Memory',
+        title: 'Interview Memory — Anonymous Hiring Data',
         description:
           'An open-source recruitment analytics platform that turns anonymous application and interview records into aggregated hiring benchmarks.',
       },
@@ -1089,7 +1088,6 @@ const messages = {
       codeLabel: 'Page not found',
     },
     home: {
-      tabTitleSuffix: 'Experience, Measured',
       hero: {
         eyebrow: 'Job-search benchmark',
         title: 'Where do you stand in',
