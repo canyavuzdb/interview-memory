@@ -128,13 +128,19 @@ function Metric({ label, primary = false, value }) {
   )
 }
 
-function AnalyticsView({ copy, locale, onAnimationEnd, outgoing = false, view }) {
+function AnalyticsView({ copy, locale, measuring = false, onAnimationEnd, outgoing = false, view }) {
+  const stateClass = measuring
+    ? 'invisible pointer-events-none relative col-start-1 row-start-1'
+    : outgoing
+      ? 'analytics-view-out pointer-events-none absolute inset-0 z-20 h-full'
+      : 'analytics-view-in absolute inset-0 z-10 h-full'
+
   return (
     <div
-      aria-hidden={outgoing || undefined}
-      inert={outgoing || undefined}
-      onAnimationEnd={onAnimationEnd}
-      className={`hero-panel-view flex h-full min-h-0 w-full flex-col ${outgoing ? 'analytics-view-out pointer-events-none absolute inset-0 z-10' : 'analytics-view-in relative z-0'}`}
+      aria-hidden={measuring || outgoing || undefined}
+      inert={measuring || outgoing || undefined}
+      onAnimationEnd={measuring ? undefined : onAnimationEnd}
+      className={`hero-panel-view flex min-h-0 w-full flex-col ${stateClass}`}
     >
       <div className="flex min-h-0 flex-1 flex-col py-3">
         <h2 className="hero-panel-title flex min-h-14 max-w-md items-end text-[1.4rem] font-semibold leading-[1.15] tracking-[-0.04em] text-ink">
@@ -221,7 +227,7 @@ export default function HeroAnalyticsPanel({ copy, locale }) {
     <section
       id="hero-signals"
       aria-label={copy.panelLabel}
-      className="hero-analytics-panel relative flex h-[620px] w-full min-w-0 scroll-mt-24 flex-col overflow-hidden border border-[var(--line-strong)] bg-surface shadow-[var(--shadow-card)] [overflow-anchor:none] sm:h-[590px] xl:h-[650px]"
+      className="hero-analytics-panel relative flex min-h-[620px] w-full min-w-0 scroll-mt-24 flex-col overflow-hidden border border-[var(--line-strong)] bg-surface shadow-[var(--shadow-card)] [overflow-anchor:none] sm:min-h-[590px] xl:min-h-[650px]"
     >
       <header className="flex min-h-[52px] items-center justify-between gap-4 border-b border-[var(--line-strong)] px-5 sm:px-6">
         <p className="font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-muted">
@@ -275,8 +281,17 @@ export default function HeroAnalyticsPanel({ copy, locale }) {
         id="hero-analytics-panel"
         role="tabpanel"
         aria-labelledby={`hero-tab-${view.id}`}
-        className="relative flex min-h-0 w-full flex-1 overflow-hidden"
+        className="relative grid min-h-0 w-full flex-1 overflow-hidden"
       >
+        {copy.views.map((candidate) => (
+          <AnalyticsView
+            key={`measure-${candidate.id}`}
+            measuring
+            copy={copy}
+            locale={locale}
+            view={candidate}
+          />
+        ))}
         {previousIndex !== null && (
           <AnalyticsView
             outgoing

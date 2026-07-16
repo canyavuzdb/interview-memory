@@ -106,7 +106,7 @@ export default async function HomePage({ params }) {
       </section>
 
       <div className="landing-puzzle-flow">
-        <LandingStory>
+        <LandingStory locale={locale}>
           <LandingStoryChapter id="surveys" tone="survey">
             <SurveyLaunchBanner
               copy={messages.home.surveyPrompt}

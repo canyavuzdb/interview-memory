@@ -19,7 +19,7 @@ export default function SiteFooter({ copy, locale }) {
         {copy.eyebrow}
       </p>
 
-      <div className="mt-8 grid gap-12 lg:grid-cols-[minmax(0,1.25fr)_0.65fr_0.75fr_minmax(18rem,1fr)] lg:gap-10">
+      <div className="mt-8 grid gap-12 md:grid-cols-2 lg:gap-10 xl:grid-cols-[minmax(0,1.25fr)_0.65fr_0.75fr_minmax(18rem,1fr)]">
         <div>
           <Link href={`/${locale}`} className="inline-flex items-center gap-4" aria-label={copy.homeAria}>
             <BrandMark

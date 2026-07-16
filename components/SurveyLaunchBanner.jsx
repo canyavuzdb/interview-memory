@@ -31,7 +31,16 @@ export default function SurveyLaunchBanner({ copy, href }) {
         href={href}
         className="survey-launch-banner group relative grid overflow-hidden py-7 md:grid-cols-[11rem_minmax(0,1fr)_auto] md:items-center md:gap-10 lg:gap-14"
       >
-        <span className="relative block min-h-10 overflow-hidden font-mono text-[10px] font-bold uppercase leading-5 tracking-[0.12em] text-accent md:min-h-0">
+        <span className="relative grid min-h-10 overflow-hidden font-mono text-[10px] font-bold uppercase leading-5 tracking-[0.12em] text-accent md:min-h-0">
+          {copy.items.map((candidate) => (
+            <span
+              key={`eyebrow-measure-${candidate.eyebrow}`}
+              aria-hidden="true"
+              className="invisible col-start-1 row-start-1 block"
+            >
+              {candidate.eyebrow}
+            </span>
+          ))}
           {previousIndex !== null && (
             <span
               aria-hidden="true"
@@ -41,12 +50,26 @@ export default function SurveyLaunchBanner({ copy, href }) {
               {copy.items[previousIndex].eyebrow}
             </span>
           )}
-          <span key={`eyebrow-${activeIndex}-${cycleKey}`} className="analytics-view-in block">
+          <span key={`eyebrow-${activeIndex}-${cycleKey}`} className="analytics-view-in col-start-1 row-start-1 block">
             {item.eyebrow}
           </span>
         </span>
 
-        <span className="relative mt-3 block min-h-[5.25rem] overflow-hidden md:mt-0">
+        <span className="relative mt-3 grid min-h-[5.25rem] overflow-hidden md:mt-0">
+          {copy.items.map((candidate) => (
+            <span
+              key={`content-measure-${candidate.eyebrow}`}
+              aria-hidden="true"
+              className="invisible col-start-1 row-start-1 block"
+            >
+              <span className="block text-lg font-semibold tracking-[-0.025em] text-ink">
+                {candidate.title}
+              </span>
+              <span className="mt-2.5 block max-w-3xl text-sm leading-6 text-muted">
+                {candidate.description}
+              </span>
+            </span>
+          ))}
           {previousIndex !== null && (
             <span aria-hidden="true" className="analytics-view-out absolute inset-0 block">
               <span className="block text-lg font-semibold tracking-[-0.025em] text-ink">
@@ -60,7 +83,7 @@ export default function SurveyLaunchBanner({ copy, href }) {
           <span
             key={`content-${activeIndex}-${cycleKey}`}
             aria-live="polite"
-            className="analytics-view-in block"
+            className="analytics-view-in col-start-1 row-start-1 block"
           >
             <span className="block text-lg font-semibold tracking-[-0.025em] text-ink">
               {item.title}
