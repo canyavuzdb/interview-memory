@@ -61,15 +61,32 @@ export default async function HomePage({ params }) {
           </h1>
 
           <p className="mt-7 max-w-xl text-xl font-semibold leading-8 tracking-tight text-ink">
-            {messages.home.hero.subtitle}
+            {messages.home.hero.subtitleParts.pre}
+            <span className="hero-anonymous-mark whitespace-nowrap">
+              <span className="relative z-10">{messages.home.hero.subtitleParts.highlight}</span>
+              <svg
+                className="hero-anonymous-scribble"
+                viewBox="0 0 160 24"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                <path
+                  className="hero-anonymous-stroke hero-anonymous-stroke-primary"
+                  pathLength="100"
+                  d="M4 13 C28 5 48 17 72 10 C95 3 119 14 156 7"
+                />
+                <path
+                  className="hero-anonymous-stroke hero-anonymous-stroke-secondary"
+                  pathLength="100"
+                  d="M13 18 C37 12 57 20 82 14 C106 9 128 17 150 12"
+                />
+              </svg>
+            </span>
+            {messages.home.hero.subtitleParts.post}
           </p>
 
           <p className="mt-4 max-w-xl text-lg leading-8 text-muted">
-            {messages.home.hero.descriptionParts.pre}
-            <span className="hero-body-highlight whitespace-nowrap font-mono">
-              {messages.home.hero.descriptionParts.highlight}
-            </span>
-            {messages.home.hero.descriptionParts.post}
+            {messages.home.hero.description}
           </p>
 
           <ul className="mt-7 flex flex-wrap gap-x-6 gap-y-2" aria-label={messages.home.hero.detailsLabel}>

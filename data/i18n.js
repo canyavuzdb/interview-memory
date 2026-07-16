@@ -131,20 +131,22 @@ const messages = {
       codeLabel: 'Sayfa bulunamadı',
     },
     home: {
+      tabTitleSuffix: 'Deneyimden Veriye',
       hero: {
         eyebrow: 'İş arama karşılaştırması',
         title: 'İş arama sürecinde',
         titleHighlight: 'neredesin?',
-        subtitle: 'İş arama süreni benzer rol ve deneyim gruplarıyla karşılaştır.',
+        subtitleParts: {
+          pre: 'İş arama süreni ',
+          highlight: 'anonim',
+          post: ' olarak paylaş; benzer rol ve deneyim gruplarıyla karşılaştır.',
+        },
         detailsLabel: 'Karşılaştırmada kullanılan bilgiler',
         details: ['Rol · deneyim · süre', 'Karşılaştırma grubu'],
         signalsLabel: 'Başvuru yanıt durumları',
         signals: responseStatuses.tr.map(({ label }) => label),
-        descriptionParts: {
-          pre: 'Başvuru sonuçlarını ',
-          highlight: 'anonim',
-          post: ' olarak paylaş; sürenin benzer aday grubunun medyanına göre nasıl konumlandığını incele.',
-        },
+        description:
+          'Başvuru sonuçlarını paylaş; sürenin benzer aday grubunun medyanına göre nasıl konumlandığını incele.',
         explore: 'Sürecini karşılaştır',
         benchmark: 'İşe alım verilerini incele',
       },
