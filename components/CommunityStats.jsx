@@ -1,11 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import ResponseStatusBar from '@/components/ResponseStatusBar'
-
-const ROTATION_MS = 10000
 
 const COVERAGE_LAYOUT = [
   'col-span-4 row-span-3',
@@ -33,7 +31,7 @@ function EffortChart({ card }) {
       </p>
       <div className="space-y-4">
         {card.stages.map((stage, index) => (
-          <div key={stage.label} className="grid grid-cols-[2rem_5.5rem_minmax(0,1fr)_3rem] items-center gap-3">
+          <div key={stage.label} className="grid grid-cols-[1.5rem_4.25rem_minmax(2.5rem,1fr)_2rem] items-center gap-2 sm:grid-cols-[2rem_5.5rem_minmax(0,1fr)_3rem] sm:gap-3">
             <span className="font-mono text-[8px] font-bold text-muted">0{index + 1}</span>
             <span className="font-mono text-[9px] font-bold uppercase tracking-[0.06em] text-muted">
               {stage.label}
@@ -142,23 +140,115 @@ function Chart({ card }) {
   return <EffortChart card={card} />
 }
 
+function CommunityCard({ card, locale, measuring = false }) {
+  return (
+    <div
+      aria-hidden={measuring || undefined}
+      inert={measuring || undefined}
+      role={measuring ? undefined : 'tabpanel'}
+      className={`community-signal-layout col-start-1 row-start-1 grid min-h-[46rem] lg:min-h-[500px] lg:grid-cols-[0.36fr_0.64fr] ${measuring ? 'invisible pointer-events-none' : 'community-signal-panel'}`}
+    >
+      <div className="flex flex-col border-b border-line p-6 sm:p-8 lg:border-b-0 lg:border-r">
+        <p className="font-mono text-[9px] font-bold uppercase tracking-[0.11em] text-accent">
+          {card.eyebrow}
+        </p>
+        <h3 className="mt-5 text-3xl font-semibold leading-[1.05] tracking-[-0.05em] text-ink sm:text-4xl">
+          {card.title}
+        </h3>
+        {card.summary && (
+          <div className="mt-7 border-l-2 border-accent pl-4">
+            <p className="font-mono text-[9px] font-bold uppercase leading-5 tracking-[0.08em] text-ink">
+              {card.summary}
+            </p>
+          </div>
+        )}
+
+        <Link
+          href={`/${locale}${card.path}`}
+          className="group mt-auto flex items-center justify-between gap-4 border-t border-[var(--line-strong)] pt-5 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-ink transition-colors hover:text-accentDark"
+        >
+          <span>{card.cta}</span>
+          <ArrowUpRight size={16} className="shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+        </Link>
+      </div>
+
+      <div className="flex min-w-0 items-center p-6 sm:p-8 lg:p-10">
+        <div className="w-full">
+          <Chart card={card} />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function CommunityStats({ copy, locale }) {
   const [activeIndex, setActiveIndex] = useState(0)
-  const [isPaused, setIsPaused] = useState(false)
+  const [isFocusPaused, setIsFocusPaused] = useState(false)
+  const [isPointerPaused, setIsPointerPaused] = useState(false)
+  const [isInView, setIsInView] = useState(false)
+  const [isDocumentVisible, setIsDocumentVisible] = useState(true)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  const [cycleKey, setCycleKey] = useState(0)
+  const sectionRef = useRef(null)
   const activeCard = copy.cards[activeIndex]
 
   useEffect(() => {
-    if (isPaused) return undefined
+    const section = sectionRef.current
 
-    const interval = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % copy.cards.length)
-    }, ROTATION_MS)
+    if (!section || typeof IntersectionObserver !== 'function') {
+      setIsInView(true)
+      return undefined
+    }
 
-    return () => window.clearInterval(interval)
-  }, [copy.cards.length, isPaused])
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsInView(entry.isIntersecting && entry.intersectionRatio >= 0.2)
+    }, { threshold: [0, 0.2] })
+
+    observer.observe(section)
+
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+
+    function syncMotionPreference() {
+      setPrefersReducedMotion(motionQuery.matches)
+    }
+
+    function syncDocumentVisibility() {
+      setIsDocumentVisible(!document.hidden)
+    }
+
+    syncMotionPreference()
+    syncDocumentVisibility()
+    motionQuery.addEventListener('change', syncMotionPreference)
+    document.addEventListener('visibilitychange', syncDocumentVisibility)
+
+    return () => {
+      motionQuery.removeEventListener('change', syncMotionPreference)
+      document.removeEventListener('visibilitychange', syncDocumentVisibility)
+    }
+  }, [])
+
+  function selectCard(index) {
+    setActiveIndex(index)
+    setCycleKey((current) => current + 1)
+  }
+
+  function advanceCard() {
+    setActiveIndex((current) => (current + 1) % copy.cards.length)
+    setCycleKey((current) => current + 1)
+  }
+
+  const shouldRotate = isInView
+    && isDocumentVisible
+    && !isFocusPaused
+    && !isPointerPaused
+    && !prefersReducedMotion
 
   return (
-    <section className="mx-auto max-w-7xl px-5 py-12 sm:px-6 lg:px-8 lg:py-14">
+    <section ref={sectionRef} className="community-stats-section mx-auto max-w-7xl px-5 py-12 sm:px-6 lg:px-8 lg:py-14">
       <div className="grid gap-3 pb-2 sm:flex sm:items-center sm:justify-between sm:gap-5">
         <div className="flex flex-wrap items-baseline gap-3">
           <p className="community-stats-zone-eyebrow font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-accent">
@@ -174,9 +264,13 @@ export default function CommunityStats({ copy, locale }) {
       </div>
 
       <div
-        className="mt-8 border border-[var(--line-strong)] bg-surface shadow-[var(--shadow-soft)]"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
+        className="community-stats-frame mt-8 border border-[var(--line-strong)] bg-surface shadow-[var(--shadow-soft)] [overflow-anchor:none]"
+        onMouseEnter={() => setIsPointerPaused(true)}
+        onMouseLeave={() => setIsPointerPaused(false)}
+        onFocusCapture={() => setIsFocusPaused(true)}
+        onBlurCapture={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget)) setIsFocusPaused(false)
+        }}
       >
         <div className="grid grid-cols-3 border-b border-[var(--line-strong)]" role="tablist" aria-label={copy.tabsLabel}>
           {copy.cards.map((card, index) => {
@@ -187,54 +281,39 @@ export default function CommunityStats({ copy, locale }) {
                 type="button"
                 role="tab"
                 aria-selected={isActive}
-                onClick={() => setActiveIndex(index)}
+                onClick={() => selectCard(index)}
                 className={`relative min-w-0 px-3 py-4 text-left transition-colors sm:px-5 ${index > 0 ? 'border-l border-line' : ''} ${isActive ? 'bg-ink text-surface' : 'bg-transparent text-muted hover:bg-[var(--surface-muted)] hover:text-ink'}`}
               >
                 <span className="block font-mono text-[8px] font-bold uppercase tracking-[0.08em] sm:text-[9px]">
                   {card.code} <span className="hidden sm:inline">{card.label}</span>
                 </span>
-                {isActive && !isPaused && (
-                  <span className="community-tab-progress absolute inset-x-0 bottom-0 h-[2px] bg-accent" aria-hidden="true" />
+                {isActive && shouldRotate && (
+                  <span
+                    key={`${card.code}-${cycleKey}`}
+                    className="community-tab-progress absolute inset-x-0 bottom-0 h-[2px] bg-accent"
+                    aria-hidden="true"
+                    onAnimationEnd={advanceCard}
+                  />
                 )}
               </button>
             )
           })}
         </div>
 
-        <div
-          key={activeCard.code}
-          className="community-signal-panel grid min-h-[46rem] lg:min-h-[500px] lg:grid-cols-[0.36fr_0.64fr]"
-          role="tabpanel"
-        >
-          <div className="flex flex-col border-b border-line p-6 sm:p-8 lg:border-b-0 lg:border-r">
-            <p className="font-mono text-[9px] font-bold uppercase tracking-[0.11em] text-accent">
-              {activeCard.eyebrow}
-            </p>
-            <h3 className="mt-5 text-3xl font-semibold leading-[1.05] tracking-[-0.05em] text-ink sm:text-4xl">
-              {activeCard.title}
-            </h3>
-            {activeCard.summary && (
-              <div className="mt-7 border-l-2 border-accent pl-4">
-                <p className="font-mono text-[9px] font-bold uppercase leading-5 tracking-[0.08em] text-ink">
-                  {activeCard.summary}
-                </p>
-              </div>
-            )}
-
-            <Link
-              href={`/${locale}${activeCard.path}`}
-              className="group mt-auto flex items-center justify-between gap-4 border-t border-[var(--line-strong)] pt-5 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-ink transition-colors hover:text-accentDark"
-            >
-              <span>{activeCard.cta}</span>
-              <ArrowUpRight size={16} className="shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
-            </Link>
-          </div>
-
-          <div className="flex min-w-0 items-center p-6 sm:p-8 lg:p-10">
-            <div className="w-full">
-              <Chart card={activeCard} />
-            </div>
-          </div>
+        <div className="community-signal-stage grid">
+          {copy.cards.map((card) => (
+            <CommunityCard
+              key={`measure-${card.code}`}
+              measuring
+              card={card}
+              locale={locale}
+            />
+          ))}
+          <CommunityCard
+            key={`${activeCard.code}-${cycleKey}`}
+            card={activeCard}
+            locale={locale}
+          />
         </div>
 
       </div>

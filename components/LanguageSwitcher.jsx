@@ -1,4 +1,9 @@
+'use client'
+
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
+
+const LOCATION_CHANGE_EVENT = 'interview-memory:location-change'
 
 export default function LanguageSwitcher({
   locale,
@@ -7,10 +12,28 @@ export default function LanguageSwitcher({
   embedded = false,
 }) {
   const nextLocale = locale === 'tr' ? 'en' : 'tr'
+  const [hash, setHash] = useState('')
+
+  useEffect(() => {
+    function syncHash() {
+      setHash(window.location.hash)
+    }
+
+    syncHash()
+    window.addEventListener('hashchange', syncHash)
+    window.addEventListener('popstate', syncHash)
+    window.addEventListener(LOCATION_CHANGE_EVENT, syncHash)
+
+    return () => {
+      window.removeEventListener('hashchange', syncHash)
+      window.removeEventListener('popstate', syncHash)
+      window.removeEventListener(LOCATION_CHANGE_EVENT, syncHash)
+    }
+  }, [])
 
   return (
     <Link
-      href={`/${nextLocale}${path}`}
+      href={`/${nextLocale}${path}${hash}`}
       lang={nextLocale}
       hrefLang={nextLocale}
       aria-label={`${label}: ${nextLocale.toUpperCase()}`}

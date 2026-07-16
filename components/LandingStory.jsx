@@ -2,11 +2,15 @@
 
 import { useLayoutEffect } from 'react'
 
-const PINNED_STORY_MEDIA_QUERY = '(min-width: 1024px) and (min-height: 900px) and (prefers-reduced-motion: no-preference)'
+const PINNED_STORY_MEDIA_QUERY = '(min-width: 1024px) and (min-height: 620px)'
+const CHAPTER_TRANSITION_MEDIA_QUERY = '(prefers-reduced-motion: no-preference)'
 const CHAPTER_EXIT_MIN_DISTANCE = 420
 const CHAPTER_EXIT_MAX_DISTANCE = 480
 const CHAPTER_EXIT_VIEWPORT_RATIO = 0.44
 const CHAPTER_EXIT_PROPERTY = '--chapter-exit-progress'
+const PINNED_STORY_CLASS = 'landing-story-is-pinned'
+const CHAPTER_TRANSITION_CLASS = 'landing-story-has-transitions'
+const LOCATION_CHANGE_EVENT = 'interview-memory:location-change'
 
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value))
@@ -29,7 +33,7 @@ export function LandingStoryChapter({ children, id, tone }) {
   )
 }
 
-export default function LandingStory({ children }) {
+export default function LandingStory({ children, locale }) {
   useLayoutEffect(() => {
     let cancelled = false
     let alignedScrollY = null
@@ -44,6 +48,8 @@ export default function LandingStory({ children }) {
       layer.classList.contains('landing-story-chapter')
     ))
     const pinnedStoryMedia = window.matchMedia(PINNED_STORY_MEDIA_QUERY)
+    const chapterTransitionMedia = window.matchMedia(CHAPTER_TRANSITION_MEDIA_QUERY)
+    let previousViewportWidth = window.innerWidth
 
     function updateHeaderHeight() {
       const headerHeight = header?.getBoundingClientRect().height ?? 0
@@ -112,9 +118,21 @@ export default function LandingStory({ children }) {
 
       const headerHeight = updateHeaderHeight()
       const puzzleDepth = getPuzzleDepth(flow)
+      const stickyTop = headerHeight + puzzleDepth
+      const availableHeight = Math.max(1, window.innerHeight - stickyTop)
+      const chaptersFitViewport = storyChapters.every((chapter) => (
+        chapter.getBoundingClientRect().height <= availableHeight + 1
+      ))
+      const isPinnedStory = pinnedStoryMedia.matches && chaptersFitViewport
+      const hasChapterTransitions = isPinnedStory && chapterTransitionMedia.matches
 
-      if (pinnedStoryMedia.matches) {
-        updateChapterExitProgress(headerHeight + puzzleDepth)
+      flow.classList.toggle(PINNED_STORY_CLASS, isPinnedStory)
+      flow.classList.toggle(CHAPTER_TRANSITION_CLASS, hasChapterTransitions)
+
+      if (hasChapterTransitions) {
+        updateChapterExitProgress(stickyTop)
+      } else {
+        resetChapterExitProgress()
       }
 
       const footerBounds = footer.getBoundingClientRect()
@@ -133,7 +151,21 @@ export default function LandingStory({ children }) {
     }
 
     function handlePinnedStoryMediaChange() {
-      if (!pinnedStoryMedia.matches) resetChapterExitProgress()
+      queuePinnedStoryUpdate()
+    }
+
+    function handleWindowResize() {
+      const widthChanged = Math.abs(window.innerWidth - previousViewportWidth) > 1
+
+      previousViewportWidth = window.innerWidth
+      queuePinnedStoryUpdate()
+
+      if (widthChanged && window.location.hash) {
+        queueAlignment(window.location.hash)
+      }
+    }
+
+    function handleFontLoadingDone() {
       queuePinnedStoryUpdate()
     }
 
@@ -152,6 +184,16 @@ export default function LandingStory({ children }) {
       }
 
       return shouldAnimate
+    }
+
+    function updateBrowserLocation(nextLocation, replace = false) {
+      if (replace) {
+        window.history.replaceState(window.history.state, '', nextLocation)
+      } else {
+        window.history.pushState(window.history.state, '', nextLocation)
+      }
+
+      window.dispatchEvent(new Event(LOCATION_CHANGE_EVENT))
     }
 
     function alignChapter(hash = window.location.hash, behavior = 'auto') {
@@ -221,11 +263,9 @@ export default function LandingStory({ children }) {
 
         const nextLocation = `${url.pathname}${url.search}`
 
-        if (window.location.hash || window.location.search !== url.search) {
-          window.history.pushState(window.history.state, '', nextLocation)
-        } else {
-          window.history.replaceState(window.history.state, '', nextLocation)
-        }
+        const shouldReplace = !window.location.hash && window.location.search === url.search
+
+        updateBrowserLocation(nextLocation, shouldReplace)
 
         alignedScrollY = scrollToPosition(0, 'smooth') ? null : window.scrollY
         return
@@ -239,11 +279,7 @@ export default function LandingStory({ children }) {
 
         const nextLocation = `${url.pathname}${url.search}${url.hash}`
 
-        if (window.location.hash === url.hash) {
-          window.history.replaceState(window.history.state, '', nextLocation)
-        } else {
-          window.history.pushState(window.history.state, '', nextLocation)
-        }
+        updateBrowserLocation(nextLocation, window.location.hash === url.hash)
 
         queueAlignment(url.hash, 'smooth')
       }
@@ -258,11 +294,22 @@ export default function LandingStory({ children }) {
       }
     })
 
+    const resizeObserver = typeof ResizeObserver === 'function'
+      ? new ResizeObserver(queuePinnedStoryUpdate)
+      : null
+
+    ;[header, story, footer, ...storyLayers].forEach((element) => {
+      if (element) resizeObserver?.observe(element)
+    })
+
     window.addEventListener('hashchange', handleHashNavigation)
     window.addEventListener('popstate', handleHashNavigation)
-    window.addEventListener('resize', queuePinnedStoryUpdate)
+    window.addEventListener('resize', handleWindowResize)
     window.addEventListener('scroll', queuePinnedStoryUpdate, { passive: true })
+    window.visualViewport?.addEventListener('resize', queuePinnedStoryUpdate)
     pinnedStoryMedia.addEventListener('change', handlePinnedStoryMediaChange)
+    chapterTransitionMedia.addEventListener('change', handlePinnedStoryMediaChange)
+    document.fonts?.addEventListener?.('loadingdone', handleFontLoadingDone)
     document.addEventListener('click', handleAnchorClick, true)
 
     document.fonts?.ready.then(() => {
@@ -280,15 +327,21 @@ export default function LandingStory({ children }) {
       scheduledFrames.forEach((scheduledFrame) => window.cancelAnimationFrame(scheduledFrame))
 
       flow?.classList.remove('landing-footer-at-header')
+      flow?.classList.remove(PINNED_STORY_CLASS)
+      flow?.classList.remove(CHAPTER_TRANSITION_CLASS)
       resetChapterExitProgress()
+      resizeObserver?.disconnect()
       window.removeEventListener('hashchange', handleHashNavigation)
       window.removeEventListener('popstate', handleHashNavigation)
-      window.removeEventListener('resize', queuePinnedStoryUpdate)
+      window.removeEventListener('resize', handleWindowResize)
       window.removeEventListener('scroll', queuePinnedStoryUpdate)
+      window.visualViewport?.removeEventListener('resize', queuePinnedStoryUpdate)
       pinnedStoryMedia.removeEventListener('change', handlePinnedStoryMediaChange)
+      chapterTransitionMedia.removeEventListener('change', handlePinnedStoryMediaChange)
+      document.fonts?.removeEventListener?.('loadingdone', handleFontLoadingDone)
       document.removeEventListener('click', handleAnchorClick, true)
     }
-  }, [])
+  }, [locale])
 
   return <div className="landing-story">{children}</div>
 }

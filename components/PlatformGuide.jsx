@@ -79,6 +79,40 @@ function PanelBody({ panel }) {
   return <ProcessRows rows={panel.steps ?? []} />
 }
 
+function GuidePanelContent({ copy, measuring = false, panel }) {
+  return (
+    <div
+      aria-hidden={measuring || undefined}
+      aria-labelledby={measuring ? undefined : `platform-guide-panel-heading-${panel.id}`}
+      id={measuring ? undefined : `platform-guide-panel-${panel.id}`}
+      inert={measuring || undefined}
+      role={measuring ? undefined : 'region'}
+      className={`platform-guide-panel col-start-1 row-start-1 flex min-w-0 flex-col p-6 sm:p-8 lg:min-h-[37rem] lg:p-10 ${measuring ? 'invisible pointer-events-none' : ''}`}
+    >
+      <div>
+        <p className="font-mono text-[9px] font-bold uppercase tracking-[0.11em] text-accent">
+          {panel.eyebrow}
+        </p>
+        <h3
+          id={measuring ? undefined : `platform-guide-panel-heading-${panel.id}`}
+          className="mt-5 max-w-3xl text-2xl font-semibold leading-[1.08] tracking-[-0.04em] text-ink sm:text-3xl lg:text-4xl"
+        >
+          {panel.title}
+        </h3>
+        <p className="mt-5 max-w-3xl text-sm leading-6 text-muted sm:text-base sm:leading-7">
+          {panel.description}
+        </p>
+      </div>
+
+      <PanelBody panel={panel} />
+
+      <p className="mt-auto border-t border-line pt-5 font-mono text-[8px] font-bold uppercase leading-4 tracking-[0.07em] text-muted">
+        {copy.prototypeNote}
+      </p>
+    </div>
+  )
+}
+
 export default function PlatformGuide({ copy }) {
   const panels = copy.panels ?? []
   const [activeId, setActiveId] = useState(panels[0]?.id)
@@ -87,7 +121,7 @@ export default function PlatformGuide({ copy }) {
   if (!activePanel) return null
 
   return (
-    <section className="mx-auto max-w-7xl px-5 py-12 sm:px-6 lg:px-8 lg:py-14" aria-labelledby="platform-guide-title">
+    <section className="platform-guide-section mx-auto max-w-7xl px-5 py-12 sm:px-6 lg:px-8 lg:py-14" aria-labelledby="platform-guide-title">
       <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 pb-2">
         <div className="flex items-baseline gap-3">
           <p className="platform-guide-zone-eyebrow font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-accent">
@@ -105,7 +139,7 @@ export default function PlatformGuide({ copy }) {
         </p>
       </div>
 
-      <div className="mt-8 border border-[var(--line-strong)] bg-surface shadow-[var(--shadow-soft)] lg:grid lg:grid-cols-[17rem_minmax(0,1fr)]">
+      <div className="platform-guide-frame mt-8 border border-[var(--line-strong)] bg-surface shadow-[var(--shadow-soft)] [overflow-anchor:none] lg:grid lg:grid-cols-[17rem_minmax(0,1fr)]">
         <div
           role="group"
           aria-label={copy.controlsLabel}
@@ -125,7 +159,7 @@ export default function PlatformGuide({ copy }) {
                 <span className={`block font-mono text-[8px] font-bold uppercase tracking-[0.09em] ${isActive ? 'text-accent' : 'text-accentDark'}`}>
                   {panel.code}
                 </span>
-                <span className="mt-2 block truncate font-mono text-[8px] font-bold uppercase tracking-[0.07em] sm:text-[9px] lg:whitespace-normal lg:text-[10px]">
+                <span className="mt-2 block break-words font-mono text-[8px] font-bold uppercase leading-4 tracking-[0.07em] sm:text-[9px] lg:text-[10px]">
                   {panel.label}
                 </span>
               </button>
@@ -133,34 +167,20 @@ export default function PlatformGuide({ copy }) {
           })}
         </div>
 
-        <div
-          key={activePanel.id}
-          id={`platform-guide-panel-${activePanel.id}`}
-          role="region"
-          aria-labelledby={`platform-guide-panel-heading-${activePanel.id}`}
-          aria-live="polite"
-          className="flex min-w-0 flex-col p-6 sm:p-8 lg:min-h-[37rem] lg:p-10"
-        >
-          <div>
-            <p className="font-mono text-[9px] font-bold uppercase tracking-[0.11em] text-accent">
-              {activePanel.eyebrow}
-            </p>
-            <h3
-              id={`platform-guide-panel-heading-${activePanel.id}`}
-              className="mt-5 max-w-3xl text-2xl font-semibold leading-[1.08] tracking-[-0.04em] text-ink sm:text-3xl lg:text-4xl"
-            >
-              {activePanel.title}
-            </h3>
-            <p className="mt-5 max-w-3xl text-sm leading-6 text-muted sm:text-base sm:leading-7">
-              {activePanel.description}
-            </p>
-          </div>
-
-          <PanelBody panel={activePanel} />
-
-          <p className="mt-auto border-t border-line pt-5 font-mono text-[8px] font-bold uppercase leading-4 tracking-[0.07em] text-muted">
-            {copy.prototypeNote}
-          </p>
+        <div className="platform-guide-panel-stage grid min-w-0" aria-live="polite">
+          {panels.map((panel) => (
+            <GuidePanelContent
+              key={`measure-${panel.id}`}
+              measuring
+              copy={copy}
+              panel={panel}
+            />
+          ))}
+          <GuidePanelContent
+            key={activePanel.id}
+            copy={copy}
+            panel={activePanel}
+          />
         </div>
       </div>
     </section>

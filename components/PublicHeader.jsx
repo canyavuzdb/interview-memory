@@ -85,7 +85,7 @@ export default function PublicHeader({
       ref={headerRef}
       className="sticky top-0 z-30 border-b border-[var(--line-strong)] bg-transparent"
     >
-      <div className="relative mx-auto grid max-w-7xl grid-cols-[auto_1fr] items-center gap-4 px-5 py-3 sm:px-6 lg:grid-cols-[1fr_auto_1fr] lg:px-8">
+      <div className="relative mx-auto grid max-w-7xl grid-cols-[auto_1fr] items-center gap-4 px-5 py-3 sm:px-6 lg:px-8 xl:grid-cols-[1fr_auto_1fr]">
         <BrandHomeLink
           href={`/${locale}`}
           label={common.homeAria}
@@ -94,7 +94,7 @@ export default function PublicHeader({
 
         <nav
           aria-label={copy.navLabel}
-          className="hidden items-stretch divide-x divide-[var(--line-strong)] border border-[var(--line-strong)] bg-[var(--nav-surface)] font-mono text-[10px] font-semibold uppercase tracking-[0.07em] text-[var(--ink-soft)] lg:flex"
+          className="hidden items-stretch divide-x divide-[var(--line-strong)] border border-[var(--line-strong)] bg-[var(--nav-surface)] font-mono text-[10px] font-semibold uppercase tracking-[0.07em] text-[var(--ink-soft)] xl:flex"
         >
           <div
             ref={surveyMenuRef}
@@ -175,7 +175,7 @@ export default function PublicHeader({
           <Link
             href={`/${locale}/login`}
             aria-label={copy.signIn}
-            className="hidden h-9 items-center justify-center gap-2 border border-ink bg-ink px-4 font-mono text-[10px] font-bold uppercase tracking-[0.07em] text-surface transition hover:bg-accentDark lg:inline-flex"
+            className="hidden h-9 items-center justify-center gap-2 border border-ink bg-ink px-4 font-mono text-[10px] font-bold uppercase tracking-[0.07em] text-surface transition hover:bg-accentDark xl:inline-flex"
           >
             <LogIn size={14} aria-hidden="true" />
             <StableLocalizedText reserve={alternateCopy.signIn}>
@@ -193,7 +193,7 @@ export default function PublicHeader({
               setIsSurveyOpen(false)
               setIsMobileOpen((current) => !current)
             }}
-            className="grid h-9 w-9 place-items-center border border-[var(--line-strong)] bg-[var(--nav-surface)] text-ink transition hover:bg-[var(--surface-hover)] hover:text-accentDark lg:hidden"
+            className="grid h-9 w-9 place-items-center border border-[var(--line-strong)] bg-[var(--nav-surface)] text-ink transition hover:bg-[var(--surface-hover)] hover:text-accentDark xl:hidden"
           >
             {isMobileOpen ? <X size={16} aria-hidden="true" /> : <Menu size={16} aria-hidden="true" />}
           </button>
@@ -203,7 +203,7 @@ export default function PublicHeader({
       <div
         id="public-mobile-menu"
         hidden={!isMobileOpen}
-        className="absolute inset-x-0 top-full border-b border-[var(--line-strong)] bg-surface px-5 pb-5 pt-2 shadow-[0_14px_24px_color-mix(in_srgb,var(--ink)_10%,transparent)] sm:px-6 lg:hidden"
+        className="absolute inset-x-0 top-full border-b border-[var(--line-strong)] bg-surface px-5 pb-5 pt-2 shadow-[0_14px_24px_color-mix(in_srgb,var(--ink)_10%,transparent)] sm:px-6 xl:hidden"
       >
         <nav aria-label={copy.mobileNavLabel} className="mx-auto max-w-7xl">
           <div className="grid grid-cols-3 border border-[var(--line-strong)] font-mono text-[9px] font-bold uppercase tracking-[0.05em] sm:text-[10px] sm:tracking-[0.07em]">
