@@ -1,13 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <title>Interview Memory logo</title>
-  <rect width="64" height="64" fill="#191714" />
+  <style>
+    .mark { fill: #191714; }
+    .accent { fill: #5B6F64; }
+
+    @media (prefers-color-scheme: dark) {
+      .mark { fill: #FFF8F0; }
+      .accent { fill: #9CAF9F; }
+    }
+  </style>
   <path
-    fill="#FFF8F0"
+    class="mark"
     fill-rule="evenodd"
     clip-rule="evenodd"
     d="M4 4h56v56H4V4Zm4 4v48h48V8H8Z"
   />
-  <path fill="#FFF8F0" d="M13 16h6v29h-6V16Z" />
-  <path fill="#FFF8F0" d="M23 20 34 30 51 16v29h-6V29L34 38 23 28v-8Z" />
-  <path fill="#9CAF9F" d="M13 49h38v4H13v-4Z" />
+  <path class="mark" d="M13 16h6v29h-6V16Z" />
+  <path class="mark" d="M23 20 34 30 51 16v29h-6V29L34 38 23 28v-8Z" />
+  <path class="accent" d="M13 49h38v4H13v-4Z" />
 </svg>

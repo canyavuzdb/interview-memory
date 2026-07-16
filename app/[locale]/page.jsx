@@ -9,7 +9,6 @@ import PublicHeader from '@/components/PublicHeader'
 import SiteFooter from '@/components/SiteFooter'
 import StableLocalizedText from '@/components/StableLocalizedText'
 import SurveyLaunchBanner from '@/components/SurveyLaunchBanner'
-import TabTitleTicker from '@/components/TabTitleTicker'
 import { getMessages, isSupportedLocale } from '@/data/i18n'
 
 export async function generateMetadata({ params }) {
@@ -35,11 +34,6 @@ export default async function HomePage({ params }) {
 
   return (
     <main className="landing-grid min-h-screen text-ink">
-      <TabTitleTicker
-        baseTitle={messages.metadata.home.title}
-        suffix={messages.home.tabTitleSuffix}
-      />
-
       <PublicHeader
         alternateCopy={alternateMessages.header}
         common={messages.common}
