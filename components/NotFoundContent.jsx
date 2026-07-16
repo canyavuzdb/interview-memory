@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
+import BrandHomeLink from '@/components/brand/BrandHomeLink'
 import PreferenceControls from '@/components/PreferenceControls'
 import { getMessages, isSupportedLocale } from '@/data/i18n'
 
@@ -17,23 +18,10 @@ export default function NotFoundContent() {
     <main className="landing-grid flex min-h-screen flex-col text-ink">
       <header className="border-b border-[var(--line-strong)] bg-transparent">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-3 sm:px-6 lg:px-8">
-          <Link
+          <BrandHomeLink
             href={`/${locale}`}
-            className="flex items-center gap-3"
-            aria-label={messages.common.homeAria}
-          >
-            <span className="grid h-9 w-9 place-items-center border border-[var(--ink-soft)] bg-surfaceMuted font-mono text-[11px] font-bold tracking-[-0.08em] text-ink">
-              IM
-            </span>
-            <span className="hidden sm:block">
-              <span className="block text-xs font-bold uppercase leading-none tracking-[0.08em]">
-                <span className="text-accent">I</span>nterview
-              </span>
-              <span className="mt-1 block text-xs font-bold uppercase leading-none tracking-[0.08em]">
-                <span className="text-accent">M</span>emory
-              </span>
-            </span>
-          </Link>
+            label={messages.common.homeAria}
+          />
 
           <PreferenceControls
             locale={locale}

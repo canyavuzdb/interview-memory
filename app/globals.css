@@ -230,12 +230,6 @@ body {
   outline-offset: 3px;
 }
 
-.brand-logo-mark {
-  border-color: var(--accent-border);
-  background: color-mix(in srgb, var(--surface-muted) 74%, var(--accent-soft));
-  box-shadow: inset 0 -2px 0 var(--accent);
-}
-
 .brand-nav-item {
   position: relative;
 }

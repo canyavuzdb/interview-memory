@@ -1,21 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <title>Interview Memory IM logo</title>
-  <rect width="512" height="512" fill="#FFF8F0" />
-  <rect
-    x="30"
-    y="30"
-    width="452"
-    height="452"
-    fill="none"
-    stroke="#191714"
-    stroke-width="22"
-  />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Interview Memory logo</title>
+  <rect width="64" height="64" fill="#191714" />
   <path
-    fill="#191714"
-    d="M116 166h142v32h-53v116h53v32H116v-32h53V198h-53z"
+    fill="#FFF8F0"
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M4 4h56v56H4V4Zm4 4v48h48V8H8Z"
   />
-  <path
-    fill="#5B6F64"
-    d="M274 346V166h40l34 88 34-88h40v180h-34V226l-26 72h-28l-26-72v120z"
-  />
+  <path fill="#FFF8F0" d="M13 16h6v29h-6V16Z" />
+  <path fill="#FFF8F0" d="M23 20 34 30 51 16v29h-6V29L34 38 23 28v-8Z" />
+  <path fill="#9CAF9F" d="M13 49h38v4H13v-4Z" />
 </svg>
