@@ -136,17 +136,16 @@ const messages = {
         eyebrow: 'İş arama karşılaştırması',
         title: 'İş arama sürecinde',
         titleHighlight: 'neredesin?',
-        subtitleParts: {
-          pre: 'İş arama süreni ',
-          highlight: 'anonim',
-          post: ' olarak paylaş; benzer rol ve deneyim gruplarıyla karşılaştır.',
-        },
+        subtitle: 'İş arama süreni benzer rol ve deneyim gruplarıyla karşılaştır.',
         detailsLabel: 'Karşılaştırmada kullanılan bilgiler',
         details: ['Rol · deneyim · süre', 'Karşılaştırma grubu'],
         signalsLabel: 'Başvuru yanıt durumları',
         signals: responseStatuses.tr.map(({ label }) => label),
-        description:
-          'Başvuru sonuçlarını paylaş; sürenin benzer aday grubunun medyanına göre nasıl konumlandığını incele.',
+        descriptionParts: {
+          pre: 'Başvuru sonuçlarını ',
+          highlight: 'anonim',
+          post: ' olarak paylaş; sürenin benzer aday grubunun medyanına göre nasıl konumlandığını incele.',
+        },
         explore: 'Sürecini karşılaştır',
         benchmark: 'İşe alım verilerini incele',
       },
@@ -1090,6 +1089,7 @@ const messages = {
       codeLabel: 'Page not found',
     },
     home: {
+      tabTitleSuffix: 'Experience, Measured',
       hero: {
         eyebrow: 'Job-search benchmark',
         title: 'Where do you stand in',
