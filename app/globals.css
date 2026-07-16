@@ -352,18 +352,24 @@ body {
 
 .landing-story-chapter--survey {
   --chapter-bg: var(--landing-section-02);
+  --chapter-exit-bg: var(--landing-section-03);
+  --chapter-exit-grid: var(--grid-line);
   z-index: 1;
   transition: background-color 420ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .landing-story-chapter--data {
   --chapter-bg: var(--landing-section-03);
+  --chapter-exit-bg: var(--landing-section-04);
+  --chapter-exit-grid: var(--landing-info-grid);
   z-index: 2;
 }
 
 .landing-story-chapter--info {
   --chapter-bg: var(--landing-section-04);
   --chapter-grid: var(--landing-info-grid);
+  --chapter-exit-bg: var(--brand-black);
+  --chapter-exit-grid: var(--brand-dark-grid);
   z-index: 3;
 }
 
@@ -410,6 +416,21 @@ body {
 }
 
 @media (min-width: 1024px) and (min-height: 900px) and (prefers-reduced-motion: no-preference) {
+  .landing-story-chapter::after {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    pointer-events: none;
+    background-color: var(--chapter-exit-bg);
+    background-image:
+      linear-gradient(var(--chapter-exit-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--chapter-exit-grid) 1px, transparent 1px);
+    background-position: -1px -1px;
+    background-size: 32px 32px;
+    content: '';
+    opacity: var(--chapter-exit-progress, 0);
+  }
+
   .landing-story-chapter {
     position: sticky;
     top: calc(var(--landing-header-height) + var(--landing-puzzle-depth));
