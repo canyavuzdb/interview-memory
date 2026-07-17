@@ -246,7 +246,7 @@ body {
   transform: scale(0.985);
 }
 
-:where(a, button, input, select, textarea):focus-visible {
+:where(a, button, input, select, summary, textarea):focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
@@ -318,6 +318,16 @@ body {
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-position: -1px -1px;
   background-size: 32px 32px;
+}
+
+.benchmark-footer-grid {
+  background-color: var(--brand-black);
+  background-image:
+    linear-gradient(var(--brand-dark-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--brand-dark-grid) 1px, transparent 1px);
+  background-position: -1px -1px;
+  background-size: 32px 32px;
+  border-top: 1px solid var(--brand-dark-line);
 }
 
 .landing-puzzle-flow {
@@ -591,6 +601,255 @@ body {
   }
 }
 
+@keyframes benchmark-report-view-in {
+  from {
+    opacity: 0;
+    transform: translate3d(var(--benchmark-report-enter-x), 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes benchmark-report-view-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(var(--benchmark-report-exit-x), 0, 0);
+  }
+}
+
+@keyframes tempo-view-in {
+  from {
+    opacity: 0;
+    transform: translate3d(var(--tempo-enter-x), 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes tempo-view-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(var(--tempo-exit-x), 0, 0);
+  }
+}
+
+.benchmark-report-tabs {
+  isolation: isolate;
+}
+
+.report-action {
+  align-items: center;
+  border-bottom: 1px solid var(--line-strong);
+  color: var(--ink);
+  display: inline-flex;
+  font-family: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 8px;
+  font-weight: 700;
+  gap: 0.65rem;
+  letter-spacing: 0.07em;
+  min-height: 2.75rem;
+  text-transform: uppercase;
+  transition:
+    border-color 180ms ease,
+    color 180ms ease;
+}
+
+.report-action:hover {
+  border-color: var(--accent);
+  color: var(--accent-dark);
+}
+
+.report-subtab {
+  border-bottom: 1px solid transparent;
+  color: var(--muted);
+  font-family: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  min-height: 2.75rem;
+  padding-inline: 0;
+  text-transform: uppercase;
+  transition:
+    border-color 200ms ease,
+    color 200ms ease;
+}
+
+.report-subtab:hover {
+  color: var(--ink);
+}
+
+.report-subtab[aria-selected="true"] {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+.report-subtab:focus-visible,
+.report-text-control:focus-visible {
+  outline: none;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.3rem;
+}
+
+.report-filter-control {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line-strong);
+  border-radius: 0;
+  color: var(--ink);
+  height: 2.5rem;
+  outline: 0;
+  transition: border-color 180ms ease;
+}
+
+.report-filter-control:focus {
+  border-bottom-color: var(--accent);
+}
+
+.report-filter-popover {
+  background: transparent;
+  border-top: 1px solid var(--line);
+  box-shadow: none;
+}
+
+.report-filter-summary:focus-visible,
+.report-methodology-summary:focus-visible {
+  color: var(--ink);
+  outline: none;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.3rem;
+}
+
+@media (min-width: 64rem) {
+  .report-filter-popover {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-soft);
+  }
+}
+
+.benchmark-report-tab-indicator {
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  transition:
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 300ms ease;
+}
+
+.benchmark-report-tab-indicator--compact {
+  inset-block: 0;
+  left: 0;
+  width: calc(100% / var(--benchmark-report-count));
+  border-bottom: 1px solid var(--accent);
+  transform: translate3d(calc(var(--benchmark-active-index) * 100%), 0, 0);
+}
+
+.benchmark-report-tabs [role="tab"]:focus-visible {
+  outline: none;
+}
+
+.benchmark-report-tabs [role="tab"]:focus-visible > span:last-child {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.3rem;
+}
+
+.benchmark-report-stack {
+  display: grid;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.benchmark-report-view {
+  grid-area: 1 / 1;
+  min-width: 0;
+  width: 100%;
+  will-change: opacity, transform;
+}
+
+.benchmark-report-view-in {
+  position: relative;
+  z-index: 1;
+  animation: benchmark-report-view-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.benchmark-report-view-out {
+  pointer-events: none;
+  position: relative;
+  z-index: 2;
+  animation: benchmark-report-view-out 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.benchmark-report-view-parked {
+  pointer-events: none;
+  position: relative;
+  visibility: hidden;
+}
+
+.tempo-view-tab-indicator {
+  background: var(--accent);
+  bottom: 0;
+  height: 1px;
+  transform: translate3d(
+    calc(var(--tempo-active-index) * (100% + var(--tempo-tab-gap))),
+    0,
+    0
+  );
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  width: calc((100% - var(--tempo-tab-gap)) / 2);
+}
+
+.tempo-view-stack {
+  display: grid;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.tempo-view {
+  grid-area: 1 / 1;
+  min-width: 0;
+  width: 100%;
+  will-change: opacity, transform;
+}
+
+.tempo-view-in {
+  position: relative;
+  z-index: 1;
+  animation: tempo-view-in 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.tempo-view-out {
+  pointer-events: none;
+  position: relative;
+  z-index: 2;
+  animation: tempo-view-out 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.tempo-view-parked {
+  pointer-events: none;
+  position: relative;
+  visibility: hidden;
+}
+
+.tempo-metric-view {
+  animation: tempo-view-in 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  --tempo-enter-x: 8px;
+}
+
 .analytics-view-in {
   animation: analytics-view-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -691,7 +950,17 @@ body {
   }
 
   .analytics-view-in,
-  .analytics-view-out {
+  .analytics-view-out,
+  .benchmark-report-view-in,
+  .benchmark-report-view-out,
+  .tempo-metric-view,
+  .tempo-view-in,
+  .tempo-view-out {
     animation: none;
+  }
+
+  .benchmark-report-tab-indicator,
+  .tempo-view-tab-indicator {
+    transition: none;
   }
 }

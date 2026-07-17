@@ -5,7 +5,7 @@ import PreferenceControls from '@/components/PreferenceControls'
 
 export default function SurveyPageHeader({ copy, locale, path }) {
   return (
-    <header className="sticky top-0 z-30 border-b border-[var(--line-strong)] bg-transparent">
+    <header className="sticky top-0 z-30 border-b border-[var(--line-strong)] bg-[var(--nav-surface)] backdrop-blur-md">
       <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto] items-center gap-4 px-5 py-3 sm:px-6 lg:px-8">
         <BrandHomeLink
           href={`/${locale}`}
