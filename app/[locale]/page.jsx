@@ -133,7 +133,7 @@ export default async function HomePage({ params }) {
         target="_blank"
         rel="noreferrer"
         aria-label="Can Yavuz — Interview Memory GitHub repository"
-        className="brand-text-link fixed bottom-5 left-5 z-40 font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted sm:bottom-6 sm:left-6"
+        className="brand-text-link fixed bottom-5 left-5 z-40 hidden font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted lg:bottom-6 lg:left-6 lg:block"
       >
         Can Yavuz
       </a>

@@ -12,6 +12,7 @@ export default function PublicHeader({
   common,
   copy,
   locale,
+  path = '',
 }) {
   const [isMobileOpen, setIsMobileOpen] = useState(false)
   const [isSurveyOpen, setIsSurveyOpen] = useState(false)
@@ -20,6 +21,16 @@ export default function PublicHeader({
   const mobileTriggerRef = useRef(null)
   const surveyMenuRef = useRef(null)
   const surveyTriggerRef = useRef(null)
+  const isBenchmarksPage = path === '/benchmarks'
+  const communityHref = isBenchmarksPage
+    ? `/${locale}#how-it-works`
+    : `/${locale}#stats`
+  const communityLabel = isBenchmarksPage
+    ? copy.platformGuide
+    : copy.community
+  const alternateCommunityLabel = isBenchmarksPage
+    ? alternateCopy.platformGuide
+    : alternateCopy.community
 
   const surveyLinks = [
     {
@@ -146,11 +157,11 @@ export default function PublicHeader({
           </div>
 
           <Link
-            href={`/${locale}#stats`}
+            href={communityHref}
             className="brand-nav-item inline-flex items-center justify-center whitespace-nowrap px-5 py-2.5 transition hover:bg-[var(--surface-hover)] hover:text-accentDark"
           >
-            <StableLocalizedText reserve={alternateCopy.community}>
-              {copy.community}
+            <StableLocalizedText reserve={alternateCommunityLabel}>
+              {communityLabel}
             </StableLocalizedText>
           </Link>
 
@@ -167,6 +178,7 @@ export default function PublicHeader({
         <div className="flex items-stretch justify-self-end gap-3">
           <PreferenceControls
             locale={locale}
+            path={path}
             languageLabel={common.languageLabel}
             themeLabel={common.themeToggle}
             themeTitle={common.themeTitle}
@@ -215,11 +227,11 @@ export default function PublicHeader({
               {copy.surveys}
             </Link>
             <Link
-              href={`/${locale}#stats`}
+              href={communityHref}
               onClick={() => setIsMobileOpen(false)}
               className="flex min-w-0 items-center justify-center border-r border-[var(--line-strong)] px-2 py-3.5 text-center sm:px-4"
             >
-              {copy.community}
+              {communityLabel}
             </Link>
             <Link
               href={`/${locale}#how-it-works`}
