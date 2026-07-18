@@ -15,6 +15,7 @@
 /coverage/
 *.tsbuildinfo
 .eslintcache
+/lib/database/database.generated.ts.tmp-*
 
 # Operating-system files
 .DS_Store
