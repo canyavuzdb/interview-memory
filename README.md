@@ -1,17 +1,38 @@
-# Mülakat Atlası
+<p align="center">
+  <img
+    src="./app/icon.svg"
+    width="72"
+    alt="Interview Memory logosu"
+  />
+</p>
 
-Mülakat Atlası, adayların işe alım süreçlerini anonim olarak paylaşabildiği ve toplu
-benchmark raporlarını inceleyebildiği bir Next.js uygulamasıdır.
+# Interview Memory
 
-## Gereksinimler
+İşe alım süreçlerini kişisel deneyimlerden ortak içgörülere dönüştüren açık kaynak
+bir platform.
 
-- Node.js 24
-- npm 11
-- Docker Desktop veya uyumlu bir Docker çalışma ortamı (yerel Supabase için)
+Interview Memory; adayların başvuru ve mülakat deneyimlerini anonim biçimde
+paylaşmasını, kendi süreçlerini benzer aday gruplarıyla karşılaştırmasını ve
+şirketlerin işe alım yaklaşımlarını toplu veriler üzerinden incelemesini hedefler.
 
-Sürüm sözleşmesi `.nvmrc`, `package.json#engines` ve CI tarafından birlikte uygulanır.
+## Neler sunuyor?
 
-## Yerel kurulum
+- Başvuru ve şirket deneyimi için anonim anket akışları
+- Rol ve şirket bazlı işe alım benchmarkları
+- Başvuru hareketliliği ve şirket geri dönüş raporları
+- Türkçe ve İngilizce arayüz
+- Responsive, açık ve koyu tema desteği
+
+## Proje durumu
+
+Proje aktif geliştirme aşamasındadır. Arayüz ve raporlama deneyimi kullanılabilir
+durumdadır; gösterilen benchmark değerleri şimdilik temsilidir ve üretim verisi
+değildir. Gerçek veritabanı şeması, kimlik doğrulama ve yetkilendirme katmanları
+aşamalı olarak eklenmektedir.
+
+## Yerelde çalıştırma
+
+Node.js 24 ve npm 11 kullanılır.
 
 ```bash
 nvm use
@@ -20,67 +41,30 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Uygulama varsayılan olarak `http://localhost:3000` adresinde açılır.
+Uygulama `http://localhost:3000` adresinde açılır.
 
-## Kalite komutları
+## Yerel Supabase
+
+Backend geliştirmeleri için Docker çalışırken yerel Supabase ortamı açılabilir:
 
 ```bash
-npm run lint
-npm run typecheck
-npm test
-npm run test:coverage
-npm run build
+npm run db:start
+npm run db:status
+npm run db:stop
 ```
 
-Tüm yerel kalite kapıları tek komutla çalıştırılabilir:
+Yerel Supabase ortamı yalnızca geliştirme ve test içindir; dış trafiğe
+açılmamalıdır. Gerekli değişkenler `.env.example` içerisinde listelenmiştir.
+`SUPABASE_SECRET_KEY` yalnızca sunucu tarafında kullanılmalıdır.
+
+## Kalite kontrolü
+
+Lint, tip kontrolü, testler, coverage ve production build tek komutla çalışır:
 
 ```bash
 npm run check
 ```
 
-## Yerel Supabase
+## Teknolojiler
 
-Supabase CLI proje bağımlılığı olarak sabitlenmiştir; global CLI kurulumu gerekmez.
-Yerel Supabase servisleri yalnızca Docker üzerinde çalışır.
-
-```bash
-npm run db:start
-npm run db:status
-npm run db:reset
-npm run db:lint
-npm run db:test
-npm run db:stop
-```
-
-`db:reset` yalnızca yerel veritabanını yeniden oluşturur ve içindeki yerel veriyi
-siler. `db:test`, B03'te ilk pgTAP sözleşmeleri eklenene kadar `NOTESTS` sonucu
-verir; bu sonuç henüz bir veritabanı test başarısı değildir.
-
-Yerel stack geliştirme/test içindir; TLS, production rate limitleri ve güvenli
-production kimlik bilgileri sağlamaz, bu nedenle dış trafiğe açılmamalıdır.
-Güvenilmeyen bir ağda çalışırken servisleri yalnızca loopback'e bağlayan ayrı bir
-Docker ağı kullanın:
-
-```bash
-docker network create -o 'com.docker.network.bridge.host_binding_ipv4=127.0.0.1' local-network
-npm run db:start -- --network-id local-network
-```
-
-Bu aşamada uzak bir projeye `link`, `pull` veya `push` yapılmaz. Uzak proje
-bağlandığında `supabase/config.toml` içindeki PostgreSQL ana sürümü, uzak projede
-`SHOW server_version;` ile doğrulanmalıdır.
-
-## Ortam değişkenleri
-
-| Değişken | Kullanım |
-| --- | --- |
-| `NEXT_PUBLIC_SUPABASE_URL` | Supabase proje URL'si |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Tarayıcıda kullanılan `sb_publishable_...` anahtarı |
-| `SUPABASE_SECRET_KEY` | Yalnız sunucuda kullanılan `sb_secret_...` anahtarı |
-
-`NEXT_PUBLIC_` önekli değişkenler tarayıcı paketine dahil edilir. Gerçek geliştirme
-değerleri yalnızca Git tarafından yok sayılan `.env.local` dosyasında tutulmalıdır.
-`SUPABASE_SECRET_KEY`, RLS'i aşabilen ayrıcalıklı erişim sağladığından tarayıcı
-kodunda kullanılmamalı ve hiçbir zaman `NEXT_PUBLIC_` öneki almamalıdır.
-Bu temel, artık kullanım dışına alınma sürecindeki legacy `anon` ve `service_role`
-JWT anahtarlarını bilinçli olarak kabul etmez.
+Next.js, React, Tailwind CSS, Supabase ve Vitest.
