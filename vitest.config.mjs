@@ -12,11 +12,11 @@ export default defineConfig({
   test: {
     clearMocks: true,
     environment: 'node',
-    include: ['tests/contract/**/*.test.js'],
+    include: ['tests/{contract,unit}/**/*.test.js'],
     restoreMocks: true,
     coverage: {
       provider: 'v8',
-      include: ['lib/api/**/*.js'],
+      include: ['lib/api/**/*.js', 'lib/env/validation.ts'],
       reporter: ['text', 'json-summary'],
       reportsDirectory: 'coverage',
       thresholds: {
