@@ -1,50 +1,48 @@
-# Mülakat Atlası UI Starter
+# Mülakat Atlası
 
-Backend içermeyen, mock data ile çalışan sade bir Next.js + Tailwind CSS arayüz başlangıcıdır.
+Mülakat Atlası, adayların işe alım süreçlerini anonim olarak paylaşabildiği ve toplu
+benchmark raporlarını inceleyebildiği bir Next.js uygulamasıdır.
 
-## İçerik
+## Gereksinimler
 
-- Next.js App Router
-- Tailwind CSS
-- Responsive landing page
-- Off-white / warm neutral color palette
-- Mock şirket kartları
-- Hiring Experience Score alanları
-- Anonim deneyim paylaşım formu taslağı
+- Node.js 24
+- npm 11
 
-## Kurulum
+Sürüm sözleşmesi `.nvmrc`, `package.json#engines` ve CI tarafından birlikte uygulanır.
+
+## Yerel kurulum
 
 ```bash
-npm install
+nvm use
+npm ci
+cp .env.example .env.local
 npm run dev
 ```
 
-Tarayıcıda:
+Uygulama varsayılan olarak `http://localhost:3000` adresinde açılır.
+
+## Kalite komutları
 
 ```bash
-http://localhost:3000
+npm run lint
+npm run typecheck
+npm test
+npm run test:coverage
+npm run build
 ```
 
-## Renk Paleti
+Tüm yerel kalite kapıları tek komutla çalıştırılabilir:
 
-```txt
-canvas:       #F7F4EF
-surface:      #FFFCF7
-surfaceMuted: #F1EDE6
-ink:          #191714
-muted:        #706A61
-line:         #E2DDD4
-accent:       #5B6F64
-accentDark:   #31443A
-warning:      #9A6B2F
-danger:       #9B4A45
+```bash
+npm run check
 ```
 
-## Önerilen Sonraki Adımlar
+## Ortam değişkenleri
 
-- `/sirket/[slug]` detay sayfası ekle
-- `/deneyim-paylas` sayfasını ayrı route'a taşı
-- Form validasyonu ekle
-- Mock datayı ileride API veya database katmanına bağla
-- GitHub Actions ile lint/build pipeline ekle
-- Vercel'e bağlayıp preview deployments aktif et
+| Değişken | Kullanım |
+| --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase proje URL'si |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Tarayıcıda kullanılan publishable anahtar |
+
+`NEXT_PUBLIC_` önekli değişkenler tarayıcı paketine dahil edilir. Gerçek geliştirme
+değerleri yalnızca Git tarafından yok sayılan `.env.local` dosyasında tutulmalıdır.
