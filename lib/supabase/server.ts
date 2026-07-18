@@ -3,13 +3,17 @@ import 'server-only'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
+import type { ApiDatabase } from '@/lib/database/database.types'
 import { getPublicSupabaseEnvironment } from '@/lib/env/public'
 
 export async function createServerSupabaseClient() {
   const cookieStore = await cookies()
   const { publishableKey, url } = getPublicSupabaseEnvironment()
 
-  return createServerClient(url, publishableKey, {
+  return createServerClient<ApiDatabase, 'api'>(url, publishableKey, {
+    db: {
+      schema: 'api',
+    },
     cookies: {
       getAll() {
         return cookieStore.getAll()

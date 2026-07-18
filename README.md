@@ -50,12 +50,27 @@ Backend geliştirmeleri için Docker çalışırken yerel Supabase ortamı açı
 ```bash
 npm run db:start
 npm run db:status
+npm run db:reset
+npm run db:lint
+npm run db:test
+npm run db:types
 npm run db:stop
 ```
 
+`db:start`, özel `api` şemasını temiz kurulumda oluşturabilmek için önce
+veritabanını hazırlar, ardından yerel Supabase servislerini yeniden başlatır.
+`db:reset` ise yerel veritabanındaki tüm verileri siler ve migration dosyalarını
+baştan uygular; yalnızca silinebilir geliştirme verileriyle kullanılmalıdır.
+
 Yerel Supabase ortamı yalnızca geliştirme ve test içindir; dış trafiğe
-açılmamalıdır. Gerekli değişkenler `.env.example` içerisinde listelenmiştir.
+açılmamalıdır. İlk başlatmadan sonra yerel değerler
+`npm run db:status -- -o env` ile görüntülenebilir. Çıktıdaki `API_URL`,
+`PUBLISHABLE_KEY` ve `SECRET_KEY` değerleri sırasıyla `.env.local` içindeki
+`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` ve
+`SUPABASE_SECRET_KEY` alanlarına yazılır. `.env.local` commit edilmez;
 `SUPABASE_SECRET_KEY` yalnızca sunucu tarafında kullanılmalıdır.
+Migration dosyaları veritabanı şemasının tek kaynağıdır. Şema değiştiğinde
+üretilen TypeScript tipleri de `npm run db:types` ile yenilenir.
 
 ## Kalite kontrolü
 

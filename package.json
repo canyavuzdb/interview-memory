@@ -12,12 +12,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "db:start": "supabase start",
+    "db:start": "node scripts/start-local-supabase.mjs",
+    "db:start:ci": "node scripts/start-local-supabase.mjs --database-only",
     "db:stop": "supabase stop",
     "db:status": "supabase status",
     "db:reset": "supabase db reset --local",
-    "db:lint": "supabase db lint --local --level warning --fail-on error",
+    "db:lint": "supabase db lint --local --schema api,authorization,core,privacy --level warning --fail-on error",
+    "db:test:present": "node scripts/check-database-tests.mjs",
     "db:test": "supabase test db --local",
+    "db:types": "node scripts/database-types.mjs generate",
+    "db:types:check": "node scripts/database-types.mjs check",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit --incremental false --pretty false",
     "test": "vitest run",
@@ -33,7 +37,8 @@
     "next": "16.2.9",
     "react": "19.2.7",
     "react-dom": "19.2.7",
-    "server-only": "0.0.1"
+    "server-only": "0.0.1",
+    "zod": "4.4.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "3.3.5",
