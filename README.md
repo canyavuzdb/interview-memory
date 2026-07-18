@@ -1,16 +1,38 @@
-# Mülakat Atlası
+<p align="center">
+  <img
+    src="./app/icon.svg"
+    width="72"
+    alt="Interview Memory logosu"
+  />
+</p>
 
-Mülakat Atlası, adayların işe alım süreçlerini anonim olarak paylaşabildiği ve toplu
-benchmark raporlarını inceleyebildiği bir Next.js uygulamasıdır.
+# Interview Memory
 
-## Gereksinimler
+İşe alım süreçlerini kişisel deneyimlerden ortak içgörülere dönüştüren açık kaynak
+bir platform.
 
-- Node.js 24
-- npm 11
+Interview Memory; adayların başvuru ve mülakat deneyimlerini anonim biçimde
+paylaşmasını, kendi süreçlerini benzer aday gruplarıyla karşılaştırmasını ve
+şirketlerin işe alım yaklaşımlarını toplu veriler üzerinden incelemesini hedefler.
 
-Sürüm sözleşmesi `.nvmrc`, `package.json#engines` ve CI tarafından birlikte uygulanır.
+## Neler sunuyor?
 
-## Yerel kurulum
+- Başvuru ve şirket deneyimi için anonim anket akışları
+- Rol ve şirket bazlı işe alım benchmarkları
+- Başvuru hareketliliği ve şirket geri dönüş raporları
+- Türkçe ve İngilizce arayüz
+- Responsive, açık ve koyu tema desteği
+
+## Proje durumu
+
+Proje aktif geliştirme aşamasındadır. Arayüz ve raporlama deneyimi kullanılabilir
+durumdadır; gösterilen benchmark değerleri şimdilik temsilidir ve üretim verisi
+değildir. Gerçek veritabanı şeması, kimlik doğrulama ve yetkilendirme katmanları
+aşamalı olarak eklenmektedir.
+
+## Yerelde çalıştırma
+
+Node.js 24 ve npm 11 kullanılır.
 
 ```bash
 nvm use
@@ -19,30 +41,30 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Uygulama varsayılan olarak `http://localhost:3000` adresinde açılır.
+Uygulama `http://localhost:3000` adresinde açılır.
 
-## Kalite komutları
+## Yerel Supabase
+
+Backend geliştirmeleri için Docker çalışırken yerel Supabase ortamı açılabilir:
 
 ```bash
-npm run lint
-npm run typecheck
-npm test
-npm run test:coverage
-npm run build
+npm run db:start
+npm run db:status
+npm run db:stop
 ```
 
-Tüm yerel kalite kapıları tek komutla çalıştırılabilir:
+Yerel Supabase ortamı yalnızca geliştirme ve test içindir; dış trafiğe
+açılmamalıdır. Gerekli değişkenler `.env.example` içerisinde listelenmiştir.
+`SUPABASE_SECRET_KEY` yalnızca sunucu tarafında kullanılmalıdır.
+
+## Kalite kontrolü
+
+Lint, tip kontrolü, testler, coverage ve production build tek komutla çalışır:
 
 ```bash
 npm run check
 ```
 
-## Ortam değişkenleri
+## Teknolojiler
 
-| Değişken | Kullanım |
-| --- | --- |
-| `NEXT_PUBLIC_SUPABASE_URL` | Supabase proje URL'si |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Tarayıcıda kullanılan publishable anahtar |
-
-`NEXT_PUBLIC_` önekli değişkenler tarayıcı paketine dahil edilir. Gerçek geliştirme
-değerleri yalnızca Git tarafından yok sayılan `.env.local` dosyasında tutulmalıdır.
+Next.js, React, Tailwind CSS, Supabase ve Vitest.
