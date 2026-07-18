@@ -1,20 +1,25 @@
-node_modules
-.next
-out
-.env
-.env.local
-.env.production
-.vercel
+# Dependencies
+/node_modules/
+
+# Next.js and generated output
+/.next/
+/out/
+/output/
+/.vercel/
+
+# Local environment files; keep the empty template versioned.
+.env*
+!.env.example
+
+# Test and tool output
+/coverage/
+*.tsbuildinfo
+.eslintcache
+
+# Operating-system files
 .DS_Store
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-
-.env
-.env.local
-.env.production
-
-# Generated project reports
-/output/pdf/interview-memory-proje-durum-raporu.pdf

@@ -2,30 +2,48 @@ name: CI
 
 on:
   pull_request:
+    branches:
+      - master
   push:
     branches:
-      - main
+      - master
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build:
-    name: Build project
-    runs-on: ubuntu-latest
+  quality:
+    name: Quality gates
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 22
+          node-version-file: .nvmrc
           cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Run lint
-        run: npm run lint --if-present
+      - name: Lint source
+        run: npm run lint
 
-      - name: Build application
+      - name: Check TypeScript contracts
+        run: npm run typecheck
+
+      - name: Run contract tests
+        run: npm run test:coverage
+
+      - name: Build production application
         run: npm run build
