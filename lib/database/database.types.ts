@@ -6,6 +6,48 @@ export type CurrentNoticeRecord =
 export type ConsentReceiptRecord =
   GeneratedDatabase['api']['Functions']['record_authenticated_consent_v1']['Returns'][number]
 
+export type ActiveSectorRecord =
+  GeneratedDatabase['api']['Functions']['list_active_sectors_v1']['Returns'][number]
+export type ActiveRoleFamilyRecord =
+  GeneratedDatabase['api']['Functions']['list_active_role_families_v1']['Returns'][number]
+export type ActiveRoleRecord =
+  GeneratedDatabase['api']['Functions']['list_active_roles_v1']['Returns'][number]
+type GeneratedPublishedCompanyRecord =
+  GeneratedDatabase['api']['Functions']['list_published_companies_v1']['Returns'][number]
+export type PublishedCompanyRecord = Omit<
+  GeneratedPublishedCompanyRecord,
+  'country_code' | 'sector_id'
+> & {
+  country_code: string | null
+  sector_id: number | null
+}
+type GeneratedActiveCompensationBandRecord =
+  GeneratedDatabase['api']['Functions']['list_active_compensation_bands_v1']['Returns'][number]
+export type ActiveCompensationBandRecord = Omit<
+  GeneratedActiveCompensationBandRecord,
+  'valid_to'
+> & {
+  valid_to: string | null
+}
+export type CompanyAliasResolutionRecord =
+  GeneratedDatabase['api']['Functions']['resolve_company_alias_v1']['Returns'][number]
+
+export type SectorRow =
+  GeneratedDatabase['catalog']['Tables']['sectors']['Row']
+export type RoleFamilyRow =
+  GeneratedDatabase['catalog']['Tables']['role_families']['Row']
+export type RoleRow =
+  GeneratedDatabase['catalog']['Tables']['roles']['Row']
+export type CompanyRow =
+  GeneratedDatabase['catalog']['Tables']['companies']['Row']
+export type CompanyAliasRow =
+  GeneratedDatabase['catalog']['Tables']['company_aliases']['Row']
+export type CompensationBandRow =
+  GeneratedDatabase['catalog']['Tables']['compensation_bands']['Row']
+
+// Catalog writes remain migration/moderation owned in B05. No generic
+// Insert/Update aliases are exported from the application type surface.
+
 export type UserProfileRow =
   GeneratedDatabase['core']['Tables']['user_profiles']['Row']
 export type UserProfileInsert =

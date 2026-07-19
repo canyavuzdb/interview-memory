@@ -21,8 +21,10 @@ export default defineConfig({
       provider: 'v8',
       include: [
         'lib/api/**/*.js',
+        'lib/catalog/{contracts,errors}.ts',
         'lib/env/validation.ts',
         'lib/privacy/{contracts,errors}.ts',
+        'lib/server/catalog/{persistence.schemas,repository,service}.ts',
         'lib/server/privacy/{persistence.schemas,repository,service}.ts',
       ],
       reporter: ['text', 'json-summary'],

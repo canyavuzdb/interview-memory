@@ -27,6 +27,87 @@ export type Database = {
           version: string
         }[]
       }
+      list_active_compensation_bands_v1: {
+        Args: {
+          p_after_id?: string
+          p_after_lower_bound?: string
+          p_currency_code: string
+          p_definition_version: string
+          p_gross_net: string
+          p_limit?: number
+          p_pay_period: string
+          p_region_code: string
+        }
+        Returns: {
+          currency_code: string
+          definition_version: string
+          gross_net: string
+          id: string
+          lower_bound: string
+          pay_period: string
+          region_code: string
+          upper_bound: string
+          valid_from: string
+          valid_to: string
+        }[]
+      }
+      list_active_role_families_v1: {
+        Args: {
+          p_after_id?: string
+          p_after_sort_order?: number
+          p_limit?: number
+          p_taxonomy_version: string
+        }
+        Returns: {
+          display_name: string
+          id: string
+          slug: string
+          sort_order: number
+          taxonomy_version: string
+        }[]
+      }
+      list_active_roles_v1: {
+        Args: {
+          p_after_id?: string
+          p_after_sort_order?: number
+          p_limit?: number
+          p_role_family_id: string
+          p_taxonomy_version: string
+        }
+        Returns: {
+          display_name: string
+          id: string
+          role_family_id: string
+          slug: string
+          sort_order: number
+          taxonomy_version: string
+        }[]
+      }
+      list_active_sectors_v1: {
+        Args: never
+        Returns: {
+          display_name: string
+          id: number
+          slug: string
+          sort_order: number
+        }[]
+      }
+      list_published_companies_v1: {
+        Args: {
+          p_after_display_name?: string
+          p_after_id?: string
+          p_country_code?: string
+          p_limit?: number
+          p_sector_id?: number
+        }
+        Returns: {
+          country_code: string
+          display_name: string
+          id: string
+          sector_id: number
+          slug: string
+        }[]
+      }
       record_authenticated_consent_v1: {
         Args: {
           p_auth_user_id: string
@@ -42,6 +123,12 @@ export type Database = {
           event_created_at: string
           event_id: string
           replayed: boolean
+        }[]
+      }
+      resolve_company_alias_v1: {
+        Args: { p_alias: string; p_country_code?: string; p_locale?: string }
+        Returns: {
+          company_id: string
         }[]
       }
     }
@@ -96,6 +183,268 @@ export type Database = {
     }
     Functions: {
       [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+  catalog: {
+    Tables: {
+      companies: {
+        Row: {
+          country_code: string | null
+          created_at: string
+          display_name: string
+          external_case_ref: string | null
+          external_case_status: string | null
+          external_case_synced_at: string | null
+          id: string
+          legal_name: string | null
+          normalized_domain: string | null
+          publication_status: string
+          sector_id: number | null
+          slug: string
+          updated_at: string
+          verification_status: string
+          version: number
+        }
+        Insert: {
+          country_code?: string | null
+          created_at?: string
+          display_name: string
+          external_case_ref?: string | null
+          external_case_status?: string | null
+          external_case_synced_at?: string | null
+          id?: string
+          legal_name?: string | null
+          normalized_domain?: string | null
+          publication_status?: string
+          sector_id?: number | null
+          slug: string
+          updated_at?: string
+          verification_status?: string
+          version?: number
+        }
+        Update: {
+          country_code?: string | null
+          created_at?: string
+          display_name?: string
+          external_case_ref?: string | null
+          external_case_status?: string | null
+          external_case_synced_at?: string | null
+          id?: string
+          legal_name?: string | null
+          normalized_domain?: string | null
+          publication_status?: string
+          sector_id?: number | null
+          slug?: string
+          updated_at?: string
+          verification_status?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "companies_sector_id_fkey"
+            columns: ["sector_id"]
+            isOneToOne: false
+            referencedRelation: "sectors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      company_aliases: {
+        Row: {
+          company_id: string
+          country_code: string | null
+          created_at: string
+          id: string
+          locale: string | null
+          normalized_alias: string
+          review_status: string
+          reviewed_at: string | null
+          source_code: string
+        }
+        Insert: {
+          company_id: string
+          country_code?: string | null
+          created_at?: string
+          id?: string
+          locale?: string | null
+          normalized_alias: string
+          review_status?: string
+          reviewed_at?: string | null
+          source_code: string
+        }
+        Update: {
+          company_id?: string
+          country_code?: string | null
+          created_at?: string
+          id?: string
+          locale?: string | null
+          normalized_alias?: string
+          review_status?: string
+          reviewed_at?: string | null
+          source_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_aliases_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      compensation_bands: {
+        Row: {
+          created_at: string
+          currency_code: string
+          definition_version: string
+          gross_net: string
+          id: string
+          is_active: boolean
+          lower_bound: number
+          pay_period: string
+          region_code: string
+          upper_bound: number
+          valid_from: string
+          valid_to: string | null
+        }
+        Insert: {
+          created_at?: string
+          currency_code: string
+          definition_version: string
+          gross_net: string
+          id?: string
+          is_active?: boolean
+          lower_bound: number
+          pay_period: string
+          region_code: string
+          upper_bound: number
+          valid_from: string
+          valid_to?: string | null
+        }
+        Update: {
+          created_at?: string
+          currency_code?: string
+          definition_version?: string
+          gross_net?: string
+          id?: string
+          is_active?: boolean
+          lower_bound?: number
+          pay_period?: string
+          region_code?: string
+          upper_bound?: number
+          valid_from?: string
+          valid_to?: string | null
+        }
+        Relationships: []
+      }
+      role_families: {
+        Row: {
+          created_at: string
+          display_name: string
+          id: string
+          is_active: boolean
+          slug: string
+          sort_order: number
+          taxonomy_version: string
+        }
+        Insert: {
+          created_at?: string
+          display_name: string
+          id?: string
+          is_active?: boolean
+          slug: string
+          sort_order?: number
+          taxonomy_version: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string
+          id?: string
+          is_active?: boolean
+          slug?: string
+          sort_order?: number
+          taxonomy_version?: string
+        }
+        Relationships: []
+      }
+      roles: {
+        Row: {
+          created_at: string
+          display_name: string
+          id: string
+          is_active: boolean
+          role_family_id: string
+          slug: string
+          sort_order: number
+          taxonomy_version: string
+        }
+        Insert: {
+          created_at?: string
+          display_name: string
+          id?: string
+          is_active?: boolean
+          role_family_id: string
+          slug: string
+          sort_order?: number
+          taxonomy_version: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string
+          id?: string
+          is_active?: boolean
+          role_family_id?: string
+          slug?: string
+          sort_order?: number
+          taxonomy_version?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "roles_family_taxonomy_fkey"
+            columns: ["role_family_id", "taxonomy_version"]
+            isOneToOne: false
+            referencedRelation: "role_families"
+            referencedColumns: ["id", "taxonomy_version"]
+          },
+        ]
+      }
+      sectors: {
+        Row: {
+          display_name: string
+          id: number
+          is_active: boolean
+          slug: string
+          sort_order: number
+        }
+        Insert: {
+          display_name: string
+          id?: never
+          is_active?: boolean
+          slug: string
+          sort_order?: number
+        }
+        Update: {
+          display_name?: string
+          id?: never
+          is_active?: boolean
+          slug?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      normalize_company_alias_v1: { Args: { p_alias: string }; Returns: string }
     }
     Enums: {
       [_ in never]: never
@@ -432,6 +781,9 @@ export const Constants = {
     Enums: {},
   },
   authorization: {
+    Enums: {},
+  },
+  catalog: {
     Enums: {},
   },
   core: {
