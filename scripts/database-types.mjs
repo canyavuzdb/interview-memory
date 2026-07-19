@@ -27,7 +27,7 @@ const cliEntryPath = path.join(
   'dist',
   'supabase.js',
 )
-const schemas = ['api', 'authorization', 'core', 'privacy']
+const schemas = ['api', 'authorization', 'catalog', 'core', 'privacy']
 
 function generateTypes() {
   return new Promise((resolve, reject) => {
