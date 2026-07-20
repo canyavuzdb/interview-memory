@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
+import SessionAccessLink from '@/components/auth/SessionAccessLink'
 import BrandHomeLink from '@/components/brand/BrandHomeLink'
 import PreferenceControls from '@/components/PreferenceControls'
 
@@ -21,6 +22,12 @@ export default function SurveyPageHeader({ copy, locale, path }) {
           themeTitle={copy.themeTitle}
           className="justify-self-end"
         >
+          <SessionAccessLink
+            accountLabel={copy.account}
+            locale={locale}
+            signInLabel={copy.signIn}
+            variant="compact"
+          />
           <Link
             href={`/${locale}`}
             title={copy.backHome}

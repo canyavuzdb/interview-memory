@@ -5,6 +5,8 @@ export type CurrentNoticeRecord =
   GeneratedDatabase['api']['Functions']['get_current_notice_v1']['Returns'][number]
 export type ConsentReceiptRecord =
   GeneratedDatabase['api']['Functions']['record_authenticated_consent_v1']['Returns'][number]
+export type AccountContextRecord =
+  GeneratedDatabase['api']['Functions']['get_my_account_v1']['Returns'][number]
 
 export type ActiveSectorRecord =
   GeneratedDatabase['api']['Functions']['list_active_sectors_v1']['Returns'][number]

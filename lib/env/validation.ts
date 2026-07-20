@@ -72,13 +72,31 @@ export function requireSupabaseUrl(
   value: string | undefined,
   name: string,
 ): string {
+  return requirePublicOrigin(value, name, 'Supabase URL')
+}
+
+export function requireSiteUrl(
+  value: string | undefined,
+  name: string,
+): string {
+  return requirePublicOrigin(value, name, 'site URL')
+}
+
+function requirePublicOrigin(
+  value: string | undefined,
+  name: string,
+  valueType: string,
+): string {
   const normalizedValue = requireEnvironmentValue(value, name)
   let parsedUrl: URL
 
   try {
     parsedUrl = new URL(normalizedValue)
   } catch {
-    throw environmentError('Invalid Supabase URL in environment variable', name)
+    throw environmentError(
+      `Invalid ${valueType} in environment variable`,
+      name,
+    )
   }
 
   const isSecure = parsedUrl.protocol === 'https:'
@@ -98,7 +116,7 @@ export function requireSupabaseUrl(
     hasUnexpectedComponents
   ) {
     throw environmentError(
-      'Invalid Supabase URL in environment variable',
+      `Invalid ${valueType} in environment variable`,
       name,
     )
   }

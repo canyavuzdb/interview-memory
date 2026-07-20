@@ -1,9 +1,10 @@
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { ArrowLeft, Check } from 'lucide-react'
 import LoginPreview from '@/components/LoginPreview'
 import PreferenceControls from '@/components/PreferenceControls'
 import { getMessages, isSupportedLocale } from '@/data/i18n'
+import { resolveActiveAccount } from '@/lib/server/auth/session'
 
 export async function generateMetadata({ params }) {
   const { locale } = await params
@@ -13,13 +14,22 @@ export async function generateMetadata({ params }) {
   return getMessages(locale).metadata.login
 }
 
-export default async function LoginPage({ params }) {
+export default async function LoginPage({ params, searchParams }) {
   const { locale } = await params
 
   if (!isSupportedLocale(locale)) notFound()
 
+  const account = await resolveActiveAccount()
+
+  if (account) redirect(`/${locale}/account`)
+
   const messages = getMessages(locale)
   const copy = messages.login
+  const query = await searchParams
+  const next =
+    typeof query?.next === 'string' ? query.next : `/${locale}/account`
+  const initialStatus =
+    typeof query?.status === 'string' ? query.status : null
 
   return (
     <main className="landing-grid min-h-screen text-ink">
@@ -75,6 +85,9 @@ export default async function LoginPage({ params }) {
         <LoginPreview
           copy={copy}
           anonymousHref={`/${locale}#surveys`}
+          locale={locale}
+          next={next}
+          initialStatus={initialStatus}
         />
       </section>
     </main>
