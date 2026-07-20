@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   requireEnvironmentValue,
+  requireSiteUrl,
   requireSupabasePublishableKey,
   requireSupabaseSecretKey,
   requireSupabaseUrl,
@@ -42,6 +43,29 @@ describe('environment validation', () => {
 
     expect(readValue).toThrow(
       'Invalid Supabase URL in environment variable: SUPABASE_URL',
+    )
+    expect(readValue).not.toThrow(value)
+  })
+
+  it.each([
+    ['http://localhost:3000/', 'http://localhost:3000'],
+    ['http://127.0.0.1:3000', 'http://127.0.0.1:3000'],
+    ['https://interview-memory.example', 'https://interview-memory.example'],
+  ])('accepts a safe application origin: %s', (value, expected) => {
+    expect(requireSiteUrl(value, 'NEXT_PUBLIC_SITE_URL')).toBe(expected)
+  })
+
+  it.each([
+    'not-a-url',
+    'http://interview-memory.example',
+    'https://user@interview-memory.example',
+    'https://interview-memory.example/login',
+    'https://interview-memory.example?token=private',
+  ])('rejects an unsafe application origin without leaking it: %s', (value) => {
+    const readValue = () => requireSiteUrl(value, 'NEXT_PUBLIC_SITE_URL')
+
+    expect(readValue).toThrow(
+      'Invalid site URL in environment variable: NEXT_PUBLIC_SITE_URL',
     )
     expect(readValue).not.toThrow(value)
   })

@@ -1,4 +1,5 @@
 import { IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
 
 const plexSans = IBM_Plex_Sans({
@@ -49,11 +50,17 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="tr" suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-        <script dangerouslySetInnerHTML={{ __html: localeScript }} />
-      </head>
       <body className={`${plexSans.variable} ${plexMono.variable} font-sans`}>
+        <Script
+          id="theme-initializer"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: themeScript }}
+        />
+        <Script
+          id="locale-initializer"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: localeScript }}
+        />
         {children}
       </body>
     </html>

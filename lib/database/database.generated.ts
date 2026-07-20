@@ -27,6 +27,17 @@ export type Database = {
           version: string
         }[]
       }
+      get_my_account_v1: {
+        Args: never
+        Returns: {
+          account_status: string
+          locale: string
+          onboarding_status: string
+          timezone: string
+          user_id: string
+          version: number
+        }[]
+      }
       list_active_compensation_bands_v1: {
         Args: {
           p_after_id?: string

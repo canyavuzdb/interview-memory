@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { ChevronDown, LogIn, Menu, X } from 'lucide-react'
+import { ChevronDown, Menu, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import SessionAccessLink from './auth/SessionAccessLink'
 import BrandHomeLink from './brand/BrandHomeLink'
 import PreferenceControls from './PreferenceControls'
 import StableLocalizedText from './StableLocalizedText'
@@ -184,16 +185,11 @@ export default function PublicHeader({
             themeTitle={common.themeTitle}
           />
 
-          <Link
-            href={`/${locale}/login`}
-            aria-label={copy.signIn}
-            className="hidden h-9 items-center justify-center gap-2 border border-ink bg-ink px-4 font-mono text-[10px] font-bold uppercase tracking-[0.07em] text-surface transition hover:bg-accentDark xl:inline-flex"
-          >
-            <LogIn size={14} aria-hidden="true" />
-            <StableLocalizedText reserve={alternateCopy.signIn}>
-              {copy.signIn}
-            </StableLocalizedText>
-          </Link>
+          <SessionAccessLink
+            accountLabel={copy.account}
+            locale={locale}
+            signInLabel={copy.signIn}
+          />
 
           <button
             ref={mobileTriggerRef}
@@ -259,14 +255,13 @@ export default function PublicHeader({
             ))}
           </div>
 
-          <Link
-            href={`/${locale}/login`}
-            onClick={() => setIsMobileOpen(false)}
-            className="mt-5 flex h-11 items-center justify-center gap-2 bg-ink px-4 font-mono text-[10px] font-bold uppercase tracking-[0.07em] text-surface"
-          >
-            <LogIn size={14} aria-hidden="true" />
-            {copy.signIn}
-          </Link>
+          <SessionAccessLink
+            accountLabel={copy.account}
+            locale={locale}
+            onNavigate={() => setIsMobileOpen(false)}
+            signInLabel={copy.signIn}
+            variant="mobile"
+          />
         </nav>
       </div>
     </header>
