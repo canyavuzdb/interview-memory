@@ -6,6 +6,7 @@ import {
   hmacValue,
   respondentTokenHmacs,
   sha256Value,
+  submissionCapabilityHmacs,
 } from '@/lib/server/security/crypto'
 
 const activeSecret = Buffer.alloc(32, 1).toString('base64url')
@@ -49,5 +50,29 @@ describe('security cryptography', () => {
     expect(sha256Value({ b: 2, a: 1 })).toBe(
       sha256Value({ a: 1, b: 2 }),
     )
+  })
+
+  it('uses a separate capability HMAC domain and supports rotation', () => {
+    const capability = submissionCapabilityHmacs('token', {
+      active: { version: 2, secret: activeSecret },
+      previous: { version: 1, secret: previousSecret },
+    })
+
+    expect(capability).toMatchObject({
+      active: { version: 2 },
+      previous: { version: 1 },
+    })
+    expect(capability.active.hmac).not.toBe(
+      respondentTokenHmacs('token', {
+        active: { version: 2, secret: activeSecret },
+        previous: null,
+      }).active.hmac,
+    )
+    expect(
+      submissionCapabilityHmacs('token', {
+        active: { version: 2, secret: activeSecret },
+        previous: null,
+      }).previous,
+    ).toBeNull()
   })
 })

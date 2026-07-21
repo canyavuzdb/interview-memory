@@ -286,8 +286,8 @@ select extensions.is(
       and pg_get_constraintdef(constraint_record.oid) like
         '%submission_id%'
   ),
-  0,
-  'submission_id intentionally has no FK before the intake root exists'
+  1,
+  'submission consent now references the B07 intake root'
 );
 
 select extensions.is(

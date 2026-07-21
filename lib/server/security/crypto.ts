@@ -59,6 +59,32 @@ export function respondentTokenHmacs(
   }
 }
 
+export function submissionCapabilityHmacs(
+  token: string,
+  keyRing: RespondentKeyRing,
+) {
+  return {
+    active: {
+      hmac: hmacValue(
+        keyRing.active.secret,
+        'submission-capability:v1',
+        token,
+      ),
+      version: keyRing.active.version,
+    },
+    previous: keyRing.previous
+      ? {
+          hmac: hmacValue(
+            keyRing.previous.secret,
+            'submission-capability:v1',
+            token,
+          ),
+          version: keyRing.previous.version,
+        }
+      : null,
+  }
+}
+
 export function canonicalJson(value: unknown): string {
   if (value === null || typeof value !== 'object') {
     return JSON.stringify(value)

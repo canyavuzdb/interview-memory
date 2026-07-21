@@ -1,6 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { getServerSecurityEnvironment } from '@/lib/env/server'
+import {
+  getServerIntakeEnvironment,
+  getServerSecurityEnvironment,
+} from '@/lib/env/server'
 
 const active = Buffer.alloc(32, 1).toString('base64url')
 const previous = Buffer.alloc(32, 2).toString('base64url')
@@ -60,6 +63,56 @@ describe('server security environment', () => {
 
     expect(getServerSecurityEnvironment).toThrow(
       'Respondent HMAC key versions must be distinct',
+    )
+  })
+})
+
+describe('server intake environment', () => {
+  it('loads an active-only capability key ring', () => {
+    vi.stubEnv('SUBMISSION_CAPABILITY_HMAC_ACTIVE_KEY_VERSION', '1')
+    vi.stubEnv('SUBMISSION_CAPABILITY_HMAC_ACTIVE_KEY', active)
+    vi.stubEnv('SUBMISSION_CAPABILITY_HMAC_PREVIOUS_KEY_VERSION', '')
+    vi.stubEnv('SUBMISSION_CAPABILITY_HMAC_PREVIOUS_KEY', '')
+
+    expect(getServerIntakeEnvironment()).toEqual({
+      capabilityKeys: {
+        active: { version: 1, secret: active },
+        previous: null,
+      },
+    })
+  })
+
+  it('loads the previous capability key during rotation', () => {
+    vi.stubEnv('SUBMISSION_CAPABILITY_HMAC_ACTIVE_KEY_VERSION', '2')
+    vi.stubEnv('SUBMISSION_CAPABILITY_HMAC_ACTIVE_KEY', active)
+    vi.stubEnv('SUBMISSION_CAPABILITY_HMAC_PREVIOUS_KEY_VERSION', '1')
+    vi.stubEnv('SUBMISSION_CAPABILITY_HMAC_PREVIOUS_KEY', previous)
+
+    expect(getServerIntakeEnvironment().capabilityKeys.previous).toEqual({
+      version: 1,
+      secret: previous,
+    })
+  })
+
+  it('requires the previous capability key pair together', () => {
+    vi.stubEnv('SUBMISSION_CAPABILITY_HMAC_ACTIVE_KEY_VERSION', '2')
+    vi.stubEnv('SUBMISSION_CAPABILITY_HMAC_ACTIVE_KEY', active)
+    vi.stubEnv('SUBMISSION_CAPABILITY_HMAC_PREVIOUS_KEY_VERSION', '1')
+    vi.stubEnv('SUBMISSION_CAPABILITY_HMAC_PREVIOUS_KEY', '')
+
+    expect(getServerIntakeEnvironment).toThrow(
+      'Previous submission capability HMAC key and version must be configured together',
+    )
+  })
+
+  it('requires distinct capability key versions', () => {
+    vi.stubEnv('SUBMISSION_CAPABILITY_HMAC_ACTIVE_KEY_VERSION', '2')
+    vi.stubEnv('SUBMISSION_CAPABILITY_HMAC_ACTIVE_KEY', active)
+    vi.stubEnv('SUBMISSION_CAPABILITY_HMAC_PREVIOUS_KEY_VERSION', '2')
+    vi.stubEnv('SUBMISSION_CAPABILITY_HMAC_PREVIOUS_KEY', previous)
+
+    expect(getServerIntakeEnvironment).toThrow(
+      'Submission capability HMAC key versions must be distinct',
     )
   })
 })
