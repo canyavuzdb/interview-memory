@@ -71,3 +71,52 @@ export function getServerSecurityEnvironment() {
     ),
   }
 }
+
+export function getServerIntakeEnvironment() {
+  const previousKey = process.env.SUBMISSION_CAPABILITY_HMAC_PREVIOUS_KEY?.trim()
+  const previousVersion =
+    process.env.SUBMISSION_CAPABILITY_HMAC_PREVIOUS_KEY_VERSION?.trim()
+
+  if (Boolean(previousKey) !== Boolean(previousVersion)) {
+    throw new Error(
+      'Previous submission capability HMAC key and version must be configured together',
+    )
+  }
+
+  const activeVersion = requirePositiveInteger(
+    process.env.SUBMISSION_CAPABILITY_HMAC_ACTIVE_KEY_VERSION,
+    'SUBMISSION_CAPABILITY_HMAC_ACTIVE_KEY_VERSION',
+  )
+  const parsedPreviousVersion = previousVersion
+    ? requirePositiveInteger(
+        previousVersion,
+        'SUBMISSION_CAPABILITY_HMAC_PREVIOUS_KEY_VERSION',
+      )
+    : null
+
+  if (parsedPreviousVersion === activeVersion) {
+    throw new Error('Submission capability HMAC key versions must be distinct')
+  }
+
+  return {
+    capabilityKeys: {
+      active: {
+        version: activeVersion,
+        secret: requireBase64UrlSecret(
+          process.env.SUBMISSION_CAPABILITY_HMAC_ACTIVE_KEY,
+          'SUBMISSION_CAPABILITY_HMAC_ACTIVE_KEY',
+        ),
+      },
+      previous:
+        previousKey && parsedPreviousVersion
+          ? {
+              version: parsedPreviousVersion,
+              secret: requireBase64UrlSecret(
+                previousKey,
+                'SUBMISSION_CAPABILITY_HMAC_PREVIOUS_KEY',
+              ),
+            }
+          : null,
+    },
+  }
+}

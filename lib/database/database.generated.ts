@@ -105,6 +105,25 @@ export type Database = {
           version: number
         }[]
       }
+      get_submission_receipt_v1: {
+        Args: {
+          p_active_capability_hmac?: string
+          p_active_capability_key_version?: number
+          p_previous_capability_hmac?: string
+          p_previous_capability_key_version?: number
+          p_receipt_id: string
+          p_requester_data_subject_id?: string
+        }
+        Returns: {
+          capability_rotated: boolean
+          lifecycle_status: string
+          quality_status: string
+          receipt_id: string
+          submitted_at: string
+          survey_type: string
+          withdrawn_at: string
+        }[]
+      }
       list_active_compensation_bands_v1: {
         Args: {
           p_after_id?: string
@@ -186,6 +205,19 @@ export type Database = {
           slug: string
         }[]
       }
+      merge_anonymous_subject_v1: {
+        Args: {
+          p_active_anonymous_hmac: string
+          p_anonymous_quota_subject_hmac: string
+          p_auth_user_id: string
+          p_authenticated_quota_subject_hmac: string
+          p_previous_anonymous_hmac: string
+        }
+        Returns: {
+          data_subject_id: string
+          merged: boolean
+        }[]
+      }
       record_authenticated_consent_v1: {
         Args: {
           p_auth_user_id: string
@@ -214,6 +246,12 @@ export type Database = {
           created: boolean
           data_subject_id: string
           key_rotated: boolean
+        }[]
+      }
+      resolve_authenticated_subject_v1: {
+        Args: { p_auth_user_id: string }
+        Returns: {
+          data_subject_id: string
         }[]
       }
       resolve_company_alias_v1: {
