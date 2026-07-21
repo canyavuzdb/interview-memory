@@ -15,6 +15,73 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      claim_idempotency_v1: {
+        Args: {
+          p_expires_at: string
+          p_idempotency_key_hmac: string
+          p_operation_code: string
+          p_request_fingerprint: string
+          p_subject_hmac: string
+          p_subject_type: string
+        }
+        Returns: {
+          outcome: string
+          record_status: string
+          resource_id: string
+          resource_type: string
+          response_code: number
+        }[]
+      }
+      cleanup_security_ephemera_v1: {
+        Args: { p_batch_size?: number }
+        Returns: {
+          idempotency_rows_deleted: number
+          quota_rows_deleted: number
+        }[]
+      }
+      complete_idempotency_v1: {
+        Args: {
+          p_idempotency_key_hmac: string
+          p_operation_code: string
+          p_request_fingerprint: string
+          p_resource_id: string
+          p_resource_type: string
+          p_response_code: number
+          p_subject_hmac: string
+          p_subject_type: string
+        }
+        Returns: boolean
+      }
+      consume_submission_quota_v1: {
+        Args: {
+          p_counter_kind: string
+          p_expires_at: string
+          p_limit: number
+          p_policy_hash: string
+          p_policy_version: string
+          p_scope: string
+          p_subject_hmac: string
+          p_subject_type: string
+          p_window_kind: string
+          p_window_start: string
+        }
+        Returns: {
+          allowed: boolean
+          current_count: number
+          remaining: number
+        }[]
+      }
+      fail_idempotency_v1: {
+        Args: {
+          p_idempotency_key_hmac: string
+          p_operation_code: string
+          p_request_fingerprint: string
+          p_response_code: number
+          p_subject_hmac: string
+          p_subject_type: string
+        }
+        Returns: boolean
+      }
       get_current_notice_v1: {
         Args: { p_document_type: string; p_locale: string }
         Returns: {
@@ -134,6 +201,19 @@ export type Database = {
           event_created_at: string
           event_id: string
           replayed: boolean
+        }[]
+      }
+      resolve_anonymous_subject_v1: {
+        Args: {
+          p_active_hmac: string
+          p_active_key_version: number
+          p_previous_hmac?: string
+          p_previous_key_version?: number
+        }
+        Returns: {
+          created: boolean
+          data_subject_id: string
+          key_rotated: boolean
         }[]
       }
       resolve_company_alias_v1: {

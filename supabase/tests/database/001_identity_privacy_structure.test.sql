@@ -123,12 +123,17 @@ select extensions.is(
     join pg_namespace as namespace
       on namespace.oid = procedure.pronamespace
     where namespace.nspname in ('api', 'authorization', 'core', 'privacy')
+      and procedure.proname not in (
+        'claim_idempotency_v1',
+        'complete_idempotency_v1',
+        'fail_idempotency_v1'
+      )
       and lower(
         pg_get_function_identity_arguments(procedure.oid)
       ) ~ '(^|[^a-z])(ip|ip_hmac|user_agent|device|fingerprint)([^a-z]|$)'
   ),
   0,
-  'application functions accept no tracking identifier arguments'
+  'application functions accept no tracking identifiers outside the documented B06 request fingerprint contract'
 );
 
 select extensions.is(

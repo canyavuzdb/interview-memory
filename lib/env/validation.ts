@@ -23,6 +23,38 @@ export function requireEnvironmentValue(
   return normalizedValue
 }
 
+export function requirePositiveInteger(
+  value: string | undefined,
+  name: string,
+): number {
+  const normalizedValue = requireEnvironmentValue(value, name)
+
+  if (!/^[1-9][0-9]*$/u.test(normalizedValue)) {
+    throw environmentError('Invalid positive integer environment variable', name)
+  }
+
+  const parsedValue = Number(normalizedValue)
+
+  if (!Number.isSafeInteger(parsedValue)) {
+    throw environmentError('Invalid positive integer environment variable', name)
+  }
+
+  return parsedValue
+}
+
+export function requireBase64UrlSecret(
+  value: string | undefined,
+  name: string,
+): string {
+  const normalizedValue = requireEnvironmentValue(value, name)
+
+  if (!/^[A-Za-z0-9_-]{43}$/u.test(normalizedValue)) {
+    throw environmentError('Invalid 32-byte base64url secret', name)
+  }
+
+  return normalizedValue
+}
+
 function requireSupabaseKey(
   value: string | undefined,
   name: string,
