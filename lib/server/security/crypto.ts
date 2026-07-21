@@ -1,0 +1,80 @@
+import 'server-only'
+
+import { createHash, createHmac, randomBytes } from 'node:crypto'
+
+type KeyMaterial = {
+  version: number
+  secret: string
+}
+
+export type RespondentKeyRing = {
+  active: KeyMaterial
+  previous: KeyMaterial | null
+}
+
+function decodeSecret(secret: string): Buffer {
+  return Buffer.from(secret, 'base64url')
+}
+
+export function createOpaqueToken(): string {
+  return randomBytes(32).toString('base64url')
+}
+
+export function hmacValue(
+  secret: string,
+  purpose: string,
+  value: string,
+): string {
+  const digest = createHmac('sha256', decodeSecret(secret))
+    .update(`${purpose}\u0000`, 'utf8')
+    .update(value, 'utf8')
+    .digest('hex')
+
+  return `\\x${digest}`
+}
+
+export function respondentTokenHmacs(
+  token: string,
+  keyRing: RespondentKeyRing,
+) {
+  return {
+    active: {
+      hmac: hmacValue(
+        keyRing.active.secret,
+        'respondent-cookie:v1',
+        token,
+      ),
+      version: keyRing.active.version,
+    },
+    previous: keyRing.previous
+      ? {
+          hmac: hmacValue(
+            keyRing.previous.secret,
+            'respondent-cookie:v1',
+            token,
+          ),
+          version: keyRing.previous.version,
+        }
+      : null,
+  }
+}
+
+export function canonicalJson(value: unknown): string {
+  if (value === null || typeof value !== 'object') {
+    return JSON.stringify(value)
+  }
+
+  if (Array.isArray(value)) {
+    return `[${value.map((item) => canonicalJson(item)).join(',')}]`
+  }
+
+  const entries = Object.entries(value as Record<string, unknown>)
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([key, child]) => `${JSON.stringify(key)}:${canonicalJson(child)}`)
+
+  return `{${entries.join(',')}}`
+}
+
+export function sha256Value(value: unknown): string {
+  return `\\x${createHash('sha256').update(canonicalJson(value)).digest('hex')}`
+}

@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
+  requireBase64UrlSecret,
   requireEnvironmentValue,
+  requirePositiveInteger,
   requireSiteUrl,
   requireSupabasePublishableKey,
   requireSupabaseSecretKey,
@@ -19,6 +21,34 @@ describe('environment validation', () => {
       'Missing environment variable: SECRET_KEY',
     )
   })
+
+  it('accepts positive integer versions and 256-bit base64url secrets', () => {
+    expect(requirePositiveInteger(' 12 ', 'KEY_VERSION')).toBe(12)
+    expect(
+      requireBase64UrlSecret(
+        Buffer.alloc(32, 7).toString('base64url'),
+        'HMAC_KEY',
+      ),
+    ).toHaveLength(43)
+  })
+
+  it.each(['0', '-1', '1.5', '9007199254740992'])(
+    'rejects invalid positive integers: %s',
+    (value) => {
+      expect(() => requirePositiveInteger(value, 'KEY_VERSION')).toThrow(
+        'Invalid positive integer environment variable: KEY_VERSION',
+      )
+    },
+  )
+
+  it.each(['short', 'a'.repeat(42), 'a'.repeat(44), '+'.repeat(43)])(
+    'rejects invalid 256-bit base64url secrets',
+    (value) => {
+      expect(() => requireBase64UrlSecret(value, 'HMAC_KEY')).toThrow(
+        'Invalid 32-byte base64url secret: HMAC_KEY',
+      )
+    },
+  )
 
   it.each([
     ['http://localhost:54321/', 'http://localhost:54321'],

@@ -17,7 +17,7 @@
     "db:stop": "supabase stop",
     "db:status": "supabase status",
     "db:reset": "supabase db reset --local",
-    "db:lint": "supabase db lint --local --schema api,authorization,catalog,core,privacy --level warning --fail-on error",
+    "db:lint": "supabase db lint --local --schema api,authorization,catalog,core,privacy,security --level warning --fail-on error",
     "db:test:present": "node scripts/check-database-tests.mjs",
     "db:test": "supabase test db --local",
     "db:types": "node scripts/database-types.mjs generate",
