@@ -6,6 +6,12 @@
       "scope": "survey.single-response",
       "windows": [
         {
+          "kind": "attempt_10m",
+          "counter": "attempt",
+          "limit": 10,
+          "durationSeconds": 600
+        },
+        {
           "kind": "accepted_period",
           "counter": "accepted",
           "limit": 1,

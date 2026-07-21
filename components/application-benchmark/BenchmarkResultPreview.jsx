@@ -32,11 +32,11 @@ function Metric({ label, suffix, value }) {
 
 export default function BenchmarkResultPreview({ contextCopy, copy, state }) {
   const applications = Number(state.applicationsCount) || 0
-  const responses = Number(state.responsesCount) || 0
+  const humanResponses = Number(state.humanResponsesCount) || 0
   const technicalInterviews = Number(state.technicalInterviewsCount) || 0
   const stages = [
     { label: copy.yourApplicationsLabel, value: applications },
-    { label: copy.responseLabel, value: responses },
+    { label: copy.responseLabel, value: humanResponses },
     { label: copy.hrLabel, value: Number(state.hrInterviewsCount) || 0 },
     { label: copy.technicalLabel, value: technicalInterviews },
     { label: copy.offerLabel, value: Number(state.offersCount) || 0 },
@@ -45,7 +45,9 @@ export default function BenchmarkResultPreview({ contextCopy, copy, state }) {
   const applicationsPerTechnicalInterview = technicalInterviews > 0
     ? Math.ceil(applications / technicalInterviews)
     : null
-  const responseRate = applications > 0 ? Math.round((responses / applications) * 100) : null
+  const responseRate = applications > 0
+    ? Math.round((humanResponses / applications) * 100)
+    : null
   const personalSignal = applicationsPerTechnicalInterview !== null
     ? `${applicationsPerTechnicalInterview} ${copy.applicationsPerTechnicalSuffix}`
     : copy.noTechnicalInterviewSignal

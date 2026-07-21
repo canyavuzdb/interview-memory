@@ -71,6 +71,58 @@ export type Database = {
           remaining: number
         }[]
       }
+      create_search_episode_v1: {
+        Args: {
+          p_accepted_offers_count: number
+          p_any_interviews_count: number
+          p_applications_count: number
+          p_capability_expires_at: string
+          p_capability_hmac: string
+          p_capability_key_version: number
+          p_command_fingerprint: string
+          p_consent_idempotency_key: string
+          p_consent_subject_proof_hmac: string
+          p_consent_subject_proof_key_version: number
+          p_counts_are_estimated: boolean
+          p_currently_employed: boolean
+          p_data_subject_id: string
+          p_employment_started_count: number
+          p_employment_type: string
+          p_ended_month: string
+          p_experience_band: string
+          p_hr_interviews_count: number
+          p_human_responses_count: number
+          p_idempotency_key_hmac: string
+          p_idempotency_request_fingerprint: string
+          p_idempotency_subject_hmac: string
+          p_locale: string
+          p_notice_version_id: string
+          p_observed_through: string
+          p_offers_count: number
+          p_payload_hash: string
+          p_quota_expires_at: string
+          p_quota_limit: number
+          p_quota_policy_hash: string
+          p_quota_policy_version: string
+          p_quota_subject_hmac: string
+          p_quota_window_start: string
+          p_role_level: string
+          p_role_slug: string
+          p_schema_version: number
+          p_sector_slug: string
+          p_started_month: string
+          p_status: string
+          p_supersedes_submission_id: string
+          p_target_region: string
+          p_technical_interviews_count: number
+          p_work_mode: string
+        }
+        Returns: {
+          receipt_id: string
+          search_episode_id: string
+          submission_id: string
+        }[]
+      }
       fail_idempotency_v1: {
         Args: {
           p_idempotency_key_hmac: string
@@ -103,6 +155,15 @@ export type Database = {
           timezone: string
           user_id: string
           version: number
+        }[]
+      }
+      get_search_episode_create_result_v1: {
+        Args: { p_data_subject_id: string; p_submission_id: string }
+        Returns: {
+          capability_key_version: number
+          receipt_id: string
+          search_episode_id: string
+          submission_id: string
         }[]
       }
       get_submission_receipt_v1: {

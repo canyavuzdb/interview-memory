@@ -4,6 +4,12 @@ create extension if not exists pgtap with schema extensions;
 
 select extensions.plan(31);
 
+delete from privacy.notice_versions
+where id in (
+  'b8000000-0000-4000-8300-000000000001',
+  'b8000000-0000-4000-8300-000000000002'
+);
+
 select extensions.has_schema('intake', 'private intake schema exists');
 select extensions.has_table(
   'intake',

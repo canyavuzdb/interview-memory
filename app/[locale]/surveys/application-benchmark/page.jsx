@@ -30,6 +30,7 @@ export default async function ApplicationBenchmarkSurveyPage({ params }) {
       <div className="mx-auto max-w-7xl px-5 py-8 sm:px-6 md:py-12 lg:px-8">
         <ApplicationBenchmarkWizard
           copy={messages.benchmarkForm}
+          locale={locale}
           sampleSize={messages.home.signal.sampleSize}
         />
         <SurveyPurposeSection copy={messages.benchmarkForm.explainer} />

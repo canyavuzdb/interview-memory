@@ -16,6 +16,12 @@ function decodeSecret(secret: string): Buffer {
   return Buffer.from(secret, 'base64url')
 }
 
+function createPurposeHmac(secret: string, purpose: string, value: string) {
+  return createHmac('sha256', decodeSecret(secret))
+    .update(`${purpose}\u0000`, 'utf8')
+    .update(value, 'utf8')
+}
+
 export function createOpaqueToken(): string {
   return randomBytes(32).toString('base64url')
 }
@@ -25,12 +31,26 @@ export function hmacValue(
   purpose: string,
   value: string,
 ): string {
-  const digest = createHmac('sha256', decodeSecret(secret))
-    .update(`${purpose}\u0000`, 'utf8')
-    .update(value, 'utf8')
-    .digest('hex')
+  const digest = createPurposeHmac(secret, purpose, value).digest('hex')
 
   return `\\x${digest}`
+}
+
+export function deriveOpaqueToken(
+  secret: string,
+  purpose: string,
+  value: string,
+): string {
+  return createPurposeHmac(secret, purpose, value).digest('base64url')
+}
+
+export function findKeyMaterial(
+  keyRing: RespondentKeyRing,
+  version: number,
+): KeyMaterial | null {
+  if (keyRing.active.version === version) return keyRing.active
+  if (keyRing.previous?.version === version) return keyRing.previous
+  return null
 }
 
 export function respondentTokenHmacs(

@@ -64,6 +64,24 @@ describe('security service', () => {
     )
   })
 
+  it('prepares accepted quota metadata without consuming it', () => {
+    const repo = repository()
+    const prepared = service(repo).prepareQuota({
+      policy: 'singleResponse',
+      windowKind: 'accepted_period',
+      counter: 'accepted',
+      subjectId,
+      now: new Date('2026-07-21T12:00:00.000Z'),
+    })
+
+    expect(prepared).toMatchObject({
+      scope: 'survey.single-response',
+      counterKind: 'accepted',
+      limit: 1,
+    })
+    expect(repo.consumeQuota).not.toHaveBeenCalled()
+  })
+
   it('returns a bounded Retry-After when quota is exhausted', async () => {
     const repo = repository({
       consumeQuota: vi.fn().mockResolvedValue({

@@ -1,3 +1,4 @@
+import SurveyChoiceGroup from '@/components/survey-flow/SurveyChoiceGroup'
 import { SurveyField, surveyControlClass } from '@/components/survey-flow/SurveyField'
 
 export default function StepFunnel({ copy, errors, setField, state, warnings }) {
@@ -20,6 +21,15 @@ export default function StepFunnel({ copy, errors, setField, state, warnings }) 
           </SurveyField>
         ))}
       </div>
+
+      <SurveyChoiceGroup
+        name="counts-are-estimated"
+        label={copy.fields.countsAreEstimated.label}
+        value={state.countsAreEstimated}
+        onChange={(value) => setField('countsAreEstimated', value)}
+        options={copy.booleanOptions}
+        error={errors.countsAreEstimated}
+      />
 
       {warnings.length > 0 && (
         <aside className="border-l-2 border-warning bg-[var(--surface-muted)] px-4 py-3 text-sm leading-6 text-muted">
