@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest'
 import {
   canonicalJson,
   createOpaqueToken,
+  deriveOpaqueToken,
+  findKeyMaterial,
   hmacValue,
   respondentTokenHmacs,
   sha256Value,
@@ -20,6 +22,20 @@ describe('security cryptography', () => {
     expect(first).toMatch(/^[A-Za-z0-9_-]{43}$/u)
     expect(second).not.toBe(first)
     expect(Buffer.from(first, 'base64url')).toHaveLength(32)
+  })
+
+  it('derives stable opaque tokens and resolves rotation keys by version', () => {
+    const ring = {
+      active: { version: 2, secret: activeSecret },
+      previous: { version: 1, secret: previousSecret },
+    }
+    const first = deriveOpaqueToken(activeSecret, 'capability', 'subject')
+    expect(first).toMatch(/^[A-Za-z0-9_-]{43}$/u)
+    expect(deriveOpaqueToken(activeSecret, 'capability', 'subject')).toBe(first)
+    expect(findKeyMaterial(ring, 2)).toEqual(ring.active)
+    expect(findKeyMaterial(ring, 1)).toEqual(ring.previous)
+    expect(findKeyMaterial(ring, 3)).toBeNull()
+    expect(findKeyMaterial({ ...ring, previous: null }, 1)).toBeNull()
   })
 
   it('separates HMAC domains and key-ring versions', () => {

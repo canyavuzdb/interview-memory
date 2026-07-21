@@ -4,6 +4,10 @@ create extension if not exists pgtap with schema extensions;
 
 select extensions.plan(27);
 
+delete from catalog.roles where taxonomy_version = '2026.1';
+delete from catalog.role_families where taxonomy_version = '2026.1';
+delete from catalog.sectors where id between 1001 and 1010;
+
 insert into catalog.sectors (
   id,
   slug,

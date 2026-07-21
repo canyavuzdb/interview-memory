@@ -4,6 +4,12 @@ create extension if not exists pgtap with schema extensions;
 
 select extensions.plan(20);
 
+delete from privacy.notice_versions
+where id in (
+  'b8000000-0000-4000-8300-000000000001',
+  'b8000000-0000-4000-8300-000000000002'
+);
+
 insert into auth.users (id, email, created_at, updated_at)
 values (
   '60000000-0000-4000-8000-000000000001',

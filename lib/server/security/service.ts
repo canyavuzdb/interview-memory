@@ -19,6 +19,20 @@ type SecurityServiceDependencies = {
   idempotencyKey: string
 }
 
+export type PreparedQuota = {
+  scope: string
+  subjectType: 'data_subject'
+  subjectHmac: string
+  windowStart: string
+  windowKind: string
+  limit: number
+  counterKind: 'attempt' | 'accepted'
+  policyVersion: string
+  policyHash: string
+  expiresAt: string
+  retryAfterSeconds: number
+}
+
 function mapPersistenceError(error: unknown): never {
   if (error instanceof SecurityPersistenceError) {
     throw new SecurityServiceError(error.code)
@@ -38,53 +52,80 @@ function windowBounds(now: Date, durationSeconds: number) {
   }
 }
 
+function prepareQuota(
+  input: unknown,
+  quotaSubjectKey: string,
+): PreparedQuota {
+  const command = quotaConsumeCommandSchema.parse(input)
+  const policy = loadQuotaPolicy()
+  const selectedPolicy = policy.document.policies[command.policy]
+  const selectedWindow = selectedPolicy?.windows.find(
+    (window) =>
+      window.kind === command.windowKind &&
+      window.counter === command.counter,
+  )
+
+  if (!selectedPolicy || !selectedWindow) {
+    throw new SecurityServiceError('QUOTA_POLICY_INVALID')
+  }
+
+  const now = command.now ?? new Date()
+  const bounds = windowBounds(now, selectedWindow.durationSeconds)
+
+  return {
+    scope: selectedPolicy.scope,
+    subjectType: 'data_subject',
+    subjectHmac: hmacValue(
+      quotaSubjectKey,
+      'quota-subject:data-subject:v1',
+      command.subjectId,
+    ),
+    windowStart: bounds.start.toISOString(),
+    windowKind: selectedWindow.kind,
+    limit: selectedWindow.limit,
+    counterKind: selectedWindow.counter,
+    policyVersion: policy.document.version,
+    policyHash: policy.hash,
+    expiresAt: bounds.expiresAt.toISOString(),
+    retryAfterSeconds: Math.max(
+      1,
+      Math.ceil((bounds.expiresAt.getTime() - now.getTime()) / 1000),
+    ),
+  }
+}
+
 export function createSecurityService({
   repository,
   quotaSubjectKey,
   idempotencyKey,
 }: SecurityServiceDependencies) {
   return {
+    prepareQuota(input: unknown) {
+      return prepareQuota(input, quotaSubjectKey)
+    },
+
     async consumeQuota(input: unknown) {
-      const command = quotaConsumeCommandSchema.parse(input)
-      const policy = loadQuotaPolicy()
-      const selectedPolicy = policy.document.policies[command.policy]
-      const selectedWindow = selectedPolicy?.windows.find(
-        (window) =>
-          window.kind === command.windowKind &&
-          window.counter === command.counter,
-      )
-
-      if (!selectedPolicy || !selectedWindow) {
-        throw new SecurityServiceError('QUOTA_POLICY_INVALID')
-      }
-
-      const now = command.now ?? new Date()
-      const bounds = windowBounds(now, selectedWindow.durationSeconds)
+      const prepared = prepareQuota(input, quotaSubjectKey)
 
       try {
         const result = await repository.consumeQuota({
-          scope: selectedPolicy.scope,
-          subjectType: 'data_subject',
-          subjectHmac: hmacValue(
-            quotaSubjectKey,
-            'quota-subject:data-subject:v1',
-            command.subjectId,
-          ),
-          windowStart: bounds.start.toISOString(),
-          windowKind: selectedWindow.kind,
-          limit: selectedWindow.limit,
-          counterKind: selectedWindow.counter,
-          policyVersion: policy.document.version,
-          policyHash: policy.hash,
-          expiresAt: bounds.expiresAt.toISOString(),
+          scope: prepared.scope,
+          subjectType: prepared.subjectType,
+          subjectHmac: prepared.subjectHmac,
+          windowStart: prepared.windowStart,
+          windowKind: prepared.windowKind,
+          limit: prepared.limit,
+          counterKind: prepared.counterKind,
+          policyVersion: prepared.policyVersion,
+          policyHash: prepared.policyHash,
+          expiresAt: prepared.expiresAt,
         })
 
         if (!result.allowed) {
-          const retryAfterSeconds = Math.max(
-            1,
-            Math.ceil((bounds.expiresAt.getTime() - now.getTime()) / 1000),
+          throw new SecurityServiceError(
+            'QUOTA_EXCEEDED',
+            prepared.retryAfterSeconds,
           )
-          throw new SecurityServiceError('QUOTA_EXCEEDED', retryAfterSeconds)
         }
 
         return result

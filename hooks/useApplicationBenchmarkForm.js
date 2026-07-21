@@ -21,10 +21,6 @@ function reducer(state, action) {
         nextState.searchEndedAt = ''
       }
 
-      if (action.field === 'offersCount' && Number(action.value) === 0) {
-        nextState.highestOfferBand = ''
-      }
-
       return nextState
     }
     case 'GO_TO_STEP':
@@ -34,7 +30,15 @@ function reducer(state, action) {
     case 'SUBMIT_START':
       return { ...state, submitStatus: 'submitting', errors: {} }
     case 'SUBMIT_SUCCESS':
-      return { ...state, submitStatus: 'success', dirty: false }
+      return {
+        ...state,
+        receiptId: action.result.receiptId,
+        replayed: action.result.replayed,
+        searchEpisodeId: action.result.searchEpisodeId,
+        submissionCapability: action.result.submissionCapability,
+        submitStatus: 'success',
+        dirty: false,
+      }
     case 'SUBMIT_ERROR':
       return { ...state, submitStatus: 'error' }
     default:
