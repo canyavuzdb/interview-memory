@@ -28,7 +28,7 @@ export default defineConfig({
         'lib/privacy/{contracts,errors}.ts',
         'lib/security/{contracts,errors}.ts',
         'lib/search-benchmark/{contracts,errors}.ts',
-        'lib/server/auth/{gateway,persistence.schemas,repository,response,service,session}.ts',
+        'lib/server/auth/{gateway,intake-bridge,persistence.schemas,repository,response,service,session}.ts',
         'lib/server/catalog/{persistence.schemas,repository,service}.ts',
         'lib/server/intake/{repository,response,service}.ts',
         'lib/server/privacy/{persistence.schemas,repository,service}.ts',

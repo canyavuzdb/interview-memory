@@ -138,12 +138,16 @@ const messages = {
       feedback: {
         invalidForm: 'Bilgileri kontrol edip yeniden dene.',
         invalidCredentials: 'E-posta veya şifre eşleşmedi.',
-        emailConfirmationRequired: 'Devam etmek için e-posta adresini doğrula.',
+        emailConfirmationRequired:
+          'Bu hesabın e-posta girişi henüz etkin değil. Google ile giriş yapmayı veya şifreni sıfırlamayı dene.',
         rateLimited: 'Çok fazla deneme yapıldı. Biraz sonra yeniden dene.',
         passwordPolicyFailed: 'Şifre güvenlik koşullarını karşılamıyor.',
         signInFailed: 'Şu anda giriş yapılamıyor. Lütfen yeniden dene.',
         signUpFailed: 'Hesap oluşturma işlemi tamamlanamadı.',
-        checkEmail: 'Devam etmek için e-posta kutundaki doğrulama bağlantısını aç.',
+        accountAlreadyExists:
+          'Bu e-posta zaten kullanılıyor. Daha önce Google ile giriş yaptıysan Google ile devam et; aksi halde giriş yapmayı veya şifreni sıfırlamayı dene.',
+        signUpSessionMissing:
+          'Hesap oturumu hemen açılamadı. E-posta Google hesabına bağlıysa Google ile devam et; değilse biraz sonra yeniden dene.',
         oauthFailed: 'Google ile giriş başlatılamadı. Lütfen yeniden dene.',
         callbackFailed: 'Giriş bağlantısı doğrulanamadı veya süresi doldu.',
         passwordUpdated: 'Şifren güncellendi. Yeni şifrenle giriş yapabilirsin.',
@@ -1589,12 +1593,16 @@ const messages = {
       feedback: {
         invalidForm: 'Check the details and try again.',
         invalidCredentials: 'The email or password did not match.',
-        emailConfirmationRequired: 'Confirm your email address to continue.',
+        emailConfirmationRequired:
+          'Email sign-in is not active for this account yet. Try Google sign-in or reset your password.',
         rateLimited: 'Too many attempts. Please try again shortly.',
         passwordPolicyFailed: 'The password does not meet the security requirements.',
         signInFailed: 'Sign-in is unavailable right now. Please try again.',
         signUpFailed: 'The account could not be created.',
-        checkEmail: 'Open the confirmation link in your inbox to continue.',
+        accountAlreadyExists:
+          'This email is already in use. If you previously used Google, continue with Google; otherwise sign in or reset your password.',
+        signUpSessionMissing:
+          'The account session could not be opened immediately. Continue with Google if the email is linked to Google, or try again shortly.',
         oauthFailed: 'Google sign-in could not be started. Please try again.',
         callbackFailed: 'The sign-in link is invalid or has expired.',
         passwordUpdated: 'Your password was updated. Sign in with the new password.',

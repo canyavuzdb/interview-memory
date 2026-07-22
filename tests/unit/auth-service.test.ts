@@ -87,7 +87,10 @@ describe('auth service', () => {
     expect(gateway.signInWithPassword).not.toHaveBeenCalled()
   })
 
-  it.each([true, false])('returns signup session state: %s', async (hasSession) => {
+  it.each([
+    [true, 'session_created'],
+    [false, 'session_missing'],
+  ] as const)('returns signup session outcome for session=%s', async (hasSession, outcome) => {
     const gateway = createGateway({
       signUp: vi.fn().mockReturnValue(success({ hasSession })),
     })
@@ -95,7 +98,7 @@ describe('auth service', () => {
       siteUrl: 'https://interview-memory.example',
     })
 
-    await expect(service.signUp(signUpInput)).resolves.toEqual({ hasSession })
+    await expect(service.signUp(signUpInput)).resolves.toEqual({ outcome })
     expect(gateway.signUp).toHaveBeenCalledWith({
       email: 'new@example.com',
       password: 'a-secure-password',
@@ -114,7 +117,7 @@ describe('auth service', () => {
       )
 
       await expect(service.signUp(signUpInput)).resolves.toEqual({
-        hasSession: false,
+        outcome: 'existing_account',
       })
     },
   )

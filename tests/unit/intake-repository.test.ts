@@ -44,6 +44,10 @@ describe('Supabase intake repository', () => {
         data: [{ data_subject_id: subjectId }],
         error: null,
       })
+      .mockResolvedValueOnce({
+        data: [{ data_subject_id: subjectId, merged: true }],
+        error: null,
+      })
     const repo = createSupabaseIntakeRepository()
 
     await expect(repo.getSubmissionReceipt(input)).resolves.toMatchObject({
@@ -52,6 +56,13 @@ describe('Supabase intake repository', () => {
     await expect(repo.resolveAuthenticatedSubject(subjectId)).resolves.toBe(
       subjectId,
     )
+    await expect(repo.mergeAnonymousSubject({
+      authUserId: subjectId,
+      activeAnonymousHmac: hash,
+      previousAnonymousHmac: null,
+      anonymousQuotaSubjectHmac: hash,
+      authenticatedQuotaSubjectHmac: hash,
+    })).resolves.toEqual({ data_subject_id: subjectId, merged: true })
     expect(rpc).toHaveBeenNthCalledWith(
       1,
       'get_submission_receipt_v1',
@@ -91,6 +102,8 @@ describe('Supabase intake repository', () => {
       .mockResolvedValueOnce({ data: [{}], error: null })
       .mockResolvedValueOnce({ data: null, error: { message: 'private' } })
       .mockResolvedValueOnce({ data: [{}], error: null })
+      .mockResolvedValueOnce({ data: null, error: { message: 'private' } })
+      .mockResolvedValueOnce({ data: [{}], error: null })
     const repo = createSupabaseIntakeRepository()
 
     await expect(repo.getSubmissionReceipt(input)).rejects.toMatchObject({
@@ -105,5 +118,29 @@ describe('Supabase intake repository', () => {
     await expect(repo.resolveAuthenticatedSubject(subjectId)).rejects.toMatchObject({
       code: 'SUBMISSION_RECEIPT_RESPONSE_INVALID',
     })
+    const mergeInput = {
+      authUserId: subjectId,
+      activeAnonymousHmac: hash,
+      previousAnonymousHmac: hash,
+      anonymousQuotaSubjectHmac: hash,
+      authenticatedQuotaSubjectHmac: hash,
+    }
+    await expect(repo.mergeAnonymousSubject(mergeInput)).rejects.toMatchObject({
+      code: 'ANONYMOUS_SUBJECT_MERGE_FAILED',
+    })
+    await expect(repo.mergeAnonymousSubject(mergeInput)).rejects.toMatchObject({
+      code: 'ANONYMOUS_SUBJECT_MERGE_RESPONSE_INVALID',
+    })
+  })
+
+  it('rejects malformed subject-merge hashes before database access', async () => {
+    await expect(createSupabaseIntakeRepository().mergeAnonymousSubject({
+      authUserId: subjectId,
+      activeAnonymousHmac: 'raw',
+      previousAnonymousHmac: null,
+      anonymousQuotaSubjectHmac: hash,
+      authenticatedQuotaSubjectHmac: hash,
+    })).rejects.toMatchObject({ code: 'ANONYMOUS_SUBJECT_MERGE_FAILED' })
+    expect(rpc).not.toHaveBeenCalled()
   })
 })

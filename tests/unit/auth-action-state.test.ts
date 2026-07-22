@@ -11,9 +11,9 @@ import { authLocaleSchema } from '@/lib/auth/contracts'
 describe('auth action state', () => {
   it('provides immutable-shaped idle and success states', () => {
     expect(initialAuthActionState).toEqual({ status: 'idle', code: null })
-    expect(authSuccessState('checkEmail')).toEqual({
+    expect(authSuccessState('recoverySent')).toEqual({
       status: 'success',
-      code: 'checkEmail',
+      code: 'recoverySent',
     })
   })
 
