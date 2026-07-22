@@ -17,7 +17,7 @@ const capabilityAuthorizationPattern =
   /^SubmissionCapability ([A-Za-z0-9_-]{43})$/u
 
 export function createIntakeService(dependencies: {
-  repository: IntakeRepository
+  repository: Pick<IntakeRepository, 'getSubmissionReceipt'>
   capabilityKeys: RespondentKeyRing
 }) {
   return {

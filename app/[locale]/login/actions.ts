@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation'
 
 import {
   authErrorState,
-  authSuccessState,
   type AuthActionState,
 } from '@/lib/auth/action-state'
 import {
@@ -16,6 +15,7 @@ import {
 } from '@/lib/auth/navigation'
 import { getPublicSiteUrl } from '@/lib/env/public'
 import { createSupabaseAuthGateway } from '@/lib/server/auth/gateway'
+import { reconcileAnonymousSubjectForActiveAccount } from '@/lib/server/auth/intake-bridge'
 import { createAuthService } from '@/lib/server/auth/service'
 
 async function createService() {
@@ -39,6 +39,7 @@ export async function signInAction(
       locale,
       next,
     })
+    await reconcileAnonymousSubjectForActiveAccount()
   } catch (error) {
     return authErrorState(error, 'signInFailed')
   }
@@ -51,7 +52,7 @@ export async function signUpAction(
   formData: FormData,
 ): Promise<AuthActionState> {
   const locale = resolveAuthLocale(formData.get('locale'))
-  let hasSession = false
+  let outcome: 'existing_account' | 'session_created' | 'session_missing'
 
   try {
     const service = await createService()
@@ -60,16 +61,25 @@ export async function signUpAction(
       password: formData.get('password'),
       locale,
     })
-    hasSession = result.hasSession
+    outcome = result.outcome
+    if (outcome === 'session_created') {
+      await reconcileAnonymousSubjectForActiveAccount()
+    }
   } catch (error) {
     return authErrorState(error, 'signUpFailed')
   }
 
-  if (hasSession) {
+  if (outcome === 'session_created') {
     redirect(getSignedInPath(getDefaultAccountPath(locale)))
   }
 
-  return authSuccessState('checkEmail')
+  return {
+    status: 'error',
+    code:
+      outcome === 'existing_account'
+        ? 'accountAlreadyExists'
+        : 'signUpSessionMissing',
+  }
 }
 
 export async function googleSignInAction(formData: FormData) {

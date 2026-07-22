@@ -91,7 +91,9 @@ export function createAuthService(
       if (result.error) throwSignInError(result.error)
     },
 
-    async signUp(input: unknown): Promise<{ hasSession: boolean }> {
+    async signUp(input: unknown): Promise<{
+      outcome: 'existing_account' | 'session_created' | 'session_missing'
+    }> {
       const command = signUpCommandSchema.parse(input)
       const result = await gateway.signUp({
         ...command,
@@ -106,13 +108,17 @@ export function createAuthService(
           result.error.code &&
           existingAccountCodes.has(result.error.code)
         ) {
-          return { hasSession: false }
+          return { outcome: 'existing_account' }
         }
 
         throwPasswordError(result.error, 'SIGN_UP_FAILED')
       }
 
-      return { hasSession: result.data?.hasSession === true }
+      return {
+        outcome: result.data?.hasSession === true
+          ? 'session_created'
+          : 'session_missing',
+      }
     },
 
     async startGoogle(input: unknown): Promise<string> {

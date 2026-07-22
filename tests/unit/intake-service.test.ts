@@ -25,6 +25,10 @@ function repository(
   return {
     getSubmissionReceipt: vi.fn().mockResolvedValue(record),
     resolveAuthenticatedSubject: vi.fn().mockResolvedValue(subjectId),
+    mergeAnonymousSubject: vi.fn().mockResolvedValue({
+      data_subject_id: subjectId,
+      merged: false,
+    }),
     ...overrides,
   }
 }

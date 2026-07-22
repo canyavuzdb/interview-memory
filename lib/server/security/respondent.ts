@@ -17,7 +17,7 @@ export const RESPONDENT_COOKIE_NAME = '__Host-im_respondent'
 const RESPONDENT_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 180
 const respondentTokenPattern = /^[A-Za-z0-9_-]{43}$/u
 
-type CookieStore = {
+export type RespondentCookieStore = {
   get(name: string): { value: string } | undefined
   set(
     name: string,
@@ -32,19 +32,24 @@ type CookieStore = {
   ): void
 }
 
+export function isValidRespondentToken(
+  value: string | undefined,
+): value is string {
+  return Boolean(value && respondentTokenPattern.test(value))
+}
+
 export async function resolveAnonymousRespondent(options?: {
-  cookieStore?: CookieStore
+  cookieStore?: RespondentCookieStore
   repository?: SecurityRepository
   production?: boolean
 }) {
-  const cookieStore = options?.cookieStore ?? ((await cookies()) as CookieStore)
+  const cookieStore =
+    options?.cookieStore ?? ((await cookies()) as RespondentCookieStore)
   const repository =
     options?.repository ?? createSupabaseSecurityRepository()
   const environment = getServerSecurityEnvironment()
   const currentCookie = cookieStore.get(RESPONDENT_COOKIE_NAME)?.value
-  const hasValidCookie = Boolean(
-    currentCookie && respondentTokenPattern.test(currentCookie),
-  )
+  const hasValidCookie = isValidRespondentToken(currentCookie)
   const token = hasValidCookie ? currentCookie! : createOpaqueToken()
   const tokenHmacs = respondentTokenHmacs(
     token,

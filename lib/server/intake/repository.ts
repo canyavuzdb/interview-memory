@@ -20,6 +20,11 @@ export type SubmissionReceiptRecord = z.infer<typeof receiptRecordSchema>
 const subjectRecordSchema: z.ZodType<AuthenticatedSubjectRecord> = z.strictObject({
   data_subject_id: z.uuid(),
 })
+const subjectMergeRecordSchema = z.strictObject({
+  data_subject_id: z.uuid(),
+  merged: z.boolean(),
+})
+export type SubjectMergeRecord = z.infer<typeof subjectMergeRecordSchema>
 
 export interface IntakeRepository {
   getSubmissionReceipt(input: {
@@ -31,13 +36,24 @@ export interface IntakeRepository {
     previousCapabilityKeyVersion: number | null
   }): Promise<SubmissionReceiptRecord | null>
   resolveAuthenticatedSubject(authUserId: string): Promise<string | null>
+  mergeAnonymousSubject(input: {
+    authUserId: string
+    activeAnonymousHmac: string
+    previousAnonymousHmac: string | null
+    anonymousQuotaSubjectHmac: string
+    authenticatedQuotaSubjectHmac: string
+  }): Promise<SubjectMergeRecord>
 }
 
-function checkedHash(value: string | null) {
+function checkedHash(
+  value: string | null,
+  errorCode: 'SUBMISSION_RECEIPT_READ_FAILED' | 'ANONYMOUS_SUBJECT_MERGE_FAILED' =
+    'SUBMISSION_RECEIPT_READ_FAILED',
+) {
   if (value === null) return undefined
   const result = postgresSha256Schema.safeParse(value)
   if (!result.success) {
-    throw new IntakePersistenceError('SUBMISSION_RECEIPT_READ_FAILED')
+    throw new IntakePersistenceError(errorCode)
   }
   return result.data
 }
@@ -90,6 +106,44 @@ export function createSupabaseIntakeRepository(): IntakeRepository {
         )
       }
       return result.data.data_subject_id
+    },
+
+    async mergeAnonymousSubject(input) {
+      const activeAnonymousHmac = checkedHash(
+        input.activeAnonymousHmac,
+        'ANONYMOUS_SUBJECT_MERGE_FAILED',
+      )
+      const { data, error } = await client.rpc('merge_anonymous_subject_v1', {
+        p_auth_user_id: input.authUserId,
+        p_active_anonymous_hmac: activeAnonymousHmac!,
+        p_previous_anonymous_hmac:
+          checkedHash(
+            input.previousAnonymousHmac,
+            'ANONYMOUS_SUBJECT_MERGE_FAILED',
+          ) ?? activeAnonymousHmac!,
+        p_anonymous_quota_subject_hmac:
+          checkedHash(
+            input.anonymousQuotaSubjectHmac,
+            'ANONYMOUS_SUBJECT_MERGE_FAILED',
+          )!,
+        p_authenticated_quota_subject_hmac:
+          checkedHash(
+            input.authenticatedQuotaSubjectHmac,
+            'ANONYMOUS_SUBJECT_MERGE_FAILED',
+          )!,
+      })
+
+      if (error) {
+        throw new IntakePersistenceError('ANONYMOUS_SUBJECT_MERGE_FAILED')
+      }
+
+      const result = subjectMergeRecordSchema.safeParse(data?.[0])
+      if (!result.success) {
+        throw new IntakePersistenceError(
+          'ANONYMOUS_SUBJECT_MERGE_RESPONSE_INVALID',
+        )
+      }
+      return result.data
     },
   }
 }

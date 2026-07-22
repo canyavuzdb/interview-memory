@@ -8,6 +8,7 @@ import {
 } from '@/lib/auth/navigation'
 import { getPublicSiteUrl } from '@/lib/env/public'
 import { createSupabaseAuthGateway } from '@/lib/server/auth/gateway'
+import { reconcileAnonymousSubjectForActiveAccount } from '@/lib/server/auth/intake-bridge'
 import { createAuthRedirect } from '@/lib/server/auth/response'
 import { createAuthService } from '@/lib/server/auth/service'
 
@@ -22,6 +23,7 @@ export async function GET(request: NextRequest) {
       siteUrl,
     })
     await service.exchangeCode(parameters.get('code'))
+    await reconcileAnonymousSubjectForActiveAccount()
 
     return createAuthRedirect(
       new URL(getSignedInPath(next), `${siteUrl}/`).toString(),
