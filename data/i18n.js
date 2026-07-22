@@ -1340,7 +1340,7 @@ const messages = {
         dataLabel: 'Anonim Anket',
         title: 'Söz verdikleri sürede döndüler mi?',
         description:
-          'Bu prototip yanıtları kaydetmez. Gerçek veri altyapısında yanıt süreleri ve süreç şeffaflığına ilişkin veriler anonim örnekleme dahil edilir.',
+          'Yanıt süreleri ve süreç şeffaflığı verileri özel olarak kaydedilir; moderasyon ve örneklem eşiği olmadan şirket bazında yayınlanmaz.',
         items: [
           'Kayıt gerekmiyor',
           'İsim veya e-posta istenmiyor',
@@ -1425,13 +1425,17 @@ const messages = {
         required: 'Bu alan gerekli.',
         nonNegativeNumber: '0 veya daha büyük tam sayı gir.',
         noteTooLong: 'Not en fazla 500 karakter olabilir.',
+        consentRequired: 'Anonim katkını göndermek için bu onayı vermelisin.',
         timelineGapWarning: 'Gerçekleşen süre söz verilenden çok daha uzun görünüyor. Doğru girdiğinize emin misiniz?',
         summary: 'Devam etmeden önce işaretli alanları kontrol et.',
       },
       submitError: 'Önizleme hazırlanamadı. Lütfen tekrar dene.',
+      consentEyebrow: 'Anonim veri katkısı',
+      consentNotice:
+        'Göndererek; yanıtımın anonim analiz ve moderasyon amacıyla özel olarak saklanmasını, isteğe bağlı notlarda tanımlayıcı bilgi paylaşmamam gerektiğini, giriş yaptıysam hesabımla ilişkilendirilmesini ve yalnız moderasyon ile yeterli örneklem sonrasında toplu sonuçlarda kullanılmasını kabul ediyorum.',
       success: {
         title: 'Süreç değerlendirmen hazır.',
-        description: 'Bilgilerin kaydedilmedi. Gerçek sistemde bu değerlendirme, aday iletişimi ve süreç şeffaflığı analizlerine dahil edilecektir.',
+        description: 'Katkın güvenle kaydedildi. Moderasyon sonrasında yalnızca yeterli örneklem içindeki toplu sonuçlara dahil edilebilir.',
         ghostedLabel: 'Ghosting durumu',
         transparencyLabel: 'Şeffaflık skoru',
         professionalismLabel: 'Profesyonellik skoru',
@@ -1475,7 +1479,7 @@ const messages = {
         ],
         transparencyTitle: 'Moderasyon ve örneklem eşiği',
         transparencyText:
-          'Bu prototipte yanıtların kaydedilmez. Gerçek veri katmanında şirket bazlı sonuçlar moderasyon ve yeterli örneklem eşiği olmadan herkese açık gösterilmez.',
+          'Yanıtlar özel veri katmanında kaydedilir. Şirket bazlı sonuçlar moderasyon ve yeterli örneklem eşiği olmadan herkese açık gösterilmez.',
       },
     },
   },
@@ -2793,7 +2797,7 @@ const messages = {
         dataLabel: 'Anonymous Survey',
         title: 'Did they respond within the promised timeline?',
         description:
-          'This prototype does not save responses. In production, response timelines and process-transparency data will enter an anonymous aggregate.',
+          'Response timelines and process-transparency data are stored privately and are not published by company without moderation and a sample threshold.',
         items: [
           'No registration required',
           'No name or email asked',
@@ -2878,13 +2882,17 @@ const messages = {
         required: 'This field is required.',
         nonNegativeNumber: 'Enter a whole number equal to or greater than 0.',
         noteTooLong: 'The note must be 500 characters or fewer.',
+        consentRequired: 'You must consent before sending this anonymous contribution.',
         timelineGapWarning: 'The actual timeline seems much longer than promised. Are you sure you entered it correctly?',
         summary: 'Check the highlighted fields before continuing.',
       },
       submitError: 'The preview could not be prepared. Please try again.',
+      consentEyebrow: 'Anonymous data contribution',
+      consentNotice:
+        'By submitting, I agree that my response may be stored privately for anonymous analysis and moderation, that I must not share identifying details in optional notes, that it may be linked to my account if I am signed in, and that it may be used in aggregate results only after moderation and a sufficient sample size.',
       success: {
         title: 'Your process evaluation is ready.',
-        description: 'Your information was not saved. In production, this evaluation will contribute to candidate-communication and process-transparency analytics.',
+        description: 'Your contribution was saved securely. After moderation, it may enter aggregate results only when the sample threshold is met.',
         ghostedLabel: 'Ghosting status',
         transparencyLabel: 'Transparency score',
         professionalismLabel: 'Professionalism score',
@@ -2928,7 +2936,7 @@ const messages = {
         ],
         transparencyTitle: 'Moderation and sample threshold',
         transparencyText:
-          'This prototype does not save responses. In production, company-level results will not be published without moderation and a sufficient sample size.',
+          'Responses are stored in the private data layer. Company-level results are not published without moderation and a sufficient sample size.',
       },
     },
   },

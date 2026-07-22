@@ -28,6 +28,7 @@ export default async function CompanyExperienceSurveyPage({ params }) {
       <div className="mx-auto max-w-7xl px-5 py-8 sm:px-6 md:py-12 lg:px-8">
         <HRProcessWizard
           copy={messages.hrProcessForm}
+          locale={locale}
           sampleSize={messages.home.signal.sampleSize}
         />
         <SurveyPurposeSection copy={messages.hrProcessForm.explainer} />

@@ -112,7 +112,7 @@ export default function StepProcessReview({
       />
 
       {state.wasAskedIrrelevant === true && (
-        <fieldset>
+        <fieldset aria-describedby={errors.irrelevantTypes ? 'irrelevant-types-error' : undefined}>
           <legend className="text-sm font-semibold text-ink">
             {copy.fields.irrelevantTypes.label}
           </legend>
@@ -140,6 +140,11 @@ export default function StepProcessReview({
               )
             })}
           </div>
+          {errors.irrelevantTypes && (
+            <p id="irrelevant-types-error" className="mt-2 text-sm font-medium text-danger">
+              {errors.irrelevantTypes}
+            </p>
+          )}
         </fieldset>
       )}
     </div>

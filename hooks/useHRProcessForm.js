@@ -26,6 +26,14 @@ function reducer(state, action) {
         nextState.promisedDays = ''
       }
 
+      if (action.field === 'wasAskedIrrelevant' && action.value === false) {
+        nextState.irrelevantTypes = []
+      }
+
+      if (action.field === 'rejectionShared' && action.value === 'no') {
+        nextState.feedbackUseful = ''
+      }
+
       return nextState
     }
     case 'GO_TO_STEP':
@@ -35,7 +43,7 @@ function reducer(state, action) {
     case 'SUBMIT_START':
       return { ...state, submitStatus: 'submitting', errors: {} }
     case 'SUBMIT_SUCCESS':
-      return { ...state, submitStatus: 'success', dirty: false }
+      return { ...state, submitStatus: 'success', result: action.result, dirty: false }
     case 'SUBMIT_ERROR':
       return { ...state, submitStatus: 'error' }
     default:
