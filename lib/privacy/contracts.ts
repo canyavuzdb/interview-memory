@@ -4,6 +4,7 @@ export const supportedLocales = ['tr', 'en'] as const
 export const noticeDocumentTypes = [
   'account_notice',
   'survey_notice',
+  'company_experience_notice',
   'cookie_notice',
   'publication_consent',
 ] as const

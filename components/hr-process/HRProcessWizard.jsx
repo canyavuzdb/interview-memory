@@ -11,8 +11,9 @@ import { useHRProcessForm } from '@/hooks/useHRProcessForm'
 import { submitHRProcess } from '@/lib/api/submitHRProcess'
 import { getHRProcessWarnings } from '@/lib/validation/hrProcess'
 
-export default function HRProcessWizard({ copy, sampleSize }) {
+export default function HRProcessWizard({ copy, locale, sampleSize }) {
   const { state, dispatch, validateCurrentStep } = useHRProcessForm(copy.validation)
+  const idempotencyKeyRef = useRef(null)
   const stepHeadingRef = useRef(null)
   const warnings = getHRProcessWarnings(state, copy.validation)
 
@@ -21,6 +22,7 @@ export default function HRProcessWizard({ copy, sampleSize }) {
   }, [state.step])
 
   function setField(field, value) {
+    idempotencyKeyRef.current = null
     dispatch({ type: 'SET_FIELD', field, value })
   }
 
@@ -40,7 +42,7 @@ export default function HRProcessWizard({ copy, sampleSize }) {
     const payload = {
       companyName: state.companyName,
       appliedRole: state.appliedRole,
-      processYear: state.processYear,
+      processYear: Number(state.processYear),
       promisedTimeline: state.promisedTimeline,
       promisedDays: state.promisedTimeline === 'yes' ? Number(state.promisedDays) : null,
       actualDays: state.wasGhosted === true ? null : Number(state.actualDays),
@@ -58,9 +60,16 @@ export default function HRProcessWizard({ copy, sampleSize }) {
       hrProfessionalism: Number(state.hrProfessionalism),
       wouldRecommendProcess: state.wouldRecommendProcess,
       freeNote: state.freeNote || null,
+      locale,
+      consentGranted: state.consentGranted,
     }
-    const result = await submitHRProcess(payload)
-    dispatch({ type: result.success ? 'SUBMIT_SUCCESS' : 'SUBMIT_ERROR' })
+    idempotencyKeyRef.current ??= globalThis.crypto.randomUUID()
+    const result = await submitHRProcess(payload, idempotencyKeyRef.current)
+    dispatch(
+      result.success
+        ? { type: 'SUBMIT_SUCCESS', result }
+        : { type: 'SUBMIT_ERROR' },
+    )
   }
 
   const stepCopy = copy.steps[`step${state.step}`]

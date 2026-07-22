@@ -1,5 +1,5 @@
 import SurveyChoiceGroup from '@/components/survey-flow/SurveyChoiceGroup'
-import { SurveyField, SurveySelect, surveyControlClass } from '@/components/survey-flow/SurveyField'
+import { SurveyField, SurveyFieldError, SurveySelect, surveyControlClass } from '@/components/survey-flow/SurveyField'
 import { RATING_SCALE, REJECTION_DETAIL_LEVELS } from '@/lib/constants/hrProcess'
 
 export default function StepRatings({ copy, errors, selectPlaceholder, setField, state }) {
@@ -76,6 +76,7 @@ export default function StepRatings({ copy, errors, selectPlaceholder, setField,
         value={state.wouldRecommendProcess}
         onChange={(value) => setField('wouldRecommendProcess', value)}
         options={copy.fields.wouldRecommendProcess.options}
+        error={errors.wouldRecommendProcess}
       />
 
       <SurveyField
@@ -95,6 +96,30 @@ export default function StepRatings({ copy, errors, selectPlaceholder, setField,
           className={`${surveyControlClass} resize-none leading-6`}
         />
       </SurveyField>
+
+      <section className="border-l-2 border-accent bg-[var(--accent-soft)] px-5 py-5">
+        <p className="font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-accentDark">
+          {copy.consentEyebrow}
+        </p>
+        <label
+          htmlFor="company-experience-consent"
+          className="mt-4 flex cursor-pointer items-start gap-3 text-sm font-semibold leading-6 text-ink"
+        >
+          <input
+            id="company-experience-consent"
+            type="checkbox"
+            checked={state.consentGranted}
+            onChange={(event) => setField('consentGranted', event.target.checked)}
+            aria-invalid={Boolean(errors.consentGranted)}
+            aria-describedby={errors.consentGranted ? 'company-experience-consent-error' : undefined}
+            className="mt-1 h-4 w-4 shrink-0 accent-[var(--accent)]"
+          />
+          <span>{copy.consentNotice}</span>
+        </label>
+        <SurveyFieldError id={errors.consentGranted ? 'company-experience-consent-error' : undefined}>
+          {errors.consentGranted}
+        </SurveyFieldError>
+      </section>
     </div>
   )
 }

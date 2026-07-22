@@ -127,7 +127,8 @@ select extensions.is(
         'claim_idempotency_v1',
         'complete_idempotency_v1',
         'fail_idempotency_v1',
-        'create_search_episode_v1'
+        'create_search_episode_v1',
+        'create_company_experience_v1'
       )
       and lower(
         pg_get_function_identity_arguments(procedure.oid)
