@@ -203,6 +203,23 @@ export type Database = {
           submission_id: string
         }[]
       }
+      create_moderation_company_v1: {
+        Args: {
+          p_company_id: string
+          p_country_code: string
+          p_display_name: string
+          p_reviewer_user_id: string
+          p_slug: string
+        }
+        Returns: {
+          company_id: string
+          country_code: string
+          display_name: string
+          publication_status: string
+          slug: string
+          verification_status: string
+        }[]
+      }
       create_search_episode_v1: {
         Args: {
           p_accepted_offers_count: number
@@ -252,6 +269,23 @@ export type Database = {
         Returns: {
           receipt_id: string
           search_episode_id: string
+          submission_id: string
+        }[]
+      }
+      decide_submission_quality_v1: {
+        Args: {
+          p_company_id: string
+          p_decision: string
+          p_decision_id: string
+          p_reason_code: string
+          p_reviewer_note: string
+          p_reviewer_user_id: string
+          p_submission_id: string
+        }
+        Returns: {
+          decided_at: string
+          decision_id: string
+          quality_status: string
           submission_id: string
         }[]
       }
@@ -416,6 +450,51 @@ export type Database = {
           sort_order: number
         }[]
       }
+      list_moderation_companies_v1: {
+        Args: { p_limit: number; p_query: string; p_reviewer_user_id: string }
+        Returns: {
+          company_id: string
+          country_code: string
+          display_name: string
+          publication_status: string
+          slug: string
+          verification_status: string
+        }[]
+      }
+      list_moderation_queue_v1: {
+        Args: {
+          p_before_submission_id: string
+          p_before_submitted_at: string
+          p_limit: number
+          p_quality_status: string
+          p_reviewer_user_id: string
+          p_survey_type: string
+        }
+        Returns: {
+          any_interviews_count: number
+          applications_count: number
+          applied_role: string
+          canonical_company_id: string
+          company_name: string
+          ended_month: string
+          free_note: string
+          human_responses_count: number
+          last_reason_code: string
+          locale: string
+          offers_count: number
+          quality_signals: string[]
+          quality_status: string
+          receipt_id: string
+          role_id: string
+          role_level: string
+          schema_version: number
+          started_month: string
+          submission_id: string
+          submitted_at: string
+          survey_type: string
+          target_region: string
+        }[]
+      }
       list_published_companies_v1: {
         Args: {
           p_after_display_name?: string
@@ -538,7 +617,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_active_moderator_v1: { Args: { p_user_id: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
@@ -905,6 +984,112 @@ export type Database = {
       [_ in never]: never
     }
   }
+  moderation: {
+    Tables: {
+      submission_company_resolutions: {
+        Row: {
+          company_id: string
+          resolved_at: string
+          resolved_by_user_id: string | null
+          resolver_audit_principal: string
+          submission_id: string
+        }
+        Insert: {
+          company_id: string
+          resolved_at?: string
+          resolved_by_user_id?: string | null
+          resolver_audit_principal: string
+          submission_id: string
+        }
+        Update: {
+          company_id?: string
+          resolved_at?: string
+          resolved_by_user_id?: string | null
+          resolver_audit_principal?: string
+          submission_id?: string
+        }
+        Relationships: []
+      }
+      submission_quality_signals: {
+        Row: {
+          detected_at: string
+          id: string
+          severity: string
+          signal_code: string
+          source_field: string
+          submission_id: string
+        }
+        Insert: {
+          detected_at?: string
+          id?: string
+          severity: string
+          signal_code: string
+          source_field: string
+          submission_id: string
+        }
+        Update: {
+          detected_at?: string
+          id?: string
+          severity?: string
+          signal_code?: string
+          source_field?: string
+          submission_id?: string
+        }
+        Relationships: []
+      }
+      submission_review_decisions: {
+        Row: {
+          company_id: string | null
+          decided_at: string
+          decision: string
+          id: string
+          previous_quality_status: string
+          reason_code: string
+          reviewer_audit_principal: string
+          reviewer_note: string | null
+          reviewer_user_id: string | null
+          submission_id: string
+        }
+        Insert: {
+          company_id?: string | null
+          decided_at?: string
+          decision: string
+          id: string
+          previous_quality_status: string
+          reason_code: string
+          reviewer_audit_principal: string
+          reviewer_note?: string | null
+          reviewer_user_id?: string | null
+          submission_id: string
+        }
+        Update: {
+          company_id?: string | null
+          decided_at?: string
+          decision?: string
+          id?: string
+          previous_quality_status?: string
+          reason_code?: string
+          reviewer_audit_principal?: string
+          reviewer_note?: string | null
+          reviewer_user_id?: string | null
+          submission_id?: string
+        }
+        Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   privacy: {
     Tables: {
       consent_events: {
@@ -1143,6 +1328,9 @@ export const Constants = {
     Enums: {},
   },
   core: {
+    Enums: {},
+  },
+  moderation: {
     Enums: {},
   },
   privacy: {

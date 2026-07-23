@@ -27,7 +27,14 @@ const cliEntryPath = path.join(
   'dist',
   'supabase.js',
 )
-const schemas = ['api', 'authorization', 'catalog', 'core', 'privacy']
+const schemas = [
+  'api',
+  'authorization',
+  'catalog',
+  'core',
+  'moderation',
+  'privacy',
+]
 const registryRetryDelaysMs = [5_000, 10_000, 20_000, 40_000]
 const transientRegistryErrorPattern =
   /(?:toomanyrequests|too many requests|rate exceeded|pull rate limit|request rate limit|status(?: code)?\s*:?\s*429|429[^\n]*too many requests)/iu
