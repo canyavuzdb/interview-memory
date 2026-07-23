@@ -26,6 +26,7 @@ beforeEach(() => {
   vi.mocked(createDefaultCompanyExperienceService).mockReturnValue({ create } as never)
   create.mockResolvedValue({
     receiptId: key, companyExperienceId: key,
+    jobApplicationId: key,
     submissionCapability: null, replayed: false,
   })
 })

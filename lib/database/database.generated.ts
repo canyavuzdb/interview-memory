@@ -15,6 +15,28 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      append_application_outcome_v1: {
+        Args: {
+          p_active_capability_hmac: string
+          p_active_capability_key_version: number
+          p_application_id: string
+          p_idempotency_key_hmac: string
+          p_idempotency_request_fingerprint: string
+          p_idempotency_subject_hmac: string
+          p_idempotency_subject_type: string
+          p_occurred_month: string
+          p_outcome_code: string
+          p_planned_start_month: string
+          p_previous_capability_hmac: string
+          p_previous_capability_key_version: number
+          p_requester_data_subject_id: string
+        }
+        Returns: {
+          application_id: string
+          outcome_code: string
+          outcome_event_id: string
+        }[]
+      }
       claim_idempotency_v1: {
         Args: {
           p_expires_at: string
@@ -122,6 +144,65 @@ export type Database = {
           submission_id: string
         }[]
       }
+      create_company_experience_with_application_v1: {
+        Args: {
+          p_actual_days: number
+          p_application_channel: string
+          p_application_month: string
+          p_applied_role: string
+          p_capability_expires_at: string
+          p_capability_hmac: string
+          p_capability_key_version: number
+          p_command_fingerprint: string
+          p_company_name: string
+          p_consent_idempotency_key: string
+          p_consent_subject_proof_hmac: string
+          p_consent_subject_proof_key_version: number
+          p_current_outcome: string
+          p_data_subject_id: string
+          p_feedback_useful: number
+          p_free_note: string
+          p_ghosted_after_stage: string
+          p_had_referral: boolean
+          p_hr_professionalism: number
+          p_idempotency_key_hmac: string
+          p_idempotency_request_fingerprint: string
+          p_idempotency_subject_hmac: string
+          p_interviewer_prepared: number
+          p_irrelevant_types: string[]
+          p_last_stage: string
+          p_locale: string
+          p_notice_version_id: string
+          p_outcome_month: string
+          p_payload_hash: string
+          p_planned_start_month: string
+          p_process_transparency: number
+          p_process_year: number
+          p_promised_days: number
+          p_promised_timeline: string
+          p_quota_24h_expires_at: string
+          p_quota_24h_limit: number
+          p_quota_24h_window_start: string
+          p_quota_30d_expires_at: string
+          p_quota_30d_limit: number
+          p_quota_30d_window_start: string
+          p_quota_policy_hash: string
+          p_quota_policy_version: string
+          p_quota_subject_hmac: string
+          p_rejection_shared: string
+          p_schema_version: number
+          p_supersedes_submission_id: string
+          p_was_asked_irrelevant: boolean
+          p_was_ghosted: boolean
+          p_would_recommend_process: string
+        }
+        Returns: {
+          company_experience_id: string
+          job_application_id: string
+          receipt_id: string
+          submission_id: string
+        }[]
+      }
       create_search_episode_v1: {
         Args: {
           p_accepted_offers_count: number
@@ -184,6 +265,31 @@ export type Database = {
           p_subject_type: string
         }
         Returns: boolean
+      }
+      get_application_outcome_result_v1: {
+        Args: {
+          p_active_capability_hmac: string
+          p_active_capability_key_version: number
+          p_outcome_event_id: string
+          p_previous_capability_hmac: string
+          p_previous_capability_key_version: number
+          p_requester_data_subject_id: string
+        }
+        Returns: {
+          application_id: string
+          outcome_code: string
+          outcome_event_id: string
+        }[]
+      }
+      get_company_application_create_result_v1: {
+        Args: { p_data_subject_id: string; p_submission_id: string }
+        Returns: {
+          capability_key_version: number
+          company_experience_id: string
+          job_application_id: string
+          receipt_id: string
+          submission_id: string
+        }[]
       }
       get_company_experience_create_result_v1: {
         Args: { p_data_subject_id: string; p_submission_id: string }

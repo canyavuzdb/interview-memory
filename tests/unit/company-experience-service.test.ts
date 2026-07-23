@@ -11,6 +11,7 @@ const subjectId = '11111111-1111-4111-8111-111111111111'
 const submissionId = '22222222-2222-4222-8222-222222222222'
 const receiptId = '33333333-3333-4333-8333-333333333333'
 const experienceId = '44444444-4444-4444-8444-444444444444'
+const applicationId = '77777777-7777-4777-8777-777777777777'
 const noticeId = '55555555-5555-4555-8555-555555555555'
 const idempotencyKey = '66666666-6666-4666-8666-666666666666'
 const hash = `\\x${'ab'.repeat(32)}`
@@ -26,6 +27,9 @@ const body = {
   processTransparency: 3, hrProfessionalism: 4,
   wouldRecommendProcess: 'unsure', freeNote: '', locale: 'tr',
   consentGranted: true,
+  applicationMonth: '2026-07', applicationChannel: 'linkedin',
+  hadReferral: false, lastStage: 'technical', currentOutcome: 'interviewing',
+  outcomeMonth: null, plannedStartMonth: null,
 } as const
 
 function dependencies(options: {
@@ -44,10 +48,12 @@ function dependencies(options: {
       : vi.fn().mockResolvedValue({
           submission_id: submissionId, receipt_id: receiptId,
           company_experience_id: experienceId,
+          job_application_id: applicationId,
         }),
     getCreateResult: vi.fn().mockResolvedValue({
       submission_id: submissionId, receipt_id: receiptId,
       company_experience_id: experienceId,
+      job_application_id: applicationId,
       capability_key_version: options.actorKind === 'authenticated' ? null : 2,
     }),
   }
@@ -101,7 +107,10 @@ describe('company experience service', () => {
     const first = await setup.service.create(anonymousInput)
     const second = await dependencies().service.create(anonymousInput)
     expect(first).toEqual(second)
-    expect(first).toMatchObject({ receiptId, companyExperienceId: experienceId, replayed: false })
+    expect(first).toMatchObject({
+      receiptId, companyExperienceId: experienceId,
+      jobApplicationId: applicationId, replayed: false,
+    })
     expect(first.submissionCapability).toMatch(/^[A-Za-z0-9_-]{43}$/u)
     expect(setup.security.prepareQuota).toHaveBeenCalledTimes(2)
     expect(setup.repository.createCompanyExperience).toHaveBeenCalledWith(
@@ -136,6 +145,7 @@ describe('company experience service', () => {
     previous.repository.getCreateResult.mockResolvedValue({
       submission_id: submissionId, receipt_id: receiptId,
       company_experience_id: experienceId, capability_key_version: 1,
+      job_application_id: applicationId,
     })
     await expect(previous.service.create(anonymousInput)).resolves.toMatchObject({ replayed: true })
   })

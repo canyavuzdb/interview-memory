@@ -28,6 +28,9 @@ const input = {
   rejectionShared: 'yes_detailed', feedbackUseful: 4,
   processTransparency: 3, hrProfessionalism: 4,
   wouldRecommendProcess: 'yes', freeNote: null,
+  applicationMonth: '2026-07-01', applicationChannel: 'linkedin',
+  hadReferral: false, lastStage: 'technical', currentOutcome: 'interviewing',
+  outcomeMonth: null, plannedStartMonth: null,
 }
 
 beforeEach(() => {
@@ -37,7 +40,10 @@ beforeEach(() => {
 
 describe('company experience repository', () => {
   it('writes and replays through narrow RPCs', async () => {
-    const row = { submission_id: id, receipt_id: id, company_experience_id: id }
+    const row = {
+      submission_id: id, receipt_id: id, company_experience_id: id,
+      job_application_id: id,
+    }
     rpc
       .mockResolvedValueOnce({ data: [row], error: null })
       .mockResolvedValueOnce({ data: [{ ...row, capability_key_version: 1 }], error: null })
@@ -45,12 +51,15 @@ describe('company experience repository', () => {
     await expect(repository.createCompanyExperience(input)).resolves.toEqual(row)
     await expect(repository.getCreateResult({ submissionId: id, dataSubjectId: id }))
       .resolves.toMatchObject({ capability_key_version: 1 })
-    expect(rpc).toHaveBeenNthCalledWith(1, 'create_company_experience_v1',
+    expect(rpc).toHaveBeenNthCalledWith(1, 'create_company_experience_with_application_v1',
       expect.objectContaining({ p_company_name: 'Example', p_quota_30d_limit: 10 }))
   })
 
   it('supports authenticated nullable fields and missing replays', async () => {
-    const row = { submission_id: id, receipt_id: id, company_experience_id: id }
+    const row = {
+      submission_id: id, receipt_id: id, company_experience_id: id,
+      job_application_id: id,
+    }
     rpc
       .mockResolvedValueOnce({ data: [row], error: null })
       .mockResolvedValueOnce({ data: [], error: null })

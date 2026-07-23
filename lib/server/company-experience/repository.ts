@@ -10,6 +10,7 @@ const createResultSchema = z.strictObject({
   submission_id: z.uuid(),
   receipt_id: z.uuid(),
   company_experience_id: z.uuid(),
+  job_application_id: z.uuid(),
 })
 const replayResultSchema = createResultSchema.extend({
   capability_key_version: z.number().int().positive().nullable(),
@@ -64,6 +65,13 @@ export type CreateCompanyExperienceInput = HashFields & {
   hrProfessionalism: number
   wouldRecommendProcess: string
   freeNote: string | null
+  applicationMonth: string
+  applicationChannel: string
+  hadReferral: boolean
+  lastStage: string
+  currentOutcome: string
+  outcomeMonth: string | null
+  plannedStartMonth: string | null
 }
 
 export interface CompanyExperienceRepository {
@@ -105,7 +113,12 @@ function mapCreateError(error: { message?: string }) {
   if (message.includes('survey_submissions_command_unique')) {
     return 'COMPANY_EXPERIENCE_DUPLICATE' as const
   }
-  if (message.includes('company_experiences_')) {
+  if (
+    message.includes('company_experiences_') ||
+    message.includes('job_applications_') ||
+    message.includes('application_context_invalid') ||
+    message.includes('application_stage_outcome_invalid')
+  ) {
     return 'COMPANY_EXPERIENCE_BODY_INVALID' as const
   }
   return 'COMPANY_EXPERIENCE_WRITE_FAILED' as const
@@ -116,7 +129,7 @@ export function createSupabaseCompanyExperienceRepository(): CompanyExperienceRe
 
   return {
     async createCompanyExperience(input) {
-      const { data, error } = await client.rpc('create_company_experience_v1', {
+      const { data, error } = await client.rpc('create_company_experience_with_application_v1', {
         p_data_subject_id: input.dataSubjectId,
         p_schema_version: input.schemaVersion,
         p_locale: input.locale,
@@ -159,6 +172,13 @@ export function createSupabaseCompanyExperienceRepository(): CompanyExperienceRe
         p_hr_professionalism: input.hrProfessionalism,
         p_would_recommend_process: input.wouldRecommendProcess,
         p_free_note: nullableRpcArgument(input.freeNote),
+        p_application_month: input.applicationMonth,
+        p_application_channel: input.applicationChannel,
+        p_had_referral: input.hadReferral,
+        p_last_stage: input.lastStage,
+        p_current_outcome: input.currentOutcome,
+        p_outcome_month: nullableRpcArgument(input.outcomeMonth),
+        p_planned_start_month: nullableRpcArgument(input.plannedStartMonth),
       })
 
       if (error) throw new CompanyExperiencePersistenceError(mapCreateError(error))
@@ -173,7 +193,7 @@ export function createSupabaseCompanyExperienceRepository(): CompanyExperienceRe
 
     async getCreateResult(input) {
       const { data, error } = await client.rpc(
-        'get_company_experience_create_result_v1',
+        'get_company_application_create_result_v1',
         {
           p_submission_id: input.submissionId,
           p_data_subject_id: input.dataSubjectId,

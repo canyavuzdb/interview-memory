@@ -11,6 +11,9 @@ export const validCompanyExperienceBody = {
   processTransparency: 3, hrProfessionalism: 4,
   wouldRecommendProcess: 'unsure', freeNote: 'Private note',
   locale: 'tr', consentGranted: true,
+  applicationMonth: '2026-07', applicationChannel: 'linkedin',
+  hadReferral: false, lastStage: 'technical', currentOutcome: 'interviewing',
+  outcomeMonth: null, plannedStartMonth: null,
 } as const
 
 describe('company experience contracts', () => {
@@ -28,6 +31,9 @@ describe('company experience contracts', () => {
     { wasAskedIrrelevant: true, irrelevantTypes: [] },
     { wasAskedIrrelevant: false, irrelevantTypes: ['age'] },
     { rejectionShared: 'no', feedbackUseful: 4 },
+    { currentOutcome: 'offer_received', lastStage: 'technical', outcomeMonth: '2026-07' },
+    { currentOutcome: 'manual_rejection', outcomeMonth: null },
+    { processYear: 2025, applicationMonth: '2026-07' },
   ])('rejects incoherent conditional fields %#', (override) => {
     expect(companyExperienceCreateBodySchema.safeParse({
       ...validCompanyExperienceBody, ...override,
