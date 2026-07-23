@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import { applicationContextSchema } from '@/lib/application-outcome/contracts'
+
 export const companyExperiencePromisedTimelines = [
   'yes',
   'no',
@@ -60,6 +62,7 @@ export const companyExperienceCreateBodySchema = z
     freeNote: z.string().trim().max(500).nullable(),
     locale: z.enum(['tr', 'en']),
     consentGranted: z.literal(true),
+    ...applicationContextSchema.shape,
   })
   .superRefine((value, context) => {
     const conditionalIssue = (valid: boolean, field: string, message: string) => {
@@ -99,6 +102,58 @@ export const companyExperienceCreateBodySchema = z
       'feedbackUseful',
       'Feedback usefulness requires shared feedback',
     )
+    const ongoingOutcome = ['awaiting_response', 'interviewing'].includes(
+      value.currentOutcome,
+    )
+    conditionalIssue(
+      ongoingOutcome
+        ? value.outcomeMonth === null
+        : value.outcomeMonth !== null,
+      'outcomeMonth',
+      'Completed outcomes require a month; ongoing outcomes do not',
+    )
+    conditionalIssue(
+      value.plannedStartMonth === null ||
+        ['offer_accepted', 'employment_started'].includes(
+          value.currentOutcome,
+        ),
+      'plannedStartMonth',
+      'A planned start belongs to an accepted offer',
+    )
+    conditionalIssue(
+      ![
+        'offer_received',
+        'offer_declined',
+        'offer_accepted',
+        'employment_started',
+        'employment_not_started',
+      ].includes(value.currentOutcome) || value.lastStage === 'offer',
+      'lastStage',
+      'Offer outcomes require the offer stage',
+    )
+    conditionalIssue(
+      value.currentOutcome !== 'interviewing' ||
+        value.lastStage !== 'application',
+      'lastStage',
+      'An interviewing application must have reached an interview stage',
+    )
+    conditionalIssue(
+      String(value.processYear) === value.applicationMonth.slice(0, 4),
+      'applicationMonth',
+      'Application month must match the process year',
+    )
+    conditionalIssue(
+      value.outcomeMonth === null ||
+        value.outcomeMonth >= value.applicationMonth,
+      'outcomeMonth',
+      'Outcome month cannot precede application month',
+    )
+    conditionalIssue(
+      value.plannedStartMonth === null ||
+        value.plannedStartMonth >= value.applicationMonth,
+      'plannedStartMonth',
+      'Planned start cannot precede application month',
+    )
   })
 
 export const companyExperienceIdempotencyKeySchema = z.uuid()
@@ -106,6 +161,7 @@ export const companyExperienceIdempotencyKeySchema = z.uuid()
 export const companyExperienceCreateResultSchema = z.strictObject({
   receiptId: z.uuid(),
   companyExperienceId: z.uuid(),
+  jobApplicationId: z.uuid(),
   submissionCapability: z
     .string()
     .regex(/^[A-Za-z0-9_-]{43}$/u)

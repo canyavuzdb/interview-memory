@@ -120,6 +120,13 @@ export function createCompanyExperienceService(
       if (body.processYear > commandTime.getUTCFullYear()) {
         throw new CompanyExperienceServiceError('COMPANY_EXPERIENCE_BODY_INVALID')
       }
+      const currentMonth = commandTime.toISOString().slice(0, 7)
+      if (
+        body.applicationMonth > currentMonth ||
+        (body.outcomeMonth !== null && body.outcomeMonth > currentMonth)
+      ) {
+        throw new CompanyExperienceServiceError('COMPANY_EXPERIENCE_BODY_INVALID')
+      }
 
       let claim: Awaited<ReturnType<SecurityService['claimIdempotency']>>
       try {
@@ -171,6 +178,7 @@ export function createCompanyExperienceService(
         return companyExperienceCreateResultSchema.parse({
           receiptId: replay.receipt_id,
           companyExperienceId: replay.company_experience_id,
+          jobApplicationId: replay.job_application_id,
           submissionCapability,
           replayed: true,
         })
@@ -272,10 +280,22 @@ export function createCompanyExperienceService(
           hrProfessionalism: body.hrProfessionalism,
           wouldRecommendProcess: body.wouldRecommendProcess,
           freeNote: body.freeNote || null,
+          applicationMonth: `${body.applicationMonth}-01`,
+          applicationChannel: body.applicationChannel,
+          hadReferral: body.hadReferral,
+          lastStage: body.lastStage,
+          currentOutcome: body.currentOutcome,
+          outcomeMonth:
+            body.outcomeMonth === null ? null : `${body.outcomeMonth}-01`,
+          plannedStartMonth:
+            body.plannedStartMonth === null
+              ? null
+              : `${body.plannedStartMonth}-01`,
         })
         return companyExperienceCreateResultSchema.parse({
           receiptId: created.receipt_id,
           companyExperienceId: created.company_experience_id,
+          jobApplicationId: created.job_application_id,
           submissionCapability,
           replayed: false,
         })

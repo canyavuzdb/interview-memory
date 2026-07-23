@@ -1,6 +1,8 @@
 import SurveyChoiceGroup from '@/components/survey-flow/SurveyChoiceGroup'
 import { SurveyField, SurveySelect, surveyControlClass } from '@/components/survey-flow/SurveyField'
 import {
+  APPLICATION_OUTCOMES,
+  APPLICATION_STAGES,
   GHOSTED_AFTER_STAGES,
   IRRELEVANT_QUESTION_TYPES,
   RATING_SCALE,
@@ -17,6 +19,77 @@ export default function StepProcessReview({
 }) {
   return (
     <div className="space-y-7">
+      <SurveyField
+        id="hr-last-stage"
+        label={copy.fields.lastStage.label}
+        error={errors.lastStage}
+      >
+        <SurveySelect
+          id="hr-last-stage"
+          value={state.lastStage}
+          onChange={(event) => setField('lastStage', event.target.value)}
+        >
+          <option value="">{selectPlaceholder}</option>
+          {APPLICATION_STAGES.map((stage) => (
+            <option key={stage} value={stage}>
+              {copy.fields.lastStage.options[stage]}
+            </option>
+          ))}
+        </SurveySelect>
+      </SurveyField>
+
+      <SurveyField
+        id="hr-current-outcome"
+        label={copy.fields.currentOutcome.label}
+        error={errors.currentOutcome}
+      >
+        <SurveySelect
+          id="hr-current-outcome"
+          value={state.currentOutcome}
+          onChange={(event) => setField('currentOutcome', event.target.value)}
+        >
+          <option value="">{selectPlaceholder}</option>
+          {APPLICATION_OUTCOMES.map((outcome) => (
+            <option key={outcome} value={outcome}>
+              {copy.fields.currentOutcome.options[outcome]}
+            </option>
+          ))}
+        </SurveySelect>
+      </SurveyField>
+
+      {state.currentOutcome &&
+        !['awaiting_response', 'interviewing'].includes(state.currentOutcome) && (
+          <SurveyField
+            id="hr-outcome-month"
+            label={copy.fields.outcomeMonth.label}
+            error={errors.outcomeMonth}
+          >
+            <input
+              id="hr-outcome-month"
+              type="month"
+              value={state.outcomeMonth}
+              onChange={(event) => setField('outcomeMonth', event.target.value)}
+              aria-invalid={Boolean(errors.outcomeMonth)}
+              className={surveyControlClass}
+            />
+          </SurveyField>
+        )}
+
+      {['offer_accepted', 'employment_started'].includes(state.currentOutcome) && (
+        <SurveyField
+          id="hr-planned-start-month"
+          label={copy.fields.plannedStartMonth.label}
+        >
+          <input
+            id="hr-planned-start-month"
+            type="month"
+            value={state.plannedStartMonth}
+            onChange={(event) => setField('plannedStartMonth', event.target.value)}
+            className={surveyControlClass}
+          />
+        </SurveyField>
+      )}
+
       <SurveyChoiceGroup
         name="promised-timeline"
         label={copy.fields.promisedTimeline.label}

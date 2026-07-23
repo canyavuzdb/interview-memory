@@ -43,6 +43,9 @@ export default function HRProcessWizard({ copy, locale, sampleSize }) {
       companyName: state.companyName,
       appliedRole: state.appliedRole,
       processYear: Number(state.processYear),
+      applicationMonth: state.applicationMonth,
+      applicationChannel: state.applicationChannel,
+      hadReferral: state.hadReferral,
       promisedTimeline: state.promisedTimeline,
       promisedDays: state.promisedTimeline === 'yes' ? Number(state.promisedDays) : null,
       actualDays: state.wasGhosted === true ? null : Number(state.actualDays),
@@ -51,6 +54,16 @@ export default function HRProcessWizard({ copy, locale, sampleSize }) {
       interviewerPrepared: state.interviewerPrepared ? Number(state.interviewerPrepared) : null,
       wasAskedIrrelevant: state.wasAskedIrrelevant,
       irrelevantTypes: state.wasAskedIrrelevant === true ? state.irrelevantTypes : [],
+      lastStage: state.lastStage,
+      currentOutcome: state.currentOutcome,
+      outcomeMonth: ['awaiting_response', 'interviewing'].includes(state.currentOutcome)
+        ? null
+        : state.outcomeMonth,
+      plannedStartMonth:
+        ['offer_accepted', 'employment_started'].includes(state.currentOutcome) &&
+        state.plannedStartMonth
+          ? state.plannedStartMonth
+          : null,
       rejectionShared: state.rejectionShared,
       feedbackUseful:
         state.rejectionShared && state.rejectionShared !== 'no'
@@ -91,7 +104,14 @@ export default function HRProcessWizard({ copy, locale, sampleSize }) {
           submitStatus={state.submitStatus}
         >
           {state.step === 1 && (
-            <StepCompanyInfo copy={stepCopy} errors={state.errors} setField={setField} state={state} />
+            <StepCompanyInfo
+              booleanOptions={copy.booleanOptions}
+              copy={stepCopy}
+              errors={state.errors}
+              selectPlaceholder={copy.selectPlaceholder}
+              setField={setField}
+              state={state}
+            />
           )}
           {state.step === 2 && (
             <StepProcessReview

@@ -33,6 +33,18 @@ function reducer(state, action) {
       if (action.field === 'rejectionShared' && action.value === 'no') {
         nextState.feedbackUseful = ''
       }
+      if (
+        action.field === 'currentOutcome' &&
+        ['awaiting_response', 'interviewing'].includes(action.value)
+      ) {
+        nextState.outcomeMonth = ''
+      }
+      if (
+        action.field === 'currentOutcome' &&
+        !['offer_accepted', 'employment_started'].includes(action.value)
+      ) {
+        nextState.plannedStartMonth = ''
+      }
 
       return nextState
     }

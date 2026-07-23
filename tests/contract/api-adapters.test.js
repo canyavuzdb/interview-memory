@@ -60,6 +60,7 @@ describe('application benchmark API adapter', () => {
 describe('HR process submission adapter', () => {
   const receiptId = '11111111-1111-4111-8111-111111111111'
   const experienceId = '22222222-2222-4222-8222-222222222222'
+  const applicationId = '44444444-4444-4444-8444-444444444444'
   const idempotencyKey = '33333333-3333-4333-8333-333333333333'
 
   it('posts and validates the private company experience result', async () => {
@@ -67,12 +68,14 @@ describe('HR process submission adapter', () => {
     const fetch = vi.fn().mockResolvedValue(new Response(JSON.stringify({
       data: {
         receiptId, companyExperienceId: experienceId,
+        jobApplicationId: applicationId,
         submissionCapability: null, replayed: false,
       },
     }), { status: 201, headers: { 'Content-Type': 'application/json' } }))
     vi.stubGlobal('fetch', fetch)
     await expect(submitHRProcess(payload, idempotencyKey)).resolves.toMatchObject({
       success: true, id: receiptId, companyExperienceId: experienceId,
+      jobApplicationId: applicationId,
     })
     expect(fetch).toHaveBeenCalledWith('/api/v1/company-experiences',
       expect.objectContaining({
