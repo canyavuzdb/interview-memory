@@ -804,7 +804,7 @@ const messages = {
       title: 'İşe alım sürecini tek bir ortalamaya sıkıştırma.',
       description:
         'Rol ve şirket dönüşümlerini, aday hareketliliğini ve güncelleme alınamayan süreçleri aynı rapor akışında incele.',
-      dataNote: 'Canlı anonim toplulaştırma · Yalnız n≥10 kohortlar yayımlanır',
+      dataNote: 'Anonim toplulaştırma · Tekil yanıtlar yayımlanmaz',
       dataStatus: {
         live: {
           label: 'Canlı benchmark',
@@ -821,7 +821,7 @@ const messages = {
       },
       empty: {
         title: 'Bu rapor için henüz yeterli anonim örneklem yok.',
-        description: 'Bir kohort en az 10 farklı katkı sahibine ulaştığında toplu sonuçlar otomatik olarak burada görünür.',
+        description: 'Yeni anonim katkılar geldikçe toplu sonuçlar otomatik olarak güncellenir.',
         cta: 'Anonim katkı ver',
       },
       navigation: {
@@ -2329,7 +2329,7 @@ const messages = {
       title: 'Do not compress a hiring process into one average.',
       description:
         'Review role and company conversion, candidate activity, and processes without an update in one connected report stream.',
-      dataNote: 'Live anonymous aggregates · Only cohorts with n≥10 are published',
+      dataNote: 'Anonymous aggregates · Individual responses are never published',
       dataStatus: {
         live: {
           label: 'Live benchmark',
@@ -2346,7 +2346,7 @@ const messages = {
       },
       empty: {
         title: 'There is not enough anonymous data for this report yet.',
-        description: 'Aggregate results appear automatically once a cohort reaches at least 10 distinct contributors.',
+        description: 'Aggregate results update automatically as new anonymous contributions arrive.',
         cta: 'Contribute anonymously',
       },
       navigation: {

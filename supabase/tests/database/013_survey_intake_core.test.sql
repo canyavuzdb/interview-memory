@@ -4,6 +4,11 @@ create extension if not exists pgtap with schema extensions;
 
 select extensions.plan(31);
 
+set local session_replication_role = replica;
+delete from intake.survey_submissions
+where data_origin = 'research_replica';
+set local session_replication_role = origin;
+
 delete from privacy.notice_versions
 where id in (
   'b8000000-0000-4000-8300-000000000001',
@@ -155,7 +160,11 @@ select extensions.is(
   'begin primitive creates one submission result'
 );
 select extensions.is(
-  (select count(*)::integer from intake.survey_submissions),
+  (
+    select count(*)::integer
+    from intake.survey_submissions
+    where data_origin = 'community'
+  ),
   1,
   'one durable envelope is inserted'
 );

@@ -84,17 +84,25 @@ select extensions.is(
   'B10 wrapper returns one durable application result'
 );
 select extensions.results_eq(
-  $$select application_channel, had_referral from intake.job_applications$$,
+  $$select application_channel, had_referral
+    from intake.job_applications
+    where id = (select job_application_id from b10_created)$$,
   $$values ('company_site'::text, false)$$,
   'application context is stored once'
 );
 select extensions.is(
-  (select count(*)::integer from intake.application_stage_events),
+  (
+    select count(*)::integer
+    from intake.application_stage_events
+    where application_id = (select job_application_id from b10_created)
+  ),
   5,
   'initial stage history reaches the reported offer stage'
 );
 select extensions.results_eq(
-  $$select outcome_code, sequence_no from intake.application_outcome_events$$,
+  $$select outcome_code, sequence_no
+    from intake.application_outcome_events
+    where application_id = (select job_application_id from b10_created)$$,
   $$values ('offer_received'::text, 1)$$,
   'initial outcome is appended as sequence one'
 );
@@ -116,12 +124,18 @@ select * from api.append_application_outcome_v1(
 );
 
 select extensions.results_eq(
-  $$select outcome_code, sequence_no from intake.application_outcome_events order by sequence_no$$,
+  $$select outcome_code, sequence_no
+    from intake.application_outcome_events
+    where application_id = (select job_application_id from b10_created)
+    order by sequence_no$$,
   $$values ('offer_received'::text, 1), ('offer_accepted'::text, 2)$$,
   'authorized follow-up appends the next outcome'
 );
 select extensions.results_eq(
-  $$select status, planned_start_month is not null from intake.employment_outcomes$$,
+  $$select employment.status, employment.planned_start_month is not null
+    from intake.employment_outcomes as employment
+    join intake.application_offers as offer on offer.id = employment.offer_id
+    where offer.application_id = (select job_application_id from b10_created)$$,
   $$values ('accepted'::text, true)$$,
   'accepted offer creates the employment follow-up snapshot'
 );

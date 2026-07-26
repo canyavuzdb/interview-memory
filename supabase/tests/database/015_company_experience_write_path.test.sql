@@ -95,9 +95,13 @@ select extensions.is((select count(*)::integer from b09_created), 1, 'B09 comman
 select extensions.is((
   select count(*)::integer from intake.survey_submissions
   where survey_type = 'company_experience'
-), 1, 'one company-experience envelope is created');
+    and data_origin = 'community'
+), 1, 'one community company-experience envelope is created');
 select extensions.results_eq(
-  $$select company_id, company_name, applied_role, process_year::integer from intake.company_experiences$$,
+  $$select experience.company_id, experience.company_name, experience.applied_role,
+      experience.process_year::integer
+    from intake.company_experiences as experience
+    where experience.submission_id = (select submission_id from b09_created)$$,
   $$values ('b9000000-0000-4000-8100-000000000001'::uuid, 'Example Corp'::text, 'Frontend Developer'::text, 2026)$$,
   'approved private alias links the canonical company without publishing input'
 );

@@ -4,6 +4,13 @@ create extension if not exists pgtap with schema extensions;
 
 select extensions.plan(12);
 
+-- Keep this contract test focused on the threshold transition. The transaction
+-- rolls back, so the migration-owned replica seed remains intact for test 019.
+set local session_replication_role = replica;
+delete from intake.survey_submissions
+where data_origin = 'research_replica';
+set local session_replication_role = origin;
+
 select extensions.has_function(
   'api',
   'get_public_benchmark_report_v1',

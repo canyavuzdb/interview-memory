@@ -88,7 +88,12 @@ select * from api.create_search_episode_v1(
 );
 
 select extensions.is((select count(*)::integer from b08_created), 1, 'command returns one durable result');
-select extensions.is((select count(*)::integer from intake.survey_submissions where survey_type = 'search_benchmark'), 1, 'one T23 envelope is created');
+select extensions.is((
+  select count(*)::integer
+  from intake.survey_submissions
+  where survey_type = 'search_benchmark'
+    and data_origin = 'community'
+), 1, 'one community T23 envelope is created');
 select extensions.is((
   select count(*)::integer
   from intake.search_episodes as episode
@@ -96,7 +101,10 @@ select extensions.is((
   where role.slug = 'frontend-developer' and episode.sector_id = 1001
 ), 1, 'T24 stores canonical catalog identities');
 select extensions.results_eq(
-  $$select applications_count, human_responses_count, any_interviews_count, offers_count from intake.episode_funnel_totals$$,
+  $$select funnel.applications_count, funnel.human_responses_count, funnel.any_interviews_count, funnel.offers_count
+    from intake.episode_funnel_totals as funnel
+    join intake.search_episodes as episode on episode.id = funnel.episode_id
+    where episode.submission_id = (select submission_id from b08_created)$$,
   $$values (20, 10, 6, 2)$$,
   'T25 stores non-additive funnel totals'
 );
@@ -150,7 +158,12 @@ select extensions.throws_ok(
   )$$,
   '22023', 'search_episode_status_count_mismatch', 'DB rejects status/count mismatch'
 );
-select extensions.is((select count(*)::integer from intake.survey_submissions where survey_type = 'search_benchmark'), 1, 'rejected command leaves no partial envelope');
+select extensions.is((
+  select count(*)::integer
+  from intake.survey_submissions
+  where survey_type = 'search_benchmark'
+    and data_origin = 'community'
+), 1, 'rejected command leaves no partial community envelope');
 
 select * from extensions.finish();
 rollback;
