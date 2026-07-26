@@ -321,7 +321,7 @@ select extensions.throws_ok(
     values (
       '30000000-0000-4000-8000-000000000001',
       'Acme, Inc.',
-      'moderator'
+      'import'
     )
   $query$,
   '23514',
@@ -341,7 +341,7 @@ select extensions.throws_ok(
     values (
       '30000000-0000-4000-8000-000000000001',
       'pending reviewed',
-      'moderator',
+      'import',
       'pending',
       now()
     )
@@ -362,7 +362,7 @@ select extensions.throws_ok(
     values (
       '30000000-0000-4000-8000-000000000001',
       'direct approved',
-      'moderator',
+      'import',
       'approved'
     )
   $query$,
@@ -381,7 +381,7 @@ values (
   '40000000-0000-4000-8000-000000000001',
   '30000000-0000-4000-8000-000000000001',
   'acme',
-  'moderator'
+  'import'
 );
 
 update catalog.company_aliases
@@ -398,7 +398,7 @@ values (
   '40000000-0000-4000-8000-000000000002',
   '30000000-0000-4000-8000-000000000002',
   'acme',
-  'moderator'
+  'import'
 );
 
 select extensions.throws_ok(
@@ -426,7 +426,7 @@ select extensions.lives_ok(
       '30000000-0000-4000-8000-000000000002',
       'acme',
       'US',
-      'moderator'
+      'import'
     );
 
     update catalog.company_aliases
@@ -446,7 +446,7 @@ values (
   '40000000-0000-4000-8000-000000000004',
   '30000000-0000-4000-8000-000000000002',
   'globex',
-  'moderator'
+  'import'
 );
 
 select extensions.lives_ok(
@@ -480,7 +480,7 @@ values (
   '40000000-0000-4000-8000-000000000005',
   '30000000-0000-4000-8000-000000000001',
   'identity test',
-  'moderator'
+  'import'
 );
 
 select extensions.throws_ok(

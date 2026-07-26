@@ -49,7 +49,6 @@ export const userRoleAssignmentRowSchema: z.ZodType<UserRoleAssignmentRow> =
     id: uuidSchema,
     user_id: uuidSchema.nullable(),
     role_code: z.enum([
-      'moderator',
       'privacy_operator',
       'security_operator',
       'role_admin',
@@ -58,7 +57,6 @@ export const userRoleAssignmentRowSchema: z.ZodType<UserRoleAssignmentRow> =
     subject_audit_principal: sha256ByteaSchema,
     grantor_role_snapshot: z
       .enum([
-        'moderator',
         'privacy_operator',
         'security_operator',
         'role_admin',

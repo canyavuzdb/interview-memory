@@ -23,6 +23,21 @@ describe('company experience contracts', () => {
     }).companyName).toBe('Example Corp')
   })
 
+  it('normalizes meaningful free text and rejects unsafe note shapes', () => {
+    expect(companyExperienceCreateBodySchema.parse({
+      ...validCompanyExperienceBody, freeNote: '  Useful note  ',
+    }).freeNote).toBe('Useful note')
+    expect(companyExperienceCreateBodySchema.parse({
+      ...validCompanyExperienceBody, freeNote: '   ',
+    }).freeNote).toBeNull()
+    expect(companyExperienceCreateBodySchema.safeParse({
+      ...validCompanyExperienceBody, freeNote: 'x',
+    }).success).toBe(false)
+    expect(companyExperienceCreateBodySchema.safeParse({
+      ...validCompanyExperienceBody, freeNote: 'unsafe\u0000note',
+    }).success).toBe(false)
+  })
+
   it.each([
     { promisedTimeline: 'no', promisedDays: 7 },
     { promisedTimeline: 'yes', promisedDays: null },
