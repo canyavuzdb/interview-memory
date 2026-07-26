@@ -553,6 +553,104 @@ export type Database = {
   }
   catalog: {
     Tables: {
+      benchmark_reference_metrics: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: number
+          metric_key: string
+          metric_value: number
+          period_label: string
+          population: string
+          source_id: string
+          unit: string
+        }
+        Insert: {
+          created_at?: string
+          display_order: number
+          id?: never
+          metric_key: string
+          metric_value: number
+          period_label: string
+          population: string
+          source_id: string
+          unit: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: never
+          metric_key?: string
+          metric_value?: number
+          period_label?: string
+          population?: string
+          source_id?: string
+          unit?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "benchmark_reference_metrics_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "benchmark_reference_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      benchmark_reference_sources: {
+        Row: {
+          created_at: string
+          fieldwork_end: string
+          fieldwork_start: string
+          geography: string
+          id: string
+          is_active: boolean
+          license_name: string
+          license_url: string
+          methodology_url: string
+          published_on: string
+          publisher: string
+          sample_description: string
+          source_key: string
+          source_url: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          fieldwork_end: string
+          fieldwork_start: string
+          geography: string
+          id: string
+          is_active?: boolean
+          license_name: string
+          license_url: string
+          methodology_url: string
+          published_on: string
+          publisher: string
+          sample_description: string
+          source_key: string
+          source_url: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          fieldwork_end?: string
+          fieldwork_start?: string
+          geography?: string
+          id?: string
+          is_active?: boolean
+          license_name?: string
+          license_url?: string
+          methodology_url?: string
+          published_on?: string
+          publisher?: string
+          sample_description?: string
+          source_key?: string
+          source_url?: string
+          title?: string
+        }
+        Relationships: []
+      }
       companies: {
         Row: {
           country_code: string | null

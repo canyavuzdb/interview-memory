@@ -108,8 +108,8 @@ select extensions.is(
       and relation.relkind = 'r'
       and relation.relrowsecurity
   ),
-  6,
-  'RLS is enabled on all six catalog tables'
+  8,
+  'RLS is enabled on all eight catalog tables'
 );
 
 select extensions.is(
@@ -122,8 +122,8 @@ select extensions.is(
       and relation.relkind = 'r'
       and relation.relforcerowsecurity
   ),
-  6,
-  'RLS is forced on all six catalog tables'
+  8,
+  'RLS is forced on all eight catalog tables'
 );
 
 select extensions.is(
@@ -193,8 +193,8 @@ select extensions.is(
     where namespace.nspname = 'catalog'
       and constraint_record.contype = 'p'
   ),
-  6,
-  'all six catalog tables have a primary key'
+  8,
+  'all eight catalog tables have a primary key'
 );
 
 select extensions.is(
