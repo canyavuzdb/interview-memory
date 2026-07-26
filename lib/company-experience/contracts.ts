@@ -38,6 +38,12 @@ const cleanText = (maximum: number) =>
     .min(2)
     .max(maximum)
     .regex(/^[^\u0000-\u001f\u007f-\u009f]+$/u)
+const optionalCleanText = (maximum: number) =>
+  z.preprocess(
+    (value) =>
+      typeof value === 'string' && value.trim() === '' ? null : value,
+    cleanText(maximum).nullable(),
+  )
 const days = z.int().min(0).max(3_650)
 const rating = z.int().min(1).max(5)
 
@@ -59,7 +65,7 @@ export const companyExperienceCreateBodySchema = z
     processTransparency: rating,
     hrProfessionalism: rating,
     wouldRecommendProcess: z.enum(companyExperienceRecommendations),
-    freeNote: z.string().trim().max(500).nullable(),
+    freeNote: optionalCleanText(500),
     locale: z.enum(['tr', 'en']),
     consentGranted: z.literal(true),
     ...applicationContextSchema.shape,

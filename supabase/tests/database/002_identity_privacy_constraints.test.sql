@@ -100,7 +100,7 @@ select extensions.ok(
     )
     values (
       '10000000-0000-4000-8000-000000000001',
-      'moderator',
+      'security_operator',
       '10000000-0000-4000-8000-000000000001',
       decode(repeat('ab', 32), 'hex'),
       'operational_need'
@@ -118,7 +118,7 @@ insert into "authorization".user_role_assignments (
 )
 values (
   '10000000-0000-4000-8000-000000000001',
-  'moderator',
+  'security_operator',
   '10000000-0000-4000-8000-000000000002',
   decode(repeat('ab', 32), 'hex'),
   'operational_need'
@@ -135,7 +135,7 @@ select extensions.ok(
     )
     values (
       '10000000-0000-4000-8000-000000000001',
-      'moderator',
+      'security_operator',
       '10000000-0000-4000-8000-000000000002',
       decode(repeat('cd', 32), 'hex'),
       'role_change'

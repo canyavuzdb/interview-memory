@@ -49,7 +49,7 @@ export type CompanyAliasRow =
 export type CompensationBandRow =
   GeneratedDatabase['catalog']['Tables']['compensation_bands']['Row']
 
-// Catalog writes remain migration/moderation owned in B05. No generic
+// Catalog writes remain migration-owned in B05. No generic
 // Insert/Update aliases are exported from the application type surface.
 
 export type UserProfileRow =

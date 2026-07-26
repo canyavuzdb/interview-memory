@@ -55,7 +55,7 @@ insert into catalog.company_aliases (
   company_id, normalized_alias, locale, source_code
 ) values (
   'b9000000-0000-4000-8100-000000000001', 'example corp', 'tr',
-  'moderator'
+  'import'
 );
 update catalog.company_aliases
 set review_status = 'approved'
