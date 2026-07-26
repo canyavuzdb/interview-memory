@@ -323,6 +323,10 @@ export type Database = {
           version: number
         }[]
       }
+      get_public_benchmark_report_v1: {
+        Args: { p_min_cohort_size?: number; p_months?: number }
+        Returns: Json
+      }
       get_search_episode_create_result_v1: {
         Args: { p_data_subject_id: string; p_submission_id: string }
         Returns: {

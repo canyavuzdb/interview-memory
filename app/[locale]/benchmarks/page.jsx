@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import BenchmarkExplorer from '@/components/BenchmarkExplorer'
 import {
@@ -8,8 +9,35 @@ import BenchmarkReportHeader from '@/components/BenchmarkReportHeader'
 import BenchmarkReportSwitcher from '@/components/BenchmarkReportSwitcher'
 import PublicHeader from '@/components/PublicHeader'
 import SiteFooter from '@/components/SiteFooter'
-import { benchmarkPreviewReport } from '@/data/benchmarkPreview'
 import { getMessages, isSupportedLocale } from '@/data/i18n'
+import { createEmptyPublicBenchmarkReport } from '@/lib/public-benchmark/contracts'
+import { createDefaultPublicBenchmarkService } from '@/lib/server/public-benchmark/service'
+
+export const revalidate = 300
+
+async function loadPublicBenchmarkReport() {
+  try {
+    return await createDefaultPublicBenchmarkService().getReport()
+  } catch {
+    return createEmptyPublicBenchmarkReport('unavailable')
+  }
+}
+
+function EmptyReport({ copy, locale }) {
+  return (
+    <div className="border border-line bg-surface px-6 py-16 text-center">
+      <p className="text-lg font-semibold tracking-[-0.02em] text-ink">
+        {copy.title}
+      </p>
+      <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-muted">
+        {copy.description}
+      </p>
+      <Link href={`/${locale}/surveys`} className="report-action mt-5">
+        {copy.cta}
+      </Link>
+    </div>
+  )
+}
 
 export async function generateMetadata({ params }) {
   const { locale } = await params
@@ -25,6 +53,7 @@ export default async function BenchmarksPage({ params }) {
   if (!isSupportedLocale(locale)) notFound()
 
   const messages = getMessages(locale)
+  const benchmarkReport = await loadPublicBenchmarkReport()
   const alternateMessages = getMessages(locale === 'tr' ? 'en' : 'tr')
   const navigationCopy = messages.benchmarkPage.navigation
   const navigationItems = [
@@ -46,6 +75,16 @@ export default async function BenchmarksPage({ params }) {
       label: navigationCopy.items.responsiveness.label,
       shortLabel: navigationCopy.items.responsiveness.shortLabel,
     },
+  ]
+  const hasRoleReport = benchmarkReport.roleMonthly.length > 0
+    || benchmarkReport.companyFunnel.length > 0
+  const hasActivityReport =
+    benchmarkReport.activityTiming.candidateTempo.rows.length > 0
+    || benchmarkReport.activityTiming.companyResponseTempo.rows.length > 0
+  const hasResponsivenessReport =
+    benchmarkReport.companyResponsiveness.length > 0
+  const statusCopy = messages.benchmarkPage.dataStatus[
+    benchmarkReport.meta.status
   ]
 
   return (
@@ -76,6 +115,18 @@ export default async function BenchmarksPage({ params }) {
           </div>
         </div>
 
+        <div
+          className="mt-6 grid gap-2 border border-line bg-surface px-5 py-4 sm:grid-cols-[auto_minmax(0,1fr)] sm:items-center sm:gap-5"
+          role="status"
+        >
+          <p className="font-mono text-[8px] font-bold uppercase tracking-[0.09em] text-accentDark">
+            {statusCopy.label}
+          </p>
+          <p className="text-sm leading-6 text-muted">
+            {statusCopy.description}
+          </p>
+        </div>
+
         <BenchmarkReportSwitcher
           copy={navigationCopy}
           items={navigationItems}
@@ -92,25 +143,62 @@ export default async function BenchmarksPage({ params }) {
               locale={locale}
               path="/surveys/application-benchmark"
             />
-            <BenchmarkExplorer
-              copy={messages.community.explorer}
-              embedded
-              locale={locale}
-              report={benchmarkPreviewReport}
-            />
+            {hasRoleReport ? (
+              <BenchmarkExplorer
+                copy={messages.community.explorer}
+                embedded
+                locale={locale}
+                report={benchmarkReport}
+              />
+            ) : (
+              <EmptyReport copy={messages.benchmarkPage.empty} locale={locale} />
+            )}
           </section>
 
-          <ActivityTimingReport
-            copy={messages.benchmarkPage.reports.activityHeatmap}
-            locale={locale}
-            report={benchmarkPreviewReport.activityTiming}
-          />
+          {hasActivityReport ? (
+            <ActivityTimingReport
+              copy={messages.benchmarkPage.reports.activityHeatmap}
+              locale={locale}
+              report={benchmarkReport.activityTiming}
+            />
+          ) : (
+            <section
+              id="activity-heatmap"
+              aria-labelledby="activity-heatmap-title"
+              className="scroll-mt-24"
+            >
+              <BenchmarkReportHeader
+                copy={messages.benchmarkPage.reports.activityHeatmap}
+                headingId="activity-heatmap-title"
+                locale={locale}
+                path="/surveys"
+                showAction={false}
+              />
+              <EmptyReport copy={messages.benchmarkPage.empty} locale={locale} />
+            </section>
+          )}
 
-          <ResponsivenessReport
-            copy={messages.benchmarkPage.reports.responsiveness}
-            locale={locale}
-            rows={benchmarkPreviewReport.companyResponsiveness}
-          />
+          {hasResponsivenessReport ? (
+            <ResponsivenessReport
+              copy={messages.benchmarkPage.reports.responsiveness}
+              locale={locale}
+              rows={benchmarkReport.companyResponsiveness}
+            />
+          ) : (
+            <section
+              id="responsiveness-report"
+              aria-labelledby="responsiveness-report-title"
+              className="scroll-mt-24"
+            >
+              <BenchmarkReportHeader
+                copy={messages.benchmarkPage.reports.responsiveness}
+                headingId="responsiveness-report-title"
+                locale={locale}
+                path="/surveys/company-experience"
+              />
+              <EmptyReport copy={messages.benchmarkPage.empty} locale={locale} />
+            </section>
+          )}
         </BenchmarkReportSwitcher>
       </section>
 

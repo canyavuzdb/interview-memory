@@ -570,13 +570,17 @@ const messages = {
           design: 'Ürün tasarımı',
           platform_quality: 'Platform ve kalite',
           business_operations: 'İş ve operasyon',
+          other: 'Diğer',
         },
         roleSeniorities: {
+          intern: 'Stajyer',
           junior: 'Junior',
           mid: 'Orta seviye',
           senior: 'Senior',
+          lead_manager: 'Lead / yönetici',
         },
         roleSpecializations: {
+          software_engineering: 'Yazılım mühendisliği',
           backend_development: 'Backend geliştirme',
           frontend_development: 'Frontend geliştirme',
           full_stack_development: 'Full-stack geliştirme',
@@ -800,7 +804,26 @@ const messages = {
       title: 'İşe alım sürecini tek bir ortalamaya sıkıştırma.',
       description:
         'Rol ve şirket dönüşümlerini, aday hareketliliğini ve güncelleme alınamayan süreçleri aynı rapor akışında incele.',
-      dataNote: 'Temsili veri sözleşmesi · Gerçek kullanıcı verisi değildir',
+      dataNote: 'Canlı anonim toplulaştırma · Yalnız n≥10 kohortlar yayımlanır',
+      dataStatus: {
+        live: {
+          label: 'Canlı benchmark',
+          description: 'Sonuçlar uygun gerçek katkılardan üretiliyor; tekil yanıtlar ve düşük örneklemler yayımlanmıyor.',
+        },
+        collecting: {
+          label: 'Veri toplanıyor',
+          description: 'Henüz yayın eşiğine ulaşan bir kohort yok. Hiçbir düşük örneklem veya tekil yanıt gösterilmiyor.',
+        },
+        unavailable: {
+          label: 'Veri geçici olarak kullanılamıyor',
+          description: 'Canlı benchmark şu anda okunamadı. Güvenlik nedeniyle temsili rakamlara geri dönülmedi.',
+        },
+      },
+      empty: {
+        title: 'Bu rapor için henüz yeterli anonim örneklem yok.',
+        description: 'Bir kohort en az 10 farklı katkı sahibine ulaştığında toplu sonuçlar otomatik olarak burada görünür.',
+        cta: 'Anonim katkı ver',
+      },
       navigation: {
         ariaLabel: 'Benchmark raporları',
         eyebrow: 'Raporları keşfet',
@@ -2072,13 +2095,17 @@ const messages = {
           design: 'Product design',
           platform_quality: 'Platform and quality',
           business_operations: 'Business and operations',
+          other: 'Other',
         },
         roleSeniorities: {
+          intern: 'Intern',
           junior: 'Junior',
           mid: 'Mid-level',
           senior: 'Senior',
+          lead_manager: 'Lead / manager',
         },
         roleSpecializations: {
+          software_engineering: 'Software engineering',
           backend_development: 'Backend development',
           frontend_development: 'Frontend development',
           full_stack_development: 'Full-stack development',
@@ -2302,7 +2329,26 @@ const messages = {
       title: 'Do not compress a hiring process into one average.',
       description:
         'Review role and company conversion, candidate activity, and processes without an update in one connected report stream.',
-      dataNote: 'Illustrative data contract · Not real user data',
+      dataNote: 'Live anonymous aggregates · Only cohorts with n≥10 are published',
+      dataStatus: {
+        live: {
+          label: 'Live benchmark',
+          description: 'Results come from eligible real contributions; individual responses and small cohorts are never published.',
+        },
+        collecting: {
+          label: 'Collecting data',
+          description: 'No cohort has reached the publication threshold yet. No small-sample or individual response is shown.',
+        },
+        unavailable: {
+          label: 'Data temporarily unavailable',
+          description: 'The live benchmark could not be read. Illustrative figures are not used as a fallback.',
+        },
+      },
+      empty: {
+        title: 'There is not enough anonymous data for this report yet.',
+        description: 'Aggregate results appear automatically once a cohort reaches at least 10 distinct contributors.',
+        cta: 'Contribute anonymously',
+      },
       navigation: {
         ariaLabel: 'Benchmark reports',
         eyebrow: 'Explore reports',
