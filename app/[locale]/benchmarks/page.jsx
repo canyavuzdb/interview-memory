@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import BenchmarkExplorer from '@/components/BenchmarkExplorer'
 import {
@@ -7,13 +8,16 @@ import {
 } from '@/components/BenchmarkAdditionalReports'
 import BenchmarkReportHeader from '@/components/BenchmarkReportHeader'
 import BenchmarkReportSwitcher from '@/components/BenchmarkReportSwitcher'
+import PersonalBenchmarkPanel from '@/components/PersonalBenchmarkPanel'
 import PublicHeader from '@/components/PublicHeader'
 import SiteFooter from '@/components/SiteFooter'
 import { getMessages, isSupportedLocale } from '@/data/i18n'
 import { createEmptyPublicBenchmarkReport } from '@/lib/public-benchmark/contracts'
 import { createDefaultPublicBenchmarkService } from '@/lib/server/public-benchmark/service'
+import { resolveActiveAccount } from '@/lib/server/auth/session'
+import { createDefaultPersonalBenchmarkService } from '@/lib/server/personal-benchmark/service'
 
-export const revalidate = 300
+export const dynamic = 'force-dynamic'
 
 async function loadPublicBenchmarkReport() {
   try {
@@ -54,6 +58,10 @@ export default async function BenchmarksPage({ params }) {
 
   const messages = getMessages(locale)
   const benchmarkReport = await loadPublicBenchmarkReport()
+  const account = await resolveActiveAccount()
+  const personalReport = account
+    ? await createDefaultPersonalBenchmarkService().getReport(account.userId)
+    : null
   const alternateMessages = getMessages(locale === 'tr' ? 'en' : 'tr')
   const navigationCopy = messages.benchmarkPage.navigation
   const navigationItems = [
@@ -74,6 +82,12 @@ export default async function BenchmarksPage({ params }) {
       id: 'responsiveness-report',
       label: navigationCopy.items.responsiveness.label,
       shortLabel: navigationCopy.items.responsiveness.shortLabel,
+    },
+    {
+      code: '04',
+      id: 'personal-report',
+      label: navigationCopy.items.personalReport.label,
+      shortLabel: navigationCopy.items.personalReport.shortLabel,
     },
   ]
   const hasRoleReport = benchmarkReport.roleMonthly.length > 0
@@ -198,7 +212,36 @@ export default async function BenchmarksPage({ params }) {
               />
               <EmptyReport copy={messages.benchmarkPage.empty} locale={locale} />
             </section>
-          )}
+            )}
+
+          <section
+            id="personal-report"
+            aria-labelledby="personal-report-title"
+            className="scroll-mt-24"
+          >
+            {personalReport ? (
+              <PersonalBenchmarkPanel
+                copy={messages.account.personalReport}
+                report={personalReport}
+              />
+            ) : (
+              <div className="border border-line bg-surface px-6 py-16 text-center">
+                <p className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-accentDark">
+                  {navigationCopy.personalReport.eyebrow}
+                </p>
+                <h2 id="personal-report-title" className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-ink">
+                  {navigationCopy.personalReport.title}
+                </h2>
+                <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-muted">
+                  {navigationCopy.personalReport.description}
+                </p>
+                <Link href={`/${locale}/account`} className="report-action mt-5">
+                  {navigationCopy.personalReport.cta}
+                  <ArrowRight size={13} strokeWidth={1.7} aria-hidden="true" />
+                </Link>
+              </div>
+            )}
+          </section>
         </BenchmarkReportSwitcher>
       </section>
 
