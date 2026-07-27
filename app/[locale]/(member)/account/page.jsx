@@ -4,8 +4,11 @@ import { Check, LogOut } from 'lucide-react'
 
 import { signOutAction } from '@/app/[locale]/(member)/account/actions'
 import AccountSessionNotice from '@/components/auth/AccountSessionNotice'
+import PersonalBenchmarkPanel from '@/components/PersonalBenchmarkPanel'
 import PreferenceControls from '@/components/PreferenceControls'
 import { getMessages, isSupportedLocale } from '@/data/i18n'
+import { createDefaultPersonalBenchmarkService } from '@/lib/server/personal-benchmark/service'
+import { resolveActiveAccount } from '@/lib/server/auth/session'
 
 export async function generateMetadata({ params }) {
   const { locale } = await params
@@ -24,6 +27,10 @@ export default async function AccountPage({ params, searchParams }) {
   const copy = messages.account
   const query = await searchParams
   const didJustSignIn = query?.status === 'signedIn'
+  const account = await resolveActiveAccount()
+  const personalReport = account
+    ? await createDefaultPersonalBenchmarkService().getReport(account.userId)
+    : null
 
   return (
     <main className="landing-grid min-h-screen text-ink">
@@ -88,6 +95,9 @@ export default async function AccountPage({ params, searchParams }) {
           </form>
         </div>
       </section>
+      {personalReport && (
+        <PersonalBenchmarkPanel copy={copy.personalReport} report={personalReport} />
+      )}
     </main>
   )
 }

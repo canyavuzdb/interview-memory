@@ -323,6 +323,10 @@ export type Database = {
           version: number
         }[]
       }
+      get_my_personal_report_v1: {
+        Args: { p_auth_user_id: string }
+        Returns: Json
+      }
       get_public_benchmark_report_v1: {
         Args: { p_min_cohort_size?: number; p_months?: number }
         Returns: Json

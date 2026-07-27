@@ -53,7 +53,7 @@ function ReportTabs({
       aria-orientation={compact ? 'horizontal' : 'vertical'}
       className={
         compact
-          ? 'benchmark-report-tabs benchmark-report-tabs--compact relative grid grid-cols-3'
+          ? `benchmark-report-tabs benchmark-report-tabs--compact relative grid ${items.length === 4 ? 'grid-cols-4' : 'grid-cols-3'}`
           : 'benchmark-report-tabs benchmark-report-tabs--rail relative w-full'
       }
       style={{
