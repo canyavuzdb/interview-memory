@@ -102,7 +102,7 @@ export default async function BenchmarksPage({ params }) {
   ]
 
   return (
-    <main className="landing-grid min-h-screen text-ink">
+    <main className="benchmark-page landing-grid min-h-screen text-ink">
       <PublicHeader
         alternateCopy={alternateMessages.header}
         common={messages.common}
