@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import BinaryMaidenTower from './BinaryMaidenTower'
 import BrandMark from './brand/BrandMark'
+import CookieSettingsButton from './CookieSettingsButton'
 
 export default function SiteFooter({ copy, locale }) {
   const productLinks = [
@@ -97,6 +98,7 @@ export default function SiteFooter({ copy, locale }) {
           <p className="mt-5 max-w-xs font-mono text-[8px] uppercase leading-4 tracking-[0.07em] text-[var(--brand-dark-muted)]">
             {copy.plannedNote}
           </p>
+          <CookieSettingsButton>{copy.cookieSettings}</CookieSettingsButton>
         </div>
       </div>
 
