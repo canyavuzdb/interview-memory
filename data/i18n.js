@@ -99,15 +99,82 @@ const messages = {
       surveys: 'Anketler',
       signals: 'İşe alım verileri',
       signIn: 'Giriş yap',
+      profile: 'Profilim',
       projectTitle: 'Proje',
       repository: 'GitHub deposu',
+      githubCta: 'GitHub’da incele',
       creator: 'Can Yavuz',
-      plannedTitle: 'Planlanan sayfalar',
-      planned: ['Hakkımızda', 'Sık sorulan sorular', 'İletişim', 'Gizlilik', 'Kullanım koşulları', 'Çerez ayarları'],
-      plannedNote: 'Bu rotalar bilgi mimarisi tamamlandığında etkinleşecek.',
+      resourcesTitle: 'Bilgi ve destek',
+      resources: [
+        { href: 'about', label: 'Hakkımızda' },
+        { href: 'faq', label: 'Sık sorulan sorular' },
+        { href: 'contact', label: 'İletişim' },
+        { href: 'privacy', label: 'Gizlilik' },
+        { href: 'terms', label: 'Kullanım koşulları' },
+      ],
       cookieSettings: 'Çerez ayarlarını aç',
-      sourceNote: 'Açık kaynak · Ön yüz prototipi',
+      sourceNote: 'Açık kaynak',
       copyright: 'Interview Memory',
+    },
+    infoPages: {
+      about: {
+        eyebrow: 'Proje', title: 'İşe alım deneyimini ortak bilgiye dönüştürmek.',
+        intro: 'Interview Memory, adayların işe alım süreçlerini daha anlaşılır ve karşılaştırılabilir hale getirmeyi amaçlayan açık kaynak bir projedir.',
+        sections: [
+          { title: 'Neden var?', body: ['İşe alım süreci çoğu zaman dağınık, kişisel ve karşılaştırması zor deneyimlerden oluşur. Platform, bu deneyimlerin ölçülebilir yönlerini görünür kılmak için tasarlanır.'] },
+          { title: 'Ne toplar?', body: ['Başvuru hacmi, süreç süresi, geri dönüş ve aday deneyimi gibi sinyaller toplanır. Amaç kişisel hikâyeleri yayımlamak değil, ortak örüntüleri anlamaktır.'] },
+          { title: 'Veri kalitesi', body: ['Kayıtlar; form kuralları, tutarlılık kontrolleri ve tekrar eden istekleri önlemeye yönelik korumalarla işlenir. Bu yaklaşım, aynı katkının birden çok kez sayılmasını ve karşılaştırmaların gereksiz biçimde bozulmasını önlemeyi hedefler.', 'Sonuçlar, tekil kayıtlardan doğrudan hüküm üretmek yerine yeterli örneklem oluştuğunda toplu sinyaller olarak sunulmak üzere tasarlanır.'] },
+          { title: 'Güvenlik yaklaşımı', body: ['Hesap, anonim katkı ve yönetim işlemleri farklı erişim sınırlarıyla ele alınır. Veri katmanında rol tabanlı yetkilendirme, satır düzeyinde erişim kuralları ve işlem doğrulama kontrolleri kullanılır.', 'Gizlilik bildirimleri ve onay kayıtları sürümlü olarak tutulur; böylece bir katkının hangi bilgilendirme metniyle işlendiği izlenebilir.'] },
+          { title: 'Açık kaynak', body: ['Projenin kaynak kodu açıktır. Ürün kararları, veri yaklaşımı ve geliştirme süreci topluluk katkısına açıktır.'] },
+        ],
+        links: [{ label: 'GitHub deposunu incele', href: 'https://github.com/canyavuzdb/interview-memory/tree/master' }],
+      },
+      faq: {
+        eyebrow: 'Yardım', title: 'Sık sorulan sorular.', intro: 'Platformun kapsamı, anonimlik yaklaşımı ve sonuçların nasıl yorumlanacağına dair kısa yanıtlar.',
+        faqs: [
+          { question: 'Hangi bilgileri paylaşabilirim?', answer: 'Başvuru hacmi, süreç süresi, görüşme aşamaları, geri dönüş durumu ve aday deneyimi gibi işe alım sürecinin ölçülebilir yönlerini paylaşabilirsin. Ad, e-posta, telefon, bağlantı, aday numarası veya başka bir kişiyi tanımlayabilecek bilgi eklememelisin.' },
+          { question: 'Katkım gerçekten anonim mi?', answer: 'Anonim katkılar, herkese açık bir kişi profili oluşturmadan kaydedilir. Sürekliliği ve kötüye kullanım önlemeyi desteklemek için tarayıcıda rastgele üretilmiş bir belirteç kullanan temel çerez bulunur; bu belirteç IP adresinden veya tarayıcı bilgilerinden türetilmez.' },
+          { question: 'Hesap açarsam anonimlik ne olur?', answer: 'Hesap açmak, kayıtlarını takip etmeni ve hesap alanlarına erişmeni sağlar. Hesabınla ilişkilendirilen katkılar yine herkese açık kimlik bilgilerinle yayımlanacak şekilde tasarlanmamıştır.' },
+          { question: 'Neden her katkı hemen sonuçlara yansımıyor?', answer: 'Tek bir kayıt güvenilir bir karşılaştırma oluşturmaz. Sonuçlar, benzer rol, deneyim veya süreç gruplarında yeterli örneklem oluştuğunda anlamlı hale gelir; bu nedenle katkın hemen herkese açık bir sonuca dönüşmeyebilir.' },
+          { question: 'Veriler nasıl gruplandırılır?', answer: 'Karşılaştırmalar, bireysel hikâyeler yerine rol, deneyim, süreç aşaması ve benzer bağlamlardaki toplu sinyallere odaklanır. Amaç bir kişi veya şirket hakkında kesin hüküm vermek değil, ortak örüntüleri görünür kılmaktır.' },
+          { question: 'Şirket yanıt oranı neyi ifade eder?', answer: 'Şirket deneyimi sonuçlarında 30 günlük gözlem penceresinde anlamlı bir süreç güncellemesi alınıp alınmadığı incelenir. Otomatik alındı mesajı, tek başına anlamlı güncelleme sayılmaz.' },
+          { question: 'Sonuçlara ne kadar güvenebilirim?', answer: 'Sonuçlar kullanıcı katkılarına ve mevcut örnekleme dayanır; eksik, yanlı veya sınırlı örneklem ihtimali vardır. Bu nedenle sinyaller bilgilendirme amaçlıdır; işe alım veya kariyer kararlarında tek başına kesin kanıt olarak kullanılmamalıdır.' },
+          { question: 'Çerezler ne için kullanılıyor?', answer: 'Temel çerezler oturum açma, anonim katkının sürekliliği ve güvenlik kontrolleri için kullanılır. Mevcut uygulamada analitik veya reklam çerezi kullanılmaz; ayarları footer’daki Çerez ayarları düğmesinden görebilirsin.' },
+          { question: 'Bir hata veya uygunsuz içerik görürsem ne yapmalıyım?', answer: 'GitHub deposu üzerinden hata bildirimi veya öneri açabilirsin. Uygunsuz içerik için ilgili rota, kayıt bağlamı ve neden sorun gördüğüne dair kısa bir açıklama eklemen incelemeyi kolaylaştırır.' },
+        ],
+      },
+      contact: {
+        eyebrow: 'İletişim', title: 'Geri bildirimin ürünü iyileştirir.', intro: 'Hata bildirimi, veri yaklaşımıyla ilgili soru veya ürün önerisi için proje deposu üzerinden iletişime geçebilirsin.',
+        sections: [
+          { title: 'Hata bildirimi', body: ['Tekrarlanabilir bir sorun gördüğünde ne yaptığını, beklediğin sonucu ve gördüğün sonucu ekle. Mümkünse ekran görüntüsü veya ilgili rota da paylaş.'] },
+          { title: 'Öneriler', body: ['Yeni anket alanı, analiz veya içerik önerilerini tartışma olarak açabilirsin. Önerinin hangi kullanıcı ihtiyacını çözdüğünü eklemek önceliklendirmeyi kolaylaştırır.'] },
+        ],
+        links: [{ label: 'GitHub issues', href: 'https://github.com/canyavuzdb/interview-memory/issues' }],
+      },
+      privacy: {
+        eyebrow: 'Gizlilik', title: 'Veri yaklaşımımızı açık tutuyoruz.', intro: 'Interview Memory’de anonim katkı ve hesap kullanımında hangi bilgilerin işlendiğini, neden işlendiğini ve nasıl korunduğunu açıkça anlatıyoruz.', updated: 'Son güncelleme: 27 Temmuz 2026',
+        sections: [
+          { title: 'Hizmet kapsamı', body: ['Platform iki kullanım biçimi sunar: (a) anonim olarak işe alım süreci ve aday deneyimi katkısı, (b) hesapla giriş yapan kullanıcılar için kayıtları takip etme ve kişiselleştirilmiş alanlara erişim.'] },
+          { title: 'İşlenen veriler', body: ['Anonim katkıda başvuru ve görüşme sürecine ilişkin form yanıtları işlenir. Hesap oluşturulduğunda e-posta adresi, oturum bilgileri ve hesap tercihlerinin yanı sıra hesaba bağlanan katkı kayıtları işlenebilir.', 'Platform, anonim katkıyı sürdürmek ve kötüye kullanımı önlemek için rastgele üretilmiş bir kimlik belirteci içeren temel çerez kullanır; bu belirteç IP adresinden veya tarayıcı bilgisinden türetilmez.'] },
+          { title: 'Amaç ve yöntem', body: ['Veriler; anonim katkıyı kaydetmek, kişisel hesap deneyimini sağlamak, kötüye kullanımı önlemek ve yeterli örneklem oluştuğunda toplu işe alım karşılaştırmaları üretmek için işlenir.', 'Form yanıtları doğrudan herkese açık kişi profiline bağlanacak şekilde tasarlanmamıştır. Sonuçlar, bireyler yerine toplu sinyalleri göstermek amacıyla hazırlanır.'] },
+          { title: 'Hizmet sağlayıcılar', body: ['Uygulama, kimlik doğrulama, oturum ve veri saklama altyapısı için Supabase kullanır. Google ile giriş seçildiğinde kimlik doğrulama akışı Google üzerinden yürütülür.'] },
+          { title: 'Çerezler', body: ['Temel çerezler oturum, anonim katkının sürekliliği ve güvenlik kontrolleri için kullanılır. Anonim katılımcı çerezi en fazla 180 gün; çerez tercihi kaydı ise en fazla 1 yıl için ayarlanır. Mevcut uygulamada analitik veya reklam çerezi kullanılmaz.'] },
+          { title: 'Saklama ve haklar', body: ['Veriler, toplandıkları amaç için gerekli süre boyunca ve uygulamanın güvenlik ile yasal yükümlülükleri çerçevesinde saklanır. Hesapla ilişkilendirilen kayıtların silinmesi veya anonimleştirilmesi, ilgili hesabın ve kayıtların durumuna göre değerlendirilir.', '6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamındaki bilgi alma, düzeltme, silme veya itiraz taleplerin için İletişim sayfasındaki kanalı kullanabilirsin.'] },
+        ],
+      },
+      terms: {
+        eyebrow: 'Kullanım koşulları', title: 'Paylaşılan bilgi için ortak kurallar.', intro: 'Bu koşullar, platformun güvenli, saygılı ve yararlı kullanılmasına ilişkin temel kuralları açıklar.', updated: 'Son güncelleme: 27 Temmuz 2026',
+        sections: [
+          { title: 'Hizmet kapsamı', body: ['Interview Memory, işe alım süreçleri ve aday deneyimleri hakkında anonim katkı ve toplu karşılaştırma sunmayı amaçlar. Platformdaki içerik bilgilendirme amaçlıdır.', 'Hesap açmadan anonim katkıda bulunabilirsin. Hesap kullanımı ise kayıtlarını takip etme ve üyeler için sunulan alanlara erişim olanağı sağlar.'] },
+          { title: 'Doğru ve dürüst katkı', body: ['Yalnızca kendi deneyimine dayanan, mümkün olduğunca doğru ve güncel bilgi paylaşmalısın. Bilmediğin bilgileri tahmin ederek yazmamalı; sistemi etkilemek için tekrarlayan, yanıltıcı, spam veya sahte veri göndermemelisin.', 'Bir şirket, rol veya süreç hakkında olumsuz deneyim paylaşabilirsin; ancak deneyimini olgusal, bağlamı olan ve kişileri hedef göstermeyen bir dille anlatmalısın.'] },
+          { title: 'Paylaşılmaması gerekenler', body: ['Ad, e-posta, telefon numarası, bağlantı, aday numarası veya bir kişinin kimliğini ortaya çıkarabilecek bilgileri paylaşma. Görüşmeci, aday ya da başka bir üçüncü kişiye ait hassas kişisel verileri de ekleme.', 'Hakaret, tehdit, iftira, ayrımcı ifade, gizli şirket bilgisi veya hukuka aykırı içerik paylaşamazsın.'] },
+          { title: 'İçerik ve moderasyon', body: ['Platform, güvenlik, gizlilik veya veri kalitesi gerekçesiyle bir katkıyı inceleyebilir, görünürlüğünü sınırlayabilir ya da kaldırabilir. Tekrarlayan kötüye kullanım durumunda katkı gönderimini veya hesap erişimini kısıtlayabilir.', 'Bu işlem, katkının doğruluğuna ilişkin kesin bir yargı anlamına gelmez; platformun güvenliğini ve toplu sonuçların yararlılığını koruma amacını taşır.'] },
+          { title: 'Verinin sınırları', body: ['Sonuçlar kullanıcı katkılarına, mevcut örnekleme ve uygulanan hesaplama yöntemine dayanır. Eksik, yanlı veya sınırlı örneklem ihtimali her zaman vardır.', 'Platformdaki sinyaller işe alım, kariyer, finansal ya da hukuki kararlar için tek başına kesin kanıt veya profesyonel tavsiye değildir. Sonuçları kendi bağlamınla birlikte değerlendirmelisin.'] },
+          { title: 'Adil kullanım', body: ['Platformu hizmeti bozacak, güvenlik önlemlerini aşacak veya başkalarının erişimini engelleyecek şekilde kullanamazsın. Otomatik araçlarla aşırı veri toplama, yanıltıcı kayıt üretme veya erişim kontrollerini aşma girişimleri yasaktır.', 'Açık kaynak kodun varlığı, platformdaki verilerin sınırsız biçimde kopyalanabileceği veya yeniden yayımlanabileceği anlamına gelmez.'] },
+          { title: 'Hizmet kullanılabilirliği', body: ['Bakım, güvenlik güncellemesi veya beklenmeyen teknik durumlar nedeniyle hizmet geçici olarak kesilebilir ya da bazı özellikler değiştirilebilir.'] },
+          { title: 'Değişiklikler ve iletişim', body: ['Bu koşullar ürün geliştikçe güncellenebilir. Önemli değişiklikler bu sayfada yeni yürürlük tarihiyle yayımlanır.', 'Koşullarla ilgili soru, hata bildirimi veya uygunsuz içerik bildirimi için İletişim sayfasındaki kanal kullanılabilir.'] },
+        ],
+      },
     },
     login: {
       eyebrow: 'Hesap erişimi',
@@ -1055,30 +1122,30 @@ const messages = {
     platformGuide: {
       eyebrow: '03 /',
       title: 'Platform işleyişi',
-      note: 'Planlanan ürün akışı / ön yüz prototipi',
+      note: 'Anonim katkı · Toplu sinyaller · Karşılaştırma',
       controlsLabel: 'Platform bilgileri',
       prototypeNote:
-        'Bu ön yüz prototipi yanıtları kaydetmez; gösterilen işe alım verileri örnek amaçlıdır.',
+        'Gizlilik, kullanım koşulları ve ayrıntılı yanıtlar bilgi ve destek sayfalarında yer alır.',
       panels: [
         {
           id: 'how',
           code: '01 /',
           label: 'Nasıl çalışır?',
           eyebrow: 'Yanıttan analize',
-          title: 'Tekil süreç kayıtları karşılaştırılabilir işe alım verilerine dönüştürülür.',
+          title: 'Anonim katkılar, karşılaştırılabilir işe alım sinyallerine dönüşür.',
           description:
-            'Kısa formlar kişisel hikâyeyi değil, işe alım sürecinin ölçülebilir parçalarını toplamak üzere tasarlandı.',
+            'Kısa formlar kişisel hikâyeyi değil; sürecin süresi, aşamaları ve geri dönüşleri gibi ölçülebilir parçaları toplar.',
           steps: [
             {
               code: '01 /',
               title: 'Sürecini paylaş',
-              description: 'Rolünü, başvuru hacmini veya aday deneyimini kısa formda paylaş.',
+              description: 'Rolünü, başvuru sürecini veya aday deneyimini kısa formda anonim olarak paylaş.',
             },
             {
               code: '02 /',
               title: 'Yanıtlar gruplandırılır',
               description:
-                'Veri katmanı bağlandığında yanıtlar rol, deneyim ve süreç aşamasına göre anonim gruplara ayrılacak.',
+                'Yanıtlar rol, deneyim ve süreç aşamasına göre anonim gruplar içinde değerlendirilir.',
             },
             {
               code: '03 /',
@@ -1091,54 +1158,54 @@ const messages = {
         {
           id: 'offerings',
           code: '02 /',
-          label: 'Ne sunar?',
+          label: 'Ne sağlar?',
           eyebrow: 'Platform çıktıları',
-          title: 'Tek bir kayıt, üç ayrı analiz alanına katkı sağlar.',
+          title: 'Sürecini daha net görmen için üç farklı bakış açısı sunar.',
           description:
-            'Planlanan ürün yapısında aynı süreç kaydı hem kişisel takibe hem de ortak işe alım bilgisinin oluşmasına hizmet eder.',
+            'Katkın hem kendi sürecini anlamana hem de toplu işe alım bilgisinin güçlenmesine yardımcı olur.',
           items: [
             {
               code: '01 /',
               title: 'Kişisel süreç özeti',
-              description: 'Başvuru hacmini, süreyi ve dönüşüm hattını tek görünümde takip et.',
+              description: 'Başvuru hacmini, süreyi ve süreçteki dönüşümleri tek görünümde takip et.',
             },
             {
               code: '02 /',
               title: 'Aday grubu karşılaştırması',
               description:
-                'Sürecini benzer rol ve deneyim gruplarıyla karşılaştır.',
+                'Sürecini benzer rol ve deneyim gruplarının toplu sonuçlarıyla kıyasla.',
             },
             {
               code: '03 /',
               title: 'Şirket bazlı süreç analizi',
               description:
-                'Tekrarlanan yanıtsızlık, gecikme ve geri bildirim uygulamalarını toplu olarak analiz et.',
+                'Geri dönüş, gecikme ve aday deneyimi sinyallerini şirket bazında incele.',
             },
           ],
         },
         {
           id: 'faq',
           code: '03 /',
-          label: 'Merak edilenler',
+          label: 'Temel sorular',
           eyebrow: 'Kısa yanıtlar',
-          title: 'Platformla ilgili en temel üç soru.',
+          title: 'Başlamadan önce bilmen gereken üç şey.',
           description:
-            'Bu aşamada ürünün çalışma biçimini anlamak için gereken kısa ve doğrudan yanıtlar.',
+            'Ayrıntılar destek sayfalarında; burada yalnızca platformun en önemli ilkeleri var.',
           faqs: [
             {
               question: 'Paylaşım gerçekten anonim mi?',
               answer:
-                'Formlar ad, e-posta veya kişisel belge istemeyecek şekilde tasarlanır. Gerçek veri katmanında sonuçlar tekil kayıtlar yerine yeterli örnekleme ulaşan gruplar üzerinden sunulacaktır.',
+                'Katkılar herkese açık bir kişi profiliyle yayımlanmaz. Formlarda kişileri tanımlayan bilgi paylaşmamalısın; sonuçlar tekil kayıtlar yerine toplu sinyaller olarak sunulur.',
             },
             {
               question: 'Her kayıt doğrudan yayınlanır mı?',
               answer:
-                'Hayır. Planlanan akışta moderasyon ve minimum örneklem eşiğini geçmeyen kayıtlar herkese açık sonuçlara dahil edilmeyecektir.',
+                'Hayır. Tek bir kayıt güvenilir karşılaştırma oluşturmaz; sonuçlar yeterli örneklem ve veri kalitesi koşulları sağlandığında anlamlı hâle gelir.',
             },
             {
               question: 'Giriş yapmak neyi değiştirir?',
               answer:
-                'Anonim yanıt için giriş zorunlu olmayacak. Hesap altyapısı devreye girdiğinde giriş; süreçlerini saklama, karşılaştırmaları takip etme ve kişisel iş günlüğüne erişme imkânı verecek.',
+                'Anonim katkı için giriş zorunlu değildir. Hesapla giriş yaptığında kayıtlarını takip edebilir ve sana sunulan kişisel alanlara erişebilirsin.',
             },
           ],
         },
@@ -1677,15 +1744,82 @@ const messages = {
       surveys: 'Surveys',
       signals: 'Hiring benchmarks',
       signIn: 'Sign in',
+      profile: 'My profile',
       projectTitle: 'Project',
       repository: 'GitHub repository',
+      githubCta: 'View on GitHub',
       creator: 'Can Yavuz',
-      plannedTitle: 'Planned pages',
-      planned: ['About', 'Frequently asked questions', 'Contact', 'Privacy', 'Terms of use', 'Cookie settings'],
-      plannedNote: 'These routes will become active once the information architecture is complete.',
+      resourcesTitle: 'Information and support',
+      resources: [
+        { href: 'about', label: 'About' },
+        { href: 'faq', label: 'Frequently asked questions' },
+        { href: 'contact', label: 'Contact' },
+        { href: 'privacy', label: 'Privacy' },
+        { href: 'terms', label: 'Terms of use' },
+      ],
       cookieSettings: 'Open cookie settings',
-      sourceNote: 'Open source · Frontend prototype',
+      sourceNote: 'Open source',
       copyright: 'Interview Memory',
+    },
+    infoPages: {
+      about: {
+        eyebrow: 'Project', title: 'Turn recruitment experience into shared knowledge.',
+        intro: 'Interview Memory is an open-source project that aims to make candidate recruitment processes easier to understand and compare.',
+        sections: [
+          { title: 'Why it exists', body: ['Recruitment is often a collection of scattered, personal, and difficult-to-compare experiences. The platform is designed to make their measurable parts visible.'] },
+          { title: 'What it collects', body: ['It collects signals such as application volume, process duration, responses, and candidate experience. The goal is not to publish personal stories, but to understand shared patterns.'] },
+          { title: 'Data quality', body: ['Records are processed with form rules, consistency checks, and safeguards against repeated requests. This is intended to prevent the same contribution from being counted multiple times and distorting comparisons.', 'Rather than drawing direct conclusions from individual records, results are designed to appear as aggregate signals once there is a sufficient sample.'] },
+          { title: 'Security approach', body: ['Account, anonymous-contribution, and administrative operations are handled with separate access boundaries. The data layer uses role-based authorisation, row-level access rules, and transaction validation controls.', 'Privacy notices and consent records are versioned so that the notice governing a contribution can be traced.'] },
+          { title: 'Open source', body: ['The project source code is public. Product decisions, the data approach, and development are open to community contribution.'] },
+        ],
+        links: [{ label: 'Explore the GitHub repository', href: 'https://github.com/canyavuzdb/interview-memory/tree/master' }],
+      },
+      faq: {
+        eyebrow: 'Help', title: 'Frequently asked questions.', intro: 'Short answers about the platform scope, its anonymity approach, and how to read results.',
+        faqs: [
+          { question: 'What information can I share?', answer: 'You can share measurable parts of a recruitment process: application volume, duration, interview stages, response status, and candidate experience. Do not include a name, email, phone number, link, candidate ID, or anything else that could identify a person.' },
+          { question: 'Is my contribution genuinely anonymous?', answer: 'Anonymous contributions are stored without creating a public personal profile. To support continuity and prevent misuse, an essential cookie uses a randomly generated identifier; it is not derived from an IP address or browser data.' },
+          { question: 'What happens to anonymity if I create an account?', answer: 'An account lets you track records and access account areas. Contributions associated with your account are still not designed to be published with your public identity.' },
+          { question: 'Why does every contribution not appear in results immediately?', answer: 'One record cannot create a reliable comparison. Results become meaningful when there is a sufficient sample within similar role, experience, or process groups, so a contribution may not immediately become public output.' },
+          { question: 'How is data grouped?', answer: 'Comparisons focus on aggregate signals across role, experience, process stage, and similar context instead of individual stories. The goal is to reveal shared patterns, not make definitive judgments about a person or company.' },
+          { question: 'What does a company response rate mean?', answer: 'Company-experience results consider whether a meaningful process update was received during a 30-day observation window. An automated acknowledgement alone is not considered a meaningful update.' },
+          { question: 'How much should I trust results?', answer: 'Results rely on user contributions and the available sample, which may be incomplete, biased, or limited. Signals are for information and should not be used as conclusive evidence for a recruitment or career decision.' },
+          { question: 'What are cookies used for?', answer: 'Essential cookies support sign-in, anonymous-contribution continuity, and security controls. The current application does not use analytics or advertising cookies; you can view settings using the Cookie settings button in the footer.' },
+          { question: 'What should I do if I find an error or inappropriate content?', answer: 'You can open an issue or suggestion through the GitHub repository. For inappropriate content, include the relevant route, record context, and a brief explanation of why it is a concern.' },
+        ],
+      },
+      contact: {
+        eyebrow: 'Contact', title: 'Feedback makes the product better.', intro: 'For bug reports, questions about the data approach, or product ideas, you can contact the project through its repository.',
+        sections: [
+          { title: 'Report a bug', body: ['When you find a repeatable issue, include what you did, what you expected, and what you saw. A screenshot or route is also helpful when available.'] },
+          { title: 'Suggest an idea', body: ['Open a discussion for new survey fields, analysis, or content ideas. Explaining the user need it serves makes prioritization easier.'] },
+        ],
+        links: [{ label: 'GitHub issues', href: 'https://github.com/canyavuzdb/interview-memory/issues' }],
+      },
+      privacy: {
+        eyebrow: 'Privacy', title: 'We keep our data approach clear.', intro: 'At Interview Memory, we explain clearly what information is processed during anonymous contribution and account use, why it is processed, and how it is protected.', updated: 'Last updated: 27 July 2026',
+        sections: [
+          { title: 'Service scope', body: ['The platform offers two modes of use: (a) anonymous contributions about recruitment processes and candidate experiences, and (b) account-based tracking of records and access to personalised areas.'] },
+          { title: 'Data we process', body: ['For anonymous contributions, we process form responses about application and interview processes. When an account is created, an email address, session data, account preferences, and contribution records associated with the account may also be processed.', 'To continue an anonymous contribution and help prevent abuse, the platform uses an essential cookie containing a randomly generated identifier. The identifier is not derived from an IP address or browser data.'] },
+          { title: 'Purpose and method', body: ['We process data to save anonymous contributions, provide the account experience, help prevent misuse, and create aggregated hiring comparisons when there is a sufficient sample.', 'Form responses are not designed to be directly linked to a public personal profile. Results are prepared to show group-level signals rather than individuals.'] },
+          { title: 'Service providers', body: ['The application uses Supabase for authentication, sessions, and data storage. When Google sign-in is chosen, the authentication flow is run through Google.'] },
+          { title: 'Cookies', body: ['Essential cookies are used for sessions, anonymous-contribution continuity, and security controls. The anonymous respondent cookie is set for up to 180 days, and the cookie-preference record for up to one year. The current application does not use analytics or advertising cookies.'] },
+          { title: 'Retention and rights', body: ['Data is retained for as long as necessary for the purpose for which it was collected and in line with the application’s security and legal obligations. Deletion or anonymisation of records associated with an account is assessed according to the status of the account and records.', 'For data-protection requests including information, correction, deletion, or objection, use the channel on the Contact page.'] },
+        ],
+      },
+      terms: {
+        eyebrow: 'Terms of use', title: 'Shared rules for shared knowledge.', intro: 'These terms set out the core rules for using the platform safely, respectfully, and usefully.', updated: 'Last updated: 27 July 2026',
+        sections: [
+          { title: 'Service scope', body: ['Interview Memory aims to provide anonymous contributions and aggregate comparisons about recruitment processes and candidate experiences. Content on the platform is provided for information.', 'You can contribute anonymously without creating an account. An account lets you track records and access areas available to members.'] },
+          { title: 'Accurate and honest contributions', body: ['Share only information based on your own experience that is as accurate and current as possible. Do not guess at unknown details or submit repeated, misleading, spam, or fabricated data to influence the system.', 'You may describe a negative experience with a company, role, or process, but you should do so factually, with context, and without targeting individuals.'] },
+          { title: 'What not to share', body: ['Do not share names, email addresses, phone numbers, links, candidate IDs, or anything that could reveal a person’s identity. Do not include sensitive personal data belonging to an interviewer, candidate, or other third party.', 'You may not share harassment, threats, defamatory statements, discriminatory language, confidential company information, or unlawful content.'] },
+          { title: 'Content and moderation', body: ['For safety, privacy, or data-quality reasons, the platform may review a contribution, limit its visibility, or remove it. In the event of repeated misuse, it may restrict contribution or account access.', 'This action is not a definitive judgment about the truth of the contribution; it is intended to protect the platform and the usefulness of aggregate results.'] },
+          { title: 'Limits of data', body: ['Results rely on user contributions, the available sample, and the calculation method. Samples may always be incomplete, biased, or limited.', 'Platform signals are not conclusive evidence or professional advice for recruitment, career, financial, legal, or other decisions. Consider results together with your own context.'] },
+          { title: 'Fair use', body: ['You may not use the platform in a way that disrupts the service, bypasses security controls, or prevents others from accessing it. Attempts to collect excessive data with automated tools, create misleading records, or bypass access controls are prohibited.', 'The availability of open-source code does not mean that platform data may be copied or republished without limit.'] },
+          { title: 'Service availability', body: ['The service may be interrupted temporarily or features may change due to maintenance, security updates, or unexpected technical circumstances.'] },
+          { title: 'Changes and contact', body: ['These terms may be updated as the product evolves. Material changes will be published on this page with a new effective date.', 'For questions, bug reports, or inappropriate-content reports, use the channel on the Contact page.'] },
+        ],
+      },
     },
     login: {
       eyebrow: 'Account access',
@@ -2633,30 +2767,30 @@ const messages = {
     platformGuide: {
       eyebrow: '03 /',
       title: 'Platform overview',
-      note: 'Planned product flow / frontend prototype',
+      note: 'Anonymous contribution · Aggregate signals · Comparison',
       controlsLabel: 'Platform information',
       prototypeNote:
-        'This frontend prototype does not save responses; all benchmark data shown is illustrative.',
+        'Privacy, terms of use, and detailed answers are available in the information and support pages.',
       panels: [
         {
           id: 'how',
           code: '01 /',
           label: 'How it works',
           eyebrow: 'From record to benchmark',
-          title: 'Each process record contributes to an aggregated hiring benchmark.',
+          title: 'Anonymous contributions become comparable hiring signals.',
           description:
-            'Short forms are designed to capture measurable parts of hiring, rather than a personally identifiable story.',
+            'Short forms collect measurable parts of a process—duration, stages, and responses—not personal stories.',
           steps: [
             {
               code: '01 /',
               title: 'Share your process',
-              description: 'Add your role, application volume, or candidate experience in a short form.',
+              description: 'Share your role, application process, or candidate experience anonymously in a short form.',
             },
             {
               code: '02 /',
               title: 'Aggregate by cohort',
               description:
-                'Once the data layer is connected, responses will be grouped anonymously by role, experience, and process stage.',
+                'Responses are assessed in anonymous groups by role, experience, and process stage.',
             },
             {
               code: '03 /',
@@ -2669,52 +2803,52 @@ const messages = {
         {
           id: 'offerings',
           code: '02 /',
-          label: 'What it offers',
+          label: 'What it provides',
           eyebrow: 'Platform outputs',
-          title: 'One process record supports three analytical outputs.',
+          title: 'Three perspectives to help you see your process more clearly.',
           description:
-            'In the planned product, the same process record supports both personal tracking and shared hiring knowledge.',
+            'Your contribution helps you understand your own process while strengthening shared hiring knowledge.',
           items: [
             {
               code: '01 /',
               title: 'Personal funnel summary',
-              description: 'Track application volume, duration, and funnel conversion in one view.',
+              description: 'Track application volume, duration, and process conversions in one view.',
             },
             {
               code: '02 /',
               title: 'Peer benchmark',
-              description: 'Compare your process with aggregated metrics from similar role and experience groups.',
+              description: 'Compare your process with aggregate results from comparable role and experience groups.',
             },
             {
               code: '03 /',
               title: 'Candidate experience trends',
-              description: 'Analyze recurring non-response, delays, and feedback practices in aggregate.',
+              description: 'Explore response, delay, and candidate-experience signals at company level.',
             },
           ],
         },
         {
           id: 'faq',
           code: '03 /',
-          label: 'Common questions',
+          label: 'Core questions',
           eyebrow: 'Short answers',
-          title: 'The three essential questions about the platform.',
+          title: 'Three things to know before you begin.',
           description:
-            'Short, direct answers needed to understand how the product is intended to work at this stage.',
+            'Details live in the support pages; here are only the platform’s most important principles.',
           faqs: [
             {
               question: 'Is sharing really anonymous?',
               answer:
-                'Forms are designed not to request names, email addresses, or personal documents. In the real data layer, results will be shown for groups with sufficient samples rather than as individual records.',
+                'Contributions are not published with a public personal profile. Do not share identifying information in forms; results are presented as aggregate signals rather than individual records.',
             },
             {
               question: 'Is every record published immediately?',
               answer:
-                'No. In the planned flow, records that do not pass moderation and minimum-sample thresholds will not enter public results.',
+                'No. One record cannot create a reliable comparison; results become meaningful when sample-size and data-quality conditions are met.',
             },
             {
               question: 'What changes when I sign in?',
               answer:
-                'Sign-in will not be required for anonymous survey responses. Once accounts are connected, signing in will let you save processes, follow comparisons, and access a personal job-search journal.',
+                'Signing in is not required for anonymous contribution. With an account, you can track records and access personal areas made available to you.',
             },
           ],
         },

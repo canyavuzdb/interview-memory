@@ -6,6 +6,7 @@ import { signOutAction } from '@/app/[locale]/(member)/account/actions'
 import AccountSessionNotice from '@/components/auth/AccountSessionNotice'
 import PersonalBenchmarkPanel from '@/components/PersonalBenchmarkPanel'
 import PreferenceControls from '@/components/PreferenceControls'
+import BrandMark from '@/components/brand/BrandMark'
 import { getMessages, isSupportedLocale } from '@/data/i18n'
 import { createDefaultPersonalBenchmarkService } from '@/lib/server/personal-benchmark/service'
 import { resolveActiveAccount } from '@/lib/server/auth/session'
@@ -36,8 +37,9 @@ export default async function AccountPage({ params, searchParams }) {
     <main className="landing-grid min-h-screen text-ink">
       <header className="border-b border-[var(--line-strong)] bg-canvas/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 sm:px-6 lg:px-8">
-          <Link href={`/${locale}`} className="text-sm font-semibold text-ink">
-            Interview Memory
+          <Link href={`/${locale}`} className="flex items-center gap-3 text-sm font-semibold text-ink">
+            <BrandMark className="h-9 w-9 text-ink" />
+            <span>Interview Memory</span>
           </Link>
           <PreferenceControls
             locale={locale}

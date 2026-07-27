@@ -13,6 +13,8 @@ const variantClasses = {
     'hidden h-9 min-w-[7.5rem] items-center justify-center gap-2 border px-4 font-mono text-[10px] font-bold uppercase tracking-[0.07em] transition xl:inline-flex',
   mobile:
     'mt-5 flex h-11 w-full items-center justify-center gap-2 border px-4 font-mono text-[10px] font-bold uppercase tracking-[0.07em] transition',
+  footer:
+    'font-mono text-[10px] font-bold uppercase tracking-[0.08em] transition-colors hover:text-[var(--brand-sage)]',
 }
 
 export default function SessionAccessLink({
@@ -22,7 +24,7 @@ export default function SessionAccessLink({
   signInLabel,
   variant = 'desktop',
 }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(null)
 
   useEffect(() => {
     const client = createBrowserSupabaseClient()
@@ -59,10 +61,21 @@ export default function SessionAccessLink({
     }
   }, [])
 
+  if (isAuthenticated === null) {
+    return (
+      <span
+        aria-hidden="true"
+        className={`${variantClasses[variant]} ${variant === 'footer' ? 'inline-block h-[1em] w-20' : 'border-[var(--line-strong)] bg-[var(--nav-surface)]'}`}
+      />
+    )
+  }
+
   const href = isAuthenticated ? `/${locale}/account` : `/${locale}/login`
   const label = isAuthenticated ? accountLabel : signInLabel
   const Icon = isAuthenticated ? CircleUserRound : LogIn
-  const authenticatedClasses = isAuthenticated
+  const stateClasses = variant === 'footer'
+    ? 'text-[var(--brand-cream)]'
+    : isAuthenticated
     ? 'border-accent/35 bg-[var(--nav-surface)] text-ink hover:bg-[var(--surface-hover)]'
     : 'border-ink bg-ink text-surface hover:bg-accentDark'
 
@@ -72,9 +85,9 @@ export default function SessionAccessLink({
       aria-label={label}
       title={variant === 'compact' ? label : undefined}
       onClick={onNavigate}
-      className={`${variantClasses[variant]} ${authenticatedClasses}`}
+      className={`${variantClasses[variant]} ${stateClasses}`}
     >
-      <span className="relative inline-grid place-items-center">
+      {variant !== 'footer' && <span className="relative inline-grid place-items-center">
         <Icon size={variant === 'compact' ? 16 : 14} aria-hidden="true" />
         {isAuthenticated && (
           <span
@@ -82,7 +95,7 @@ export default function SessionAccessLink({
             className="absolute -right-1 -top-1 h-1.5 w-1.5 rounded-full bg-accent ring-2 ring-[var(--nav-surface)]"
           />
         )}
-      </span>
+      </span>}
       {variant !== 'compact' && <span>{label}</span>}
     </Link>
   )

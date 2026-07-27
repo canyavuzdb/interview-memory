@@ -30,7 +30,7 @@ function ReportHeader({ audience, code, icon: Icon, question, title }) {
           <Icon size={13} strokeWidth={1.7} aria-hidden="true" />
           {code} · {title}
         </p>
-        <span className="shrink-0 rounded-full border border-line px-2.5 py-1 font-mono text-[7px] font-bold uppercase tracking-[0.06em] text-muted">
+        <span className="shrink-0 text-right font-mono text-[7px] font-bold uppercase leading-3 tracking-[0.06em] text-muted">
           {audience}
         </span>
       </div>
