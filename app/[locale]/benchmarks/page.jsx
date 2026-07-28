@@ -8,6 +8,7 @@ import {
 } from '@/components/BenchmarkAdditionalReports'
 import BenchmarkReportHeader from '@/components/BenchmarkReportHeader'
 import BenchmarkReportSwitcher from '@/components/BenchmarkReportSwitcher'
+import InterviewPreparationHub from '@/components/interview-preparation/InterviewPreparationHub'
 import PersonalBenchmarkPanel from '@/components/PersonalBenchmarkPanel'
 import PublicHeader from '@/components/PublicHeader'
 import SiteFooter from '@/components/SiteFooter'
@@ -88,6 +89,12 @@ export default async function BenchmarksPage({ params }) {
       id: 'personal-report',
       label: navigationCopy.items.personalReport.label,
       shortLabel: navigationCopy.items.personalReport.shortLabel,
+    },
+    {
+      code: '05',
+      id: 'interview-preparation-report',
+      label: navigationCopy.items.interviewPreparation.label,
+      shortLabel: navigationCopy.items.interviewPreparation.shortLabel,
     },
   ]
   const hasRoleReport = benchmarkReport.roleMonthly.length > 0
@@ -237,6 +244,35 @@ export default async function BenchmarksPage({ params }) {
                 </p>
                 <Link href={`/${locale}/account`} className="report-action mt-5">
                   {navigationCopy.personalReport.cta}
+                  <ArrowRight size={13} strokeWidth={1.7} aria-hidden="true" />
+                </Link>
+              </div>
+            )}
+          </section>
+
+          <section
+            id="interview-preparation-report"
+            aria-labelledby="interview-preparation-report-title"
+            className="scroll-mt-24"
+          >
+            {account ? (
+              <InterviewPreparationHub
+                copy={messages.interviewPreparation}
+                locale={locale}
+              />
+            ) : (
+              <div className="border border-line bg-surface px-6 py-16 text-center">
+                <p className="font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-accentDark">
+                  {navigationCopy.interviewPreparation.eyebrow}
+                </p>
+                <h2 id="interview-preparation-report-title" className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-ink">
+                  {navigationCopy.interviewPreparation.title}
+                </h2>
+                <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-muted">
+                  {navigationCopy.interviewPreparation.description}
+                </p>
+                <Link href={`/${locale}/account`} className="report-action mt-5">
+                  {navigationCopy.interviewPreparation.cta}
                   <ArrowRight size={13} strokeWidth={1.7} aria-hidden="true" />
                 </Link>
               </div>

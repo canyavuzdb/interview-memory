@@ -8,7 +8,7 @@ const iconMap = {
   wallet: Wallet,
 }
 
-export default function SurveyCard({ survey, includesLabel }) {
+export default function SurveyCard({ survey, includesLabel, resultsCta }) {
   const Icon = iconMap[survey.icon] ?? Building2
 
   return (
@@ -46,13 +46,24 @@ export default function SurveyCard({ survey, includesLabel }) {
             ))}
           </div>
 
-          <Link
-            href={survey.href}
-            className="mt-9 inline-flex min-h-12 w-full items-center justify-between border border-ink bg-ink px-5 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-surface transition-colors duration-300 hover:bg-accentDark sm:w-fit sm:min-w-64"
-          >
-            {survey.cta}
-            <ArrowRight size={17} className="transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
-          </Link>
+          <div className="mt-9 flex flex-wrap gap-3">
+            <Link
+              href={survey.href}
+              className="inline-flex min-h-12 items-center justify-between gap-8 border border-ink bg-ink px-5 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-surface transition-colors duration-300 hover:bg-accentDark sm:min-w-64"
+            >
+              {survey.cta}
+              <ArrowRight size={17} className="transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
+            </Link>
+            {survey.resultsHref && (
+              <Link
+                href={survey.resultsHref}
+                className="inline-flex min-h-12 items-center justify-between gap-5 border border-ink px-5 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-ink transition-colors duration-300 hover:border-accentDark hover:text-accentDark"
+              >
+                {resultsCta}
+                <ArrowRight size={17} aria-hidden="true" />
+              </Link>
+            )}
+          </div>
         </div>
 
         <div className="border-t border-[var(--line-strong)] p-6 sm:p-8 lg:border-t-0">

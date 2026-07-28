@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowRight, Search } from 'lucide-react'
 import CommunityStats from '@/components/CommunityStats'
+import { DashboardCycleProvider } from '@/components/dashboard-cycle/DashboardCycleProvider'
 import HeroAnalyticsPanel from '@/components/HeroAnalyticsPanel'
 import LandingStory, { LandingStoryChapter } from '@/components/LandingStory'
 import PlatformGuide from '@/components/PlatformGuide'
@@ -41,6 +42,7 @@ export default async function HomePage({ params }) {
         locale={locale}
       />
 
+      <DashboardCycleProvider>
       <section className="mx-auto grid max-w-[1240px] items-stretch gap-12 px-5 py-16 sm:px-6 md:py-20 lg:px-8 lg:py-24 xl:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] xl:items-center xl:gap-10">
         <div className="min-w-0 flex flex-col justify-center">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-accent">
@@ -127,6 +129,7 @@ export default async function HomePage({ params }) {
           </div>
         </LandingStory>
       </div>
+      </DashboardCycleProvider>
 
       <a
         href="https://github.com/canyavuzdb/interview-memory/tree/master"

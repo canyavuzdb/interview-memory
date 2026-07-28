@@ -1,12 +1,11 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { Check, LogOut } from 'lucide-react'
+import { ArrowRight, Check, LogOut } from 'lucide-react'
 
 import { signOutAction } from '@/app/[locale]/(member)/account/actions'
 import AccountSessionNotice from '@/components/auth/AccountSessionNotice'
 import PersonalBenchmarkPanel from '@/components/PersonalBenchmarkPanel'
-import PreferenceControls from '@/components/PreferenceControls'
-import BrandMark from '@/components/brand/BrandMark'
+import PublicHeader from '@/components/PublicHeader'
 import { getMessages, isSupportedLocale } from '@/data/i18n'
 import { createDefaultPersonalBenchmarkService } from '@/lib/server/personal-benchmark/service'
 import { resolveActiveAccount } from '@/lib/server/auth/session'
@@ -25,6 +24,7 @@ export default async function AccountPage({ params, searchParams }) {
   if (!isSupportedLocale(locale)) notFound()
 
   const messages = getMessages(locale)
+  const alternateMessages = getMessages(locale === 'tr' ? 'en' : 'tr')
   const copy = messages.account
   const query = await searchParams
   const didJustSignIn = query?.status === 'signedIn'
@@ -35,21 +35,13 @@ export default async function AccountPage({ params, searchParams }) {
 
   return (
     <main className="landing-grid min-h-screen text-ink">
-      <header className="border-b border-[var(--line-strong)] bg-canvas/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 sm:px-6 lg:px-8">
-          <Link href={`/${locale}`} className="flex items-center gap-3 text-sm font-semibold text-ink">
-            <BrandMark className="h-9 w-9 text-ink" />
-            <span>Interview Memory</span>
-          </Link>
-          <PreferenceControls
-            locale={locale}
-            path="/account"
-            languageLabel={messages.common.languageLabel}
-            themeLabel={messages.common.themeToggle}
-            themeTitle={messages.common.themeTitle}
-          />
-        </div>
-      </header>
+      <PublicHeader
+        alternateCopy={alternateMessages.header}
+        common={messages.common}
+        copy={messages.header}
+        locale={locale}
+        path="/account"
+      />
 
       <section className="mx-auto grid w-full max-w-5xl gap-10 px-5 py-16 sm:px-6 md:py-24 lg:grid-cols-[1fr_0.8fr] lg:px-8">
         <div>
@@ -85,16 +77,25 @@ export default async function AccountPage({ params, searchParams }) {
             {copy.foundationNote}
           </p>
 
-          <form action={signOutAction} className="mt-7">
-            <input type="hidden" name="locale" value={locale} />
-            <button
-              type="submit"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-ink transition hover:text-accentDark"
+          <div className="mt-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-t border-line pt-4">
+            <Link
+              href={`/${locale}`}
+              className="group inline-flex min-h-10 items-center gap-3 border-b border-ink font-mono text-[10px] font-bold uppercase tracking-[0.07em] text-ink transition hover:border-accentDark hover:text-accentDark"
             >
-              <LogOut size={16} />
-              {copy.signOut}
-            </button>
-          </form>
+              {copy.startCta}
+              <ArrowRight size={15} className="transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
+            </Link>
+            <form action={signOutAction}>
+              <input type="hidden" name="locale" value={locale} />
+              <button
+                type="submit"
+                className="inline-flex min-h-10 items-center gap-2 text-sm font-semibold text-muted transition hover:text-accentDark"
+              >
+                <LogOut size={16} />
+                {copy.signOut}
+              </button>
+            </form>
+          </div>
         </div>
       </section>
       {personalReport && (

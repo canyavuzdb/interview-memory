@@ -44,6 +44,11 @@ export default function PublicHeader({
       href: `/${locale}/surveys/company-experience`,
       label: copy.companyExperience,
     },
+    {
+      description: copy.interviewPreparationDescription,
+      href: `/${locale}/surveys/interview-preparation`,
+      label: copy.interviewPreparation,
+    },
   ]
 
   function openSurveyMenu() {
@@ -154,6 +159,14 @@ export default function PublicHeader({
                   </span>
                 </Link>
               ))}
+              <Link
+                href={`/${locale}/surveys`}
+                onClick={() => setIsSurveyOpen(false)}
+                className="mt-2 flex items-center justify-between border border-[var(--line-strong)] px-4 py-3 text-xs font-semibold tracking-[-0.01em] text-ink transition hover:border-accentDark hover:text-accentDark"
+              >
+                {copy.allSurveys}
+                <span aria-hidden="true">→</span>
+              </Link>
             </div>
           </div>
 
@@ -254,6 +267,14 @@ export default function PublicHeader({
               </Link>
             ))}
           </div>
+          <Link
+            href={`/${locale}/surveys`}
+            onClick={() => setIsMobileOpen(false)}
+            className="mt-4 flex items-center justify-between border border-[var(--line-strong)] px-4 py-3 text-sm font-semibold text-ink"
+          >
+            {copy.allSurveys}
+            <span aria-hidden="true">→</span>
+          </Link>
 
           <SessionAccessLink
             accountLabel={copy.account}
