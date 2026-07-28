@@ -120,6 +120,13 @@ export default function InterviewPreparationContributionForm({ copy, locale }) {
     event.preventDefault()
     setStatus('loading')
     const result = await submitInterviewPreparation({ ...form, processYear: Number(form.processYear) })
+    if (result.success) {
+      window.dispatchEvent(
+        new CustomEvent('survey-quota-updated', {
+          detail: { survey: 'interview-preparation' },
+        }),
+      )
+    }
     setStatus(result.success ? 'success' : 'error')
   }
 

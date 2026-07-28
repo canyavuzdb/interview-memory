@@ -154,17 +154,19 @@ export function createSearchBenchmarkService(
 
       const commandTime = now()
 
-      try {
-        await dependencies.security.consumeQuota({
-          policy: 'singleResponse',
-          windowKind: 'attempt_10m',
-          counter: 'attempt',
-          subjectId: input.actor.dataSubjectId,
-          now: commandTime,
-        })
-      } catch (error) {
-        if (error instanceof SecurityServiceError) mapSecurityError(error)
-        throw new SearchBenchmarkServiceError('SEARCH_BENCHMARK_WRITE_FAILED')
+      if (input.actor.kind === 'anonymous') {
+        try {
+          await dependencies.security.consumeQuota({
+            policy: 'anonymousApplicationBenchmark',
+            windowKind: 'attempt_10m',
+            counter: 'attempt',
+            subjectId: input.actor.dataSubjectId,
+            now: commandTime,
+          })
+        } catch (error) {
+          if (error instanceof SecurityServiceError) mapSecurityError(error)
+          throw new SearchBenchmarkServiceError('SEARCH_BENCHMARK_WRITE_FAILED')
+        }
       }
 
       const parsedBody = searchBenchmarkCreateBodySchema.safeParse(input.body)
@@ -252,7 +254,7 @@ export function createSearchBenchmarkService(
       let acceptedQuota: PreparedQuota
       try {
         acceptedQuota = dependencies.security.prepareQuota({
-          policy: 'singleResponse',
+          policy: 'anonymousApplicationBenchmark',
           windowKind: 'accepted_period',
           counter: 'accepted',
           subjectId: input.actor.dataSubjectId,
@@ -332,7 +334,7 @@ export function createSearchBenchmarkService(
             claim.identity.requestFingerprint,
           quotaSubjectHmac: acceptedQuota.subjectHmac,
           quotaWindowStart: acceptedQuota.windowStart,
-          quotaLimit: acceptedQuota.limit,
+          quotaLimit: anonymous ? acceptedQuota.limit : 0,
           quotaPolicyVersion: acceptedQuota.policyVersion,
           quotaPolicyHash: acceptedQuota.policyHash,
           quotaExpiresAt: acceptedQuota.expiresAt,

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 
 import { createAuthIntakeBridge } from '@/lib/server/auth/intake-bridge'
-import { RESPONDENT_COOKIE_NAME } from '@/lib/server/security/respondent'
+import { DEVELOPMENT_RESPONDENT_COOKIE_NAME } from '@/lib/server/security/respondent'
 
 const authUserId = '11111111-1111-4111-8111-111111111111'
 const anonymousSubjectId = '22222222-2222-4222-8222-222222222222'
@@ -71,7 +71,7 @@ describe('auth intake bridge', () => {
       authenticatedQuotaSubjectHmac: expect.stringMatching(/^\\x[0-9a-f]{64}$/u),
     })
     expect(subject.cookieStore.delete).toHaveBeenCalledWith(
-      RESPONDENT_COOKIE_NAME,
+      DEVELOPMENT_RESPONDENT_COOKIE_NAME,
     )
   })
 
@@ -103,7 +103,7 @@ describe('auth intake bridge', () => {
       'no_anonymous_cookie',
     )
     expect(malformed.cookieStore.delete).toHaveBeenCalledWith(
-      RESPONDENT_COOKIE_NAME,
+      DEVELOPMENT_RESPONDENT_COOKIE_NAME,
     )
   })
 

@@ -102,7 +102,7 @@ const anonymousInput = {
 }
 
 describe('company experience service', () => {
-  it('creates one anonymous atomic command with both quotas and capability', async () => {
+  it('creates one anonymous atomic command with a daily quota and capability', async () => {
     const setup = dependencies()
     const first = await setup.service.create(anonymousInput)
     const second = await dependencies().service.create(anonymousInput)
@@ -112,10 +112,10 @@ describe('company experience service', () => {
       jobApplicationId: applicationId, replayed: false,
     })
     expect(first.submissionCapability).toMatch(/^[A-Za-z0-9_-]{43}$/u)
-    expect(setup.security.prepareQuota).toHaveBeenCalledTimes(2)
+    expect(setup.security.prepareQuota).toHaveBeenCalledTimes(1)
     expect(setup.repository.createCompanyExperience).toHaveBeenCalledWith(
       expect.objectContaining({
-        quota24hLimit: 3, quota30dLimit: 10, capabilityKeyVersion: 2,
+        quota24hLimit: 3, quota30dLimit: 0, capabilityKeyVersion: 2,
         consentSubjectProofKeyVersion: 3, irrelevantTypes: ['age'], freeNote: null,
       }),
     )
@@ -258,7 +258,7 @@ describe('company experience service', () => {
       repositoryError: new CompanyExperiencePersistenceError('COMPANY_EXPERIENCE_QUOTA_EXCEEDED'),
     })
     await expect(quota.service.create(anonymousInput)).rejects.toMatchObject({
-      code: 'COMPANY_EXPERIENCE_QUOTA_EXCEEDED', retryAfterSeconds: 1000,
+      code: 'COMPANY_EXPERIENCE_QUOTA_EXCEEDED', retryAfterSeconds: 100,
     })
 
     const malformed = dependencies()

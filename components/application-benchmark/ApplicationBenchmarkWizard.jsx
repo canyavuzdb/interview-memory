@@ -68,6 +68,13 @@ export default function ApplicationBenchmarkWizard({ copy, locale, sampleSize })
       payload,
       idempotencyKeyRef.current,
     )
+    if (result.success) {
+      window.dispatchEvent(
+        new CustomEvent('survey-quota-updated', {
+          detail: { survey: 'application-benchmark' },
+        }),
+      )
+    }
     dispatch(
       result.success
         ? { type: 'SUBMIT_SUCCESS', result }
@@ -78,7 +85,7 @@ export default function ApplicationBenchmarkWizard({ copy, locale, sampleSize })
   const stepCopy = copy.steps[`step${state.step}`]
 
   return (
-    <SurveyFlowLayout introCopy={copy.trustPanel} sampleSize={sampleSize}>
+    <SurveyFlowLayout introCopy={copy.trustPanel} sampleSize={sampleSize} survey="application-benchmark">
       {state.submitStatus === 'success' ? (
         <BenchmarkResultPreview copy={copy.success} contextCopy={copy.steps.step1} state={state} />
       ) : (

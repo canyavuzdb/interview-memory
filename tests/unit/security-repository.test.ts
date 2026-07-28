@@ -134,4 +134,61 @@ describe('Supabase security repository', () => {
       ...identity, expiresAt: '2026-07-22T00:00:00.000Z',
     })).rejects.toMatchObject({ code: 'SECURITY_RESPONSE_INVALID' })
   })
+
+  it('reads a quota status through the narrow RPC contract', async () => {
+    rpc.mockResolvedValueOnce({
+      data: [{ current_count: 1, remaining: 2 }],
+      error: null,
+    })
+
+    await expect(
+      createSupabaseSecurityRepository().getQuotaStatus({
+        scope: 'survey.single-response',
+        subjectHmac: hash,
+        windowStart: '2026-07-28T00:00:00.000Z',
+        windowKind: 'accepted_period',
+        limit: 3,
+        policyVersion: '2026-07-28.v1',
+        policyHash: hash,
+      }),
+    ).resolves.toEqual({ current_count: 1, remaining: 2 })
+
+    expect(rpc).toHaveBeenCalledWith(
+      'get_submission_quota_status_v1',
+      expect.objectContaining({
+        p_limit: 3,
+        p_scope: 'survey.single-response',
+        p_subject_hmac: hash,
+      }),
+    )
+  })
+
+  it('rejects invalid, failed, and malformed quota status reads', async () => {
+    const repository = createSupabaseSecurityRepository()
+    const input = {
+      scope: 'survey.single-response',
+      subjectHmac: hash,
+      windowStart: '2026-07-28T00:00:00.000Z',
+      windowKind: 'accepted_period',
+      limit: 3,
+      policyVersion: '2026-07-28.v1',
+      policyHash: hash,
+    }
+
+    await expect(
+      repository.getQuotaStatus({ ...input, policyHash: 'invalid' }),
+    ).rejects.toEqual(new SecurityPersistenceError('SECURITY_WRITE_FAILED'))
+    expect(rpc).not.toHaveBeenCalled()
+
+    rpc
+      .mockResolvedValueOnce({ data: null, error: { message: 'private' } })
+      .mockResolvedValueOnce({ data: [{}], error: null })
+
+    await expect(repository.getQuotaStatus(input)).rejects.toMatchObject({
+      code: 'SECURITY_WRITE_FAILED',
+    })
+    await expect(repository.getQuotaStatus(input)).rejects.toMatchObject({
+      code: 'SECURITY_RESPONSE_INVALID',
+    })
+  })
 })

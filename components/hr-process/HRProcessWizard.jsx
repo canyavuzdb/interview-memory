@@ -78,6 +78,13 @@ export default function HRProcessWizard({ copy, locale, sampleSize }) {
     }
     idempotencyKeyRef.current ??= globalThis.crypto.randomUUID()
     const result = await submitHRProcess(payload, idempotencyKeyRef.current)
+    if (result.success) {
+      window.dispatchEvent(
+        new CustomEvent('survey-quota-updated', {
+          detail: { survey: 'company-experience' },
+        }),
+      )
+    }
     dispatch(
       result.success
         ? { type: 'SUBMIT_SUCCESS', result }
@@ -88,7 +95,7 @@ export default function HRProcessWizard({ copy, locale, sampleSize }) {
   const stepCopy = copy.steps[`step${state.step}`]
 
   return (
-    <SurveyFlowLayout introCopy={copy.trustPanel} sampleSize={sampleSize}>
+    <SurveyFlowLayout introCopy={copy.trustPanel} sampleSize={sampleSize} survey="company-experience">
       {state.submitStatus === 'success' ? (
         <HRResultPreview copy={copy.success} state={state} />
       ) : (

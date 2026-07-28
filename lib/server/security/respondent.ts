@@ -14,6 +14,7 @@ import {
 } from '@/lib/server/security/repository'
 
 export const RESPONDENT_COOKIE_NAME = '__Host-im_respondent'
+export const DEVELOPMENT_RESPONDENT_COOKIE_NAME = 'im_respondent'
 const RESPONDENT_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 180
 const respondentTokenPattern = /^[A-Za-z0-9_-]{43}$/u
 
@@ -38,6 +39,12 @@ export function isValidRespondentToken(
   return Boolean(value && respondentTokenPattern.test(value))
 }
 
+export function getRespondentCookieName(production: boolean) {
+  return production
+    ? RESPONDENT_COOKIE_NAME
+    : DEVELOPMENT_RESPONDENT_COOKIE_NAME
+}
+
 export async function resolveAnonymousRespondent(options?: {
   cookieStore?: RespondentCookieStore
   repository?: SecurityRepository
@@ -48,7 +55,9 @@ export async function resolveAnonymousRespondent(options?: {
   const repository =
     options?.repository ?? createSupabaseSecurityRepository()
   const environment = getServerSecurityEnvironment()
-  const currentCookie = cookieStore.get(RESPONDENT_COOKIE_NAME)?.value
+  const production = options?.production ?? process.env.NODE_ENV === 'production'
+  const cookieName = getRespondentCookieName(production)
+  const currentCookie = cookieStore.get(cookieName)?.value
   const hasValidCookie = isValidRespondentToken(currentCookie)
   const token = hasValidCookie ? currentCookie! : createOpaqueToken()
   const tokenHmacs = respondentTokenHmacs(
@@ -65,12 +74,12 @@ export async function resolveAnonymousRespondent(options?: {
     })
 
     if (!hasValidCookie || record.created || record.key_rotated) {
-      cookieStore.set(RESPONDENT_COOKIE_NAME, token, {
+      cookieStore.set(cookieName, token, {
         httpOnly: true,
         maxAge: RESPONDENT_COOKIE_MAX_AGE_SECONDS,
         path: '/',
         sameSite: 'lax',
-        secure: options?.production ?? process.env.NODE_ENV === 'production',
+        secure: production,
       })
     }
 
