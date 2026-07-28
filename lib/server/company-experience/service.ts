@@ -188,13 +188,10 @@ export function createCompanyExperienceService(
       let quota30d: PreparedQuota
       try {
         quota24h = dependencies.security.prepareQuota({
-          policy: 'repeatableExperience', windowKind: 'accepted_24h',
+          policy: 'anonymousCompanyExperience', windowKind: 'accepted_24h',
           counter: 'accepted', subjectId: input.actor.dataSubjectId, now: commandTime,
         })
-        quota30d = dependencies.security.prepareQuota({
-          policy: 'repeatableExperience', windowKind: 'accepted_30d',
-          counter: 'accepted', subjectId: input.actor.dataSubjectId, now: commandTime,
-        })
+        quota30d = quota24h
       } catch (error) {
         await failClaim(claim.identity, 500)
         if (error instanceof SecurityServiceError) mapSecurityError(error)
@@ -256,10 +253,10 @@ export function createCompanyExperienceService(
           idempotencyRequestFingerprint: claim.identity.requestFingerprint,
           quotaSubjectHmac: quota24h.subjectHmac,
           quota24hWindowStart: quota24h.windowStart,
-          quota24hLimit: quota24h.limit,
+          quota24hLimit: input.actor.kind === 'anonymous' ? quota24h.limit : 0,
           quota24hExpiresAt: quota24h.expiresAt,
           quota30dWindowStart: quota30d.windowStart,
-          quota30dLimit: quota30d.limit,
+          quota30dLimit: 0,
           quota30dExpiresAt: quota30d.expiresAt,
           quotaPolicyVersion: quota24h.policyVersion,
           quotaPolicyHash: quota24h.policyHash,

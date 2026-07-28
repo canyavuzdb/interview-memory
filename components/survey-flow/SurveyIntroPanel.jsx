@@ -1,9 +1,10 @@
 import { EyeOff, ShieldCheck, UserRoundX } from 'lucide-react'
 import SampleDataBadge from '@/components/SampleDataBadge'
+import SurveyQuotaNotice from '@/components/survey-flow/SurveyQuotaNotice'
 
 const icons = [UserRoundX, EyeOff, ShieldCheck]
 
-export default function SurveyIntroPanel({ copy, sampleSize }) {
+export default function SurveyIntroPanel({ copy, sampleSize, survey }) {
   return (
     <aside className="py-4 lg:sticky lg:top-24 lg:py-8">
       <SampleDataBadge label={copy.dataLabel} value={sampleSize} />
@@ -13,6 +14,7 @@ export default function SurveyIntroPanel({ copy, sampleSize }) {
       <p className="mt-5 max-w-lg text-base leading-7 text-muted">
         {copy.description}
       </p>
+      {survey && copy.quota && <SurveyQuotaNotice copy={copy.quota} survey={survey} />}
 
       <div className="mt-9 hidden border-t border-line pt-6 lg:block">
         <ul className="space-y-5">

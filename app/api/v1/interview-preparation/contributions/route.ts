@@ -25,13 +25,15 @@ export async function POST(request: NextRequest) {
 
   try {
     const actor = await resolveCompanyExperienceActor()
-    const result = await createDefaultInterviewPreparationService().contribute(actor.dataSubjectId, body)
+    const result = await createDefaultInterviewPreparationService().contribute(actor, body)
     return createPrivateJsonResponse({ data: result }, 201)
   } catch (error) {
     const code = error instanceof Error && error.message === 'PREPARATION_BODY_INVALID'
       ? 'BODY_INVALID'
-      : 'PREPARATION_WRITE_FAILED'
-    return createPrivateJsonResponse({ error: { code } }, code === 'BODY_INVALID' ? 422 : 500)
+      : error instanceof Error && error.message === 'PREPARATION_QUOTA_EXCEEDED'
+        ? 'PREPARATION_QUOTA_EXCEEDED'
+        : 'PREPARATION_WRITE_FAILED'
+    return createPrivateJsonResponse({ error: { code } }, code === 'BODY_INVALID' ? 422 : code === 'PREPARATION_QUOTA_EXCEEDED' ? 429 : 500)
   }
 }
 

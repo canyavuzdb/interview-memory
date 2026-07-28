@@ -4,6 +4,7 @@ import { cookies as nextCookies } from 'next/headers'
 
 import { getServerSecurityEnvironment } from '@/lib/env/server'
 import {
+  DEVELOPMENT_RESPONDENT_COOKIE_NAME,
   RESPONDENT_COOKIE_NAME,
   resolveAnonymousRespondent,
 } from '@/lib/server/security/respondent'
@@ -39,6 +40,7 @@ function repository(record = {
   return {
     resolveAnonymousSubject: vi.fn().mockResolvedValue(record),
     consumeQuota: vi.fn(),
+    getQuotaStatus: vi.fn(),
     claimIdempotency: vi.fn(),
     completeIdempotency: vi.fn(),
     failIdempotency: vi.fn(),
@@ -113,7 +115,7 @@ describe('anonymous respondent resolution', () => {
       production: false,
     })
     expect(rotatedCookies.set).toHaveBeenCalledWith(
-      RESPONDENT_COOKIE_NAME,
+      DEVELOPMENT_RESPONDENT_COOKIE_NAME,
       token,
       expect.objectContaining({ secure: false }),
     )

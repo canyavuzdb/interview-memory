@@ -19,6 +19,11 @@ const quotaRecordSchema = z.strictObject({
   remaining: z.number().int().nonnegative(),
 })
 
+const quotaStatusRecordSchema = z.strictObject({
+  current_count: z.number().int().nonnegative(),
+  remaining: z.number().int().nonnegative(),
+})
+
 const idempotencyClaimRecordSchema = z.strictObject({
   outcome: z.enum(['claimed', 'replay', 'in_progress', 'conflict']),
   record_status: z.enum(['processing', 'completed', 'failed']),
@@ -31,6 +36,7 @@ export type AnonymousSubjectRecord = z.infer<
   typeof anonymousSubjectRecordSchema
 >
 export type QuotaRecord = z.infer<typeof quotaRecordSchema>
+export type QuotaStatusRecord = z.infer<typeof quotaStatusRecordSchema>
 export type IdempotencyClaimRecord = z.infer<
   typeof idempotencyClaimRecordSchema
 >
@@ -62,6 +68,15 @@ export interface SecurityRepository {
     policyHash: string
     expiresAt: string
   }): Promise<QuotaRecord>
+  getQuotaStatus(input: {
+    scope: string
+    subjectHmac: string
+    windowStart: string
+    windowKind: string
+    limit: number
+    policyVersion: string
+    policyHash: string
+  }): Promise<QuotaStatusRecord>
   claimIdempotency(
     input: IdempotencyIdentity & { expiresAt: string },
   ): Promise<IdempotencyClaimRecord>
@@ -146,6 +161,31 @@ export function createSupabaseSecurityRepository(): SecurityRepository {
         throw new SecurityPersistenceError('SECURITY_RESPONSE_INVALID')
       }
 
+      return result.data
+    },
+
+    async getQuotaStatus(input) {
+      const { data, error } = await client.rpc(
+        'get_submission_quota_status_v1',
+        {
+          p_limit: input.limit,
+          p_policy_hash: ensureSha256(input.policyHash),
+          p_policy_version: input.policyVersion,
+          p_scope: input.scope,
+          p_subject_hmac: ensureSha256(input.subjectHmac),
+          p_window_kind: input.windowKind,
+          p_window_start: input.windowStart,
+        },
+      )
+
+      if (error) {
+        throw new SecurityPersistenceError('SECURITY_WRITE_FAILED')
+      }
+
+      const result = quotaStatusRecordSchema.safeParse(data[0])
+      if (!result.success) {
+        throw new SecurityPersistenceError('SECURITY_RESPONSE_INVALID')
+      }
       return result.data
     },
 

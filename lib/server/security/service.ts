@@ -135,6 +135,26 @@ export function createSecurityService({
       }
     },
 
+    async getQuotaStatus(input: unknown) {
+      const prepared = prepareQuota(input, quotaSubjectKey)
+
+      try {
+        const result = await repository.getQuotaStatus({
+          scope: prepared.scope,
+          subjectHmac: prepared.subjectHmac,
+          windowStart: prepared.windowStart,
+          windowKind: prepared.windowKind,
+          limit: prepared.limit,
+          policyVersion: prepared.policyVersion,
+          policyHash: prepared.policyHash,
+        })
+
+        return { ...prepared, ...result }
+      } catch (error) {
+        mapPersistenceError(error)
+      }
+    },
+
     async claimIdempotency(input: unknown) {
       const command = idempotencyClaimCommandSchema.parse(input)
       const now = command.now ?? new Date()

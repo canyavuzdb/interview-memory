@@ -14,9 +14,9 @@ import {
   type RespondentKeyRing,
 } from '@/lib/server/security/crypto'
 import {
+  getRespondentCookieName,
   isValidRespondentToken,
   resolveAnonymousRespondent,
-  RESPONDENT_COOKIE_NAME,
   type RespondentCookieStore,
 } from '@/lib/server/security/respondent'
 
@@ -56,13 +56,16 @@ export function createAuthIntakeBridge(dependencies: BridgeDependencies) {
     async reconcile(input: {
       authUserId?: string
     } = {}): Promise<AuthIntakeBridgeResult> {
+      const cookieName = getRespondentCookieName(
+        process.env.NODE_ENV === 'production',
+      )
       const cookieToken = dependencies.cookieStore.get(
-        RESPONDENT_COOKIE_NAME,
+        cookieName,
       )?.value
 
       if (!cookieToken) return 'no_anonymous_cookie'
       if (!isValidRespondentToken(cookieToken)) {
-        dependencies.cookieStore.delete(RESPONDENT_COOKIE_NAME)
+        dependencies.cookieStore.delete(cookieName)
         return 'no_anonymous_cookie'
       }
 
@@ -100,7 +103,7 @@ export function createAuthIntakeBridge(dependencies: BridgeDependencies) {
           return 'retry_pending'
         }
 
-        dependencies.cookieStore.delete(RESPONDENT_COOKIE_NAME)
+        dependencies.cookieStore.delete(cookieName)
         return result.merged ? 'merged' : 'already_reconciled'
       } catch {
         // Authentication remains valid. Keeping the cookie makes the merge

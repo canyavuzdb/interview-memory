@@ -35,6 +35,45 @@
           "durationSeconds": 2592000
         }
       ]
+    },
+    "anonymousApplicationBenchmark": {
+      "scope": "survey.single-response",
+      "windows": [
+        {
+          "kind": "attempt_10m",
+          "counter": "attempt",
+          "limit": 10,
+          "durationSeconds": 600
+        },
+        {
+          "kind": "accepted_period",
+          "counter": "accepted",
+          "limit": 3,
+          "durationSeconds": 86400
+        }
+      ]
+    },
+    "anonymousCompanyExperience": {
+      "scope": "experience.repeatable",
+      "windows": [
+        {
+          "kind": "accepted_24h",
+          "counter": "accepted",
+          "limit": 3,
+          "durationSeconds": 86400
+        }
+      ]
+    },
+    "anonymousInterviewPreparation": {
+      "scope": "survey.interview-preparation.anonymous",
+      "windows": [
+        {
+          "kind": "accepted_day",
+          "counter": "accepted",
+          "limit": 3,
+          "durationSeconds": 86400
+        }
+      ]
     }
   }
 }

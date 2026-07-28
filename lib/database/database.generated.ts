@@ -217,6 +217,26 @@ export type Database = {
           created_at: string
         }[]
       }
+      create_interview_preparation_contribution_with_quota_v1: {
+        Args: {
+          p_applied_role: string
+          p_company_name: string
+          p_data_subject_id: string
+          p_process_year: number
+          p_quota_expires_at: string
+          p_quota_limit: number
+          p_quota_policy_hash: string
+          p_quota_policy_version: string
+          p_quota_subject_hmac: string
+          p_quota_window_start: string
+          p_seniority: string
+          p_stage_details: Json
+        }
+        Returns: {
+          contribution_id: string
+          created_at: string
+        }[]
+      }
       create_search_episode_v1: {
         Args: {
           p_accepted_offers_count: number
@@ -361,6 +381,21 @@ export type Database = {
           receipt_id: string
           search_episode_id: string
           submission_id: string
+        }[]
+      }
+      get_submission_quota_status_v1: {
+        Args: {
+          p_limit: number
+          p_policy_hash: string
+          p_policy_version: string
+          p_scope: string
+          p_subject_hmac: string
+          p_window_kind: string
+          p_window_start: string
+        }
+        Returns: {
+          current_count: number
+          remaining: number
         }[]
       }
       get_submission_receipt_v1: {

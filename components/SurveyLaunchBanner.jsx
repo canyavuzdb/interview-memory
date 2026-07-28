@@ -2,15 +2,28 @@
 
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { useDashboardCycle } from './dashboard-cycle/DashboardCycleProvider'
+import { useState } from 'react'
 
 export default function SurveyLaunchBanner({ copy, href }) {
-  const dashboardCycle = useDashboardCycle()
-  const activeIndex = dashboardCycle % copy.items.length
-  const previousIndex = dashboardCycle > 0
-    ? (dashboardCycle - 1) % copy.items.length
-    : null
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [previousIndex, setPreviousIndex] = useState(null)
+  const [cycleKey, setCycleKey] = useState(0)
   const item = copy.items[activeIndex]
+
+  function advanceItem() {
+    const nextIndex = (activeIndex + 1) % copy.items.length
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setPreviousIndex(null)
+      setActiveIndex(nextIndex)
+      setCycleKey((current) => current + 1)
+      return
+    }
+
+    setPreviousIndex(activeIndex)
+    setActiveIndex(nextIndex)
+    setCycleKey((current) => current + 1)
+  }
 
   return (
     <section className="mx-auto max-w-7xl px-5 py-10 sm:px-6 lg:px-8">
@@ -32,11 +45,12 @@ export default function SurveyLaunchBanner({ copy, href }) {
             <span
               aria-hidden="true"
               className="analytics-view-out absolute inset-0 block"
+              onAnimationEnd={() => setPreviousIndex(null)}
             >
               {copy.items[previousIndex].eyebrow}
             </span>
           )}
-          <span key={`eyebrow-${activeIndex}-${dashboardCycle}`} className="analytics-view-in col-start-1 row-start-1 block">
+          <span key={`eyebrow-${activeIndex}-${cycleKey}`} className="analytics-view-in col-start-1 row-start-1 block">
             {item.eyebrow}
           </span>
         </span>
@@ -67,7 +81,7 @@ export default function SurveyLaunchBanner({ copy, href }) {
             </span>
           )}
           <span
-            key={`content-${activeIndex}-${dashboardCycle}`}
+            key={`content-${activeIndex}-${cycleKey}`}
             aria-live="polite"
             className="analytics-view-in col-start-1 row-start-1 block"
           >
@@ -93,8 +107,9 @@ export default function SurveyLaunchBanner({ copy, href }) {
             className="relative mt-0.5 block h-px w-24 overflow-hidden bg-[var(--line-strong)]"
           >
             <span
-              key={`progress-${activeIndex}-${dashboardCycle}`}
+              key={`progress-${activeIndex}-${cycleKey}`}
               className="survey-launch-progress absolute inset-y-0 left-0 w-full bg-accent"
+              onAnimationEnd={advanceItem}
             />
           </span>
         </span>

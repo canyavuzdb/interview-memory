@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
-import { useDashboardCycle } from './dashboard-cycle/DashboardCycleProvider'
 
 const toneVariables = {
   accent: '--accent',
@@ -22,7 +21,7 @@ function RankedBars({ items, label }) {
   return (
     <div role="img" aria-label={label} className="space-y-3.5">
       {items.map((item, index) => (
-        <div key={item.label} className="grid grid-cols-[1.25rem_5.8rem_minmax(0,1fr)_2.5rem] items-center gap-2">
+        <div key={item.label} className="grid grid-cols-[1.25rem_5.8rem_minmax(0,1fr)_3.25rem] items-center gap-2">
           <span className="font-mono text-[8px] font-bold text-muted opacity-70" aria-hidden="true">
             {String(index + 1).padStart(2, '0')}
           </span>
@@ -39,8 +38,9 @@ function RankedBars({ items, label }) {
               }}
             />
           </span>
-          <span className="text-right font-mono text-[10px] font-bold text-ink">
-            {item.value}
+          <span className="text-right font-mono font-bold text-ink">
+            <span className="block text-[10px] leading-4">{item.value}</span>
+            {item.detail && <span className="block text-[8px] leading-3 text-muted">{item.detail}</span>}
           </span>
         </div>
       ))}
@@ -170,11 +170,8 @@ function AnalyticsView({ copy, locale, measuring = false, onAnimationEnd, outgoi
         </div>
       </div>
 
-      <footer className="flex min-h-12 items-center justify-between gap-4 border-t border-[var(--line-strong)] pt-3">
-        <p className="max-w-[15rem] text-[10px] leading-4 text-muted">
-          {copy.methodology}
-        </p>
-        {view.path ? (
+      {view.path && (
+        <footer className="flex min-h-12 items-center justify-end border-t border-[var(--line-strong)] pt-3">
           <Link
             href={`/${locale}${view.path}`}
             className="inline-flex shrink-0 items-center gap-2 font-mono text-[9px] font-bold uppercase tracking-[0.08em] text-ink transition hover:text-accent"
@@ -182,32 +179,38 @@ function AnalyticsView({ copy, locale, measuring = false, onAnimationEnd, outgoi
             <span>{view.cta}</span>
             <ArrowUpRight size={15} aria-hidden="true" />
           </Link>
-        ) : (
-          <span className="shrink-0 font-mono text-[9px] font-bold uppercase tracking-[0.08em] text-muted">
-            {copy.comingSoon}
-          </span>
-        )}
-      </footer>
+        </footer>
+      )}
     </div>
   )
 }
 
 export default function HeroAnalyticsPanel({ copy, locale }) {
-  const dashboardCycle = useDashboardCycle()
-  const [manualSelection, setManualSelection] = useState(null)
-  const [interactionKey, setInteractionKey] = useState(0)
-  const hasManualSelection = manualSelection?.cycle === dashboardCycle
-  const activeIndex = hasManualSelection
-    ? manualSelection.index
-    : dashboardCycle % copy.views.length
-  const previousIndex = dashboardCycle > 0 && !hasManualSelection
-    ? (dashboardCycle - 1) % copy.views.length
-    : null
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [cycleKey, setCycleKey] = useState(0)
+  const [previousIndex, setPreviousIndex] = useState(null)
   const view = copy.views[activeIndex]
 
   function changeView(index) {
-    setManualSelection({ cycle: dashboardCycle, index })
-    setInteractionKey((current) => current + 1)
+    if (index === activeIndex) {
+      setCycleKey((current) => current + 1)
+      return
+    }
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setPreviousIndex(null)
+      setActiveIndex(index)
+      setCycleKey((current) => current + 1)
+      return
+    }
+
+    setPreviousIndex(activeIndex)
+    setActiveIndex(index)
+    setCycleKey((current) => current + 1)
+  }
+
+  function advanceView() {
+    changeView((activeIndex + 1) % copy.views.length)
   }
 
   function selectView(index) {
@@ -251,9 +254,10 @@ export default function HeroAnalyticsPanel({ copy, locale }) {
             >
               {active && (
                 <span
-                  key={`${item.id}-${dashboardCycle}-${interactionKey}`}
+                  key={`${item.id}-${cycleKey}`}
                   aria-hidden="true"
                   className="analytics-tab-progress absolute bottom-0 left-0 h-0.5 w-full bg-accent"
+                  onAnimationEnd={advanceView}
                 />
               )}
               <span className="relative z-10 inline-flex items-center justify-center gap-1.5">
@@ -288,10 +292,11 @@ export default function HeroAnalyticsPanel({ copy, locale }) {
             copy={copy}
             locale={locale}
             view={copy.views[previousIndex]}
+            onAnimationEnd={() => setPreviousIndex(null)}
           />
         )}
         <AnalyticsView
-          key={`${view.id}-${dashboardCycle}-${interactionKey}`}
+          key={`${view.id}-${cycleKey}`}
           copy={copy}
           locale={locale}
           view={view}

@@ -19,6 +19,7 @@ function repository(overrides: Partial<SecurityRepository> = {}): SecurityReposi
       current_count: 1,
       remaining: 2,
     }),
+    getQuotaStatus: vi.fn().mockResolvedValue({ current_count: 0, remaining: 3 }),
     claimIdempotency: vi.fn().mockResolvedValue({
       outcome: 'claimed',
       record_status: 'processing',
