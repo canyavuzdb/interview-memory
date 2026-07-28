@@ -106,6 +106,49 @@ describe('security service', () => {
     })
   })
 
+  it('returns the current quota status and maps status read failures', async () => {
+    const repo = repository()
+    const security = service(repo)
+
+    await expect(
+      security.getQuotaStatus({
+        policy: 'anonymousApplicationBenchmark',
+        windowKind: 'accepted_period',
+        counter: 'accepted',
+        subjectId,
+        now: new Date('2026-07-28T12:00:00.000Z'),
+      }),
+    ).resolves.toMatchObject({
+      current_count: 0,
+      remaining: 3,
+      limit: 3,
+      windowStart: '2026-07-28T00:00:00.000Z',
+    })
+
+    expect(repo.getQuotaStatus).toHaveBeenCalledWith(
+      expect.objectContaining({
+        scope: 'survey.single-response',
+        limit: 3,
+      }),
+    )
+
+    const failing = service(
+      repository({
+        getQuotaStatus: vi.fn().mockRejectedValue(
+          new SecurityPersistenceError('SECURITY_RESPONSE_INVALID'),
+        ),
+      }),
+    )
+    await expect(
+      failing.getQuotaStatus({
+        policy: 'anonymousApplicationBenchmark',
+        windowKind: 'accepted_period',
+        counter: 'accepted',
+        subjectId,
+      }),
+    ).rejects.toMatchObject({ code: 'SECURITY_RESPONSE_INVALID' })
+  })
+
   it('rejects unknown policy windows and maps persistence failures', async () => {
     await expect(
       service(repository()).consumeQuota({
