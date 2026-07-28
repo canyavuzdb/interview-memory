@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
+import PublicHeader from '@/components/PublicHeader'
+import SiteFooter from '@/components/SiteFooter'
 import SurveyCarousel from '@/components/SurveyCarousel'
-import SurveyPageHeader from '@/components/survey-flow/SurveyPageHeader'
 import { getMessages, isSupportedLocale } from '@/data/i18n'
 
 export async function generateMetadata({ params }) {
@@ -17,17 +18,29 @@ export default async function SurveysPage({ params }) {
   if (!isSupportedLocale(locale)) notFound()
 
   const messages = getMessages(locale)
-  const activeSurveyIds = new Set(['application-benchmark', 'company-experience'])
+  const alternateMessages = getMessages(locale === 'tr' ? 'en' : 'tr')
+  const activeSurveyIds = new Set(['application-benchmark', 'company-experience', 'interview-preparation'])
   const surveys = messages.surveyCards
     .filter((survey) => activeSurveyIds.has(survey.id))
     .map((survey) => ({
       ...survey,
       href: `/${locale}${survey.path}`,
+      resultsHref: {
+        'application-benchmark': `/${locale}/benchmarks#role-benchmark`,
+        'company-experience': `/${locale}/benchmarks#responsiveness-report`,
+        'interview-preparation': `/${locale}/benchmarks#interview-preparation-report`,
+      }[survey.id],
     }))
 
   return (
-    <main className="landing-grid min-h-screen text-ink">
-      <SurveyPageHeader copy={messages.common} locale={locale} path="/surveys" />
+    <main className="surveys-page landing-grid min-h-screen text-ink">
+      <PublicHeader
+        alternateCopy={alternateMessages.header}
+        common={messages.common}
+        copy={messages.header}
+        locale={locale}
+        path="/surveys"
+      />
 
       <section className="mx-auto grid max-w-7xl gap-12 px-5 pb-14 pt-16 sm:px-6 md:pb-20 md:pt-20 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-end lg:px-8">
         <div>
@@ -50,6 +63,12 @@ export default async function SurveysPage({ params }) {
       </section>
 
       <SurveyCarousel copy={messages.surveyCarousel} surveys={surveys} />
+      <div className="survey-footer-grid">
+        <SiteFooter
+          copy={{ ...messages.footer, homeAria: messages.common.homeAria }}
+          locale={locale}
+        />
+      </div>
     </main>
   )
 }

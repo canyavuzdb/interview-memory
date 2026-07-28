@@ -203,6 +203,20 @@ export type Database = {
           submission_id: string
         }[]
       }
+      create_interview_preparation_contribution_v1: {
+        Args: {
+          p_applied_role: string
+          p_company_name: string
+          p_data_subject_id: string
+          p_process_year: number
+          p_seniority: string
+          p_stage_details: Json
+        }
+        Returns: {
+          contribution_id: string
+          created_at: string
+        }[]
+      }
       create_search_episode_v1: {
         Args: {
           p_accepted_offers_count: number
@@ -311,6 +325,15 @@ export type Database = {
           locale: string
           version: string
         }[]
+      }
+      get_interview_preparation_report_v1: {
+        Args: {
+          p_applied_role: string
+          p_company_name: string
+          p_min_cohort_size?: number
+          p_seniority?: string
+        }
+        Returns: Json
       }
       get_my_account_v1: {
         Args: never

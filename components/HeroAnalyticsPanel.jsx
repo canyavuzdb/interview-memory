@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
+import { useDashboardCycle } from './dashboard-cycle/DashboardCycleProvider'
 
 const toneVariables = {
   accent: '--accent',
@@ -192,31 +193,21 @@ function AnalyticsView({ copy, locale, measuring = false, onAnimationEnd, outgoi
 }
 
 export default function HeroAnalyticsPanel({ copy, locale }) {
-  const [activeIndex, setActiveIndex] = useState(0)
-  const [cycleKey, setCycleKey] = useState(0)
-  const [previousIndex, setPreviousIndex] = useState(null)
+  const dashboardCycle = useDashboardCycle()
+  const [manualSelection, setManualSelection] = useState(null)
+  const [interactionKey, setInteractionKey] = useState(0)
+  const hasManualSelection = manualSelection?.cycle === dashboardCycle
+  const activeIndex = hasManualSelection
+    ? manualSelection.index
+    : dashboardCycle % copy.views.length
+  const previousIndex = dashboardCycle > 0 && !hasManualSelection
+    ? (dashboardCycle - 1) % copy.views.length
+    : null
   const view = copy.views[activeIndex]
 
   function changeView(index) {
-    if (index === activeIndex) {
-      setCycleKey((current) => current + 1)
-      return
-    }
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setPreviousIndex(null)
-      setActiveIndex(index)
-      setCycleKey((current) => current + 1)
-      return
-    }
-
-    setPreviousIndex(activeIndex)
-    setActiveIndex(index)
-    setCycleKey((current) => current + 1)
-  }
-
-  function advanceView() {
-    changeView((activeIndex + 1) % copy.views.length)
+    setManualSelection({ cycle: dashboardCycle, index })
+    setInteractionKey((current) => current + 1)
   }
 
   function selectView(index) {
@@ -260,9 +251,8 @@ export default function HeroAnalyticsPanel({ copy, locale }) {
             >
               {active && (
                 <span
-                  key={`${item.id}-${cycleKey}`}
+                  key={`${item.id}-${dashboardCycle}-${interactionKey}`}
                   aria-hidden="true"
-                  onAnimationEnd={advanceView}
                   className="analytics-tab-progress absolute bottom-0 left-0 h-0.5 w-full bg-accent"
                 />
               )}
@@ -298,11 +288,10 @@ export default function HeroAnalyticsPanel({ copy, locale }) {
             copy={copy}
             locale={locale}
             view={copy.views[previousIndex]}
-            onAnimationEnd={() => setPreviousIndex(null)}
           />
         )}
         <AnalyticsView
-          key={`${view.id}-${cycleKey}`}
+          key={`${view.id}-${dashboardCycle}-${interactionKey}`}
           copy={copy}
           locale={locale}
           view={view}

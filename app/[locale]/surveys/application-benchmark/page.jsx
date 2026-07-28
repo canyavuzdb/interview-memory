@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import ApplicationBenchmarkWizard from '@/components/application-benchmark/ApplicationBenchmarkWizard'
-import SurveyPageHeader from '@/components/survey-flow/SurveyPageHeader'
+import PublicHeader from '@/components/PublicHeader'
 import SurveyPurposeSection from '@/components/survey-flow/SurveyPurposeSection'
 import { getMessages, isSupportedLocale } from '@/data/i18n'
 
@@ -18,11 +18,14 @@ export default async function ApplicationBenchmarkSurveyPage({ params }) {
   if (!isSupportedLocale(locale)) notFound()
 
   const messages = getMessages(locale)
+  const alternateMessages = getMessages(locale === 'tr' ? 'en' : 'tr')
 
   return (
     <main className="landing-grid min-h-screen text-ink">
-      <SurveyPageHeader
-        copy={messages.common}
+      <PublicHeader
+        alternateCopy={alternateMessages.header}
+        common={messages.common}
+        copy={messages.header}
         locale={locale}
         path="/surveys/application-benchmark"
       />

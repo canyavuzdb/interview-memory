@@ -328,7 +328,12 @@ body {
   --landing-header-height: 63px;
 }
 
-.benchmark-footer-grid {
+.surveys-page {
+  --landing-header-height: 63px;
+}
+
+.benchmark-footer-grid,
+.survey-footer-grid {
   background-color: var(--brand-black);
   background-image:
     linear-gradient(var(--brand-dark-grid) 1px, transparent 1px),
@@ -339,7 +344,8 @@ body {
   min-block-size: calc(100svh - var(--landing-header-height));
 }
 
-.benchmark-footer-grid > footer {
+.benchmark-footer-grid > footer,
+.survey-footer-grid > footer {
   min-block-size: calc(100svh - var(--landing-header-height) - 1px);
 }
 
@@ -1048,6 +1054,10 @@ body {
   .tempo-view-in,
   .tempo-view-out {
     animation: none;
+  }
+
+  .analytics-view-out {
+    display: none;
   }
 
   .benchmark-report-tab-indicator,

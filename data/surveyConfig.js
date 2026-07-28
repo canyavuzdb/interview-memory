@@ -22,6 +22,13 @@ export const SURVEYS = [
     sliderId: 'company-report',
   },
   {
+    id: 'interview-preparation',
+    path: '/surveys/interview-preparation',
+    icon: 'userSearch',
+    durationMinutes: '2-3',
+    sliderId: 'interview-preparation',
+  },
+  {
     id: 'hr-process',
     path: '/surveys/hr-process',
     icon: 'userSearch',

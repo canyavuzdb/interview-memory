@@ -24,6 +24,7 @@ export default function SurveyCarousel({ copy, surveys }) {
             key={survey.id}
             survey={survey}
             includesLabel={copy.includesLabel}
+            resultsCta={copy.resultsCta}
           />
         ))}
       </div>
