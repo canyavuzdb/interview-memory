@@ -1,20 +1,10 @@
 import { z } from 'zod'
 
-export const searchBenchmarkRoles = [
-  'software_engineer',
-  'frontend_developer',
-  'backend_developer',
-  'full_stack_developer',
-  'mobile_developer',
-  'data_analyst',
-  'data_scientist',
-  'product_manager',
-  'product_designer',
-  'devops_engineer',
-  'qa_engineer',
-  'business_analyst',
-  'other',
-] as const
+const roleSlugSchema = z
+  .string()
+  .min(1)
+  .max(80)
+  .regex(/^[a-z0-9]+(?:[_-][a-z0-9]+)*$/u)
 
 export const searchBenchmarkSectors = [
   'technology',
@@ -78,12 +68,14 @@ export const searchBenchmarkStatuses = [
 const monthSchema = z
   .string()
   .regex(/^(?:19|20)[0-9]{2}-(?:0[1-9]|1[0-2])$/u)
-const countSchema = z.int().min(0).max(100_000)
+const countSchema = z.int().min(0).max(10_000)
 
 export const searchBenchmarkCreateBodySchema = z
   .strictObject({
-    role: z.enum(searchBenchmarkRoles),
-    sector: z.enum(searchBenchmarkSectors).nullable(),
+    // The catalogue validates the selected value inside the atomic write.
+    // Underscores remain valid for historic clients during the transition.
+    role: roleSlugSchema,
+    sector: z.enum(searchBenchmarkSectors),
     roleLevel: z.enum(searchBenchmarkRoleLevels),
     experienceBand: z.enum(searchBenchmarkExperienceBands),
     targetRegion: z.enum(searchBenchmarkTargetRegions),
@@ -188,38 +180,21 @@ export const searchBenchmarkCreateBodySchema = z
       })
     }
 
-    if (
-      value.searchStatus === 'offer_accepted' &&
-      value.acceptedOffersCount === 0
-    ) {
-      context.addIssue({
-        code: 'custom',
-        path: ['acceptedOffersCount'],
-        message: 'An accepted-offer search requires an accepted offer',
-      })
-    }
-
-    if (
-      value.searchStatus === 'employment_started' &&
-      value.employmentStartedCount === 0
-    ) {
-      context.addIssue({
-        code: 'custom',
-        path: ['employmentStartedCount'],
-        message: 'An employment-started search requires an employment start',
-      })
-    }
-
-    if (value.searchStatus === 'offer_rejected' && value.offersCount === 0) {
-      context.addIssue({
-        code: 'custom',
-        path: ['offersCount'],
-        message: 'An offer-rejected search requires an offer',
-      })
-    }
   })
 
 export const searchBenchmarkIdempotencyKeySchema = z.uuid()
+
+export const searchBenchmarkLiveComparisonSchema = z.strictObject({
+  status: z.enum(['live', 'collecting']),
+  matchLevel: z.enum(['exact', 'role_level_region', 'role_level', 'role']).nullable(),
+  cohortSize: z.number().int().nonnegative(),
+  durationDaysMedian: z.number().int().nonnegative().nullable(),
+  durationDaysP25: z.number().int().nonnegative().nullable(),
+  durationDaysP75: z.number().int().nonnegative().nullable(),
+  applicationsPerMonthMedian: z.number().int().nonnegative().nullable(),
+  responseRate: z.number().nonnegative().nullable(),
+  interviewRate: z.number().nonnegative().nullable(),
+})
 
 export const searchBenchmarkCreateResultSchema = z.strictObject({
   receiptId: z.uuid(),
@@ -229,6 +204,7 @@ export const searchBenchmarkCreateResultSchema = z.strictObject({
     .regex(/^[A-Za-z0-9_-]{43}$/u)
     .nullable(),
   replayed: z.boolean(),
+  comparison: searchBenchmarkLiveComparisonSchema.nullable(),
 })
 
 export type SearchBenchmarkCreateBody = z.infer<
@@ -236,4 +212,7 @@ export type SearchBenchmarkCreateBody = z.infer<
 >
 export type SearchBenchmarkCreateResult = z.infer<
   typeof searchBenchmarkCreateResultSchema
+>
+export type SearchBenchmarkLiveComparison = z.infer<
+  typeof searchBenchmarkLiveComparisonSchema
 >

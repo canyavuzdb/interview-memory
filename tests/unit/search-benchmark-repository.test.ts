@@ -37,16 +37,27 @@ beforeEach(() => {
 describe('search benchmark repository', () => {
   it('writes and replays through narrow RPCs', async () => {
     const row = { submission_id: id, receipt_id: id, search_episode_id: id }
+    const comparison = {
+      status: 'live', matchLevel: 'exact', cohortSize: 5,
+      durationDaysMedian: 90, durationDaysP25: 60, durationDaysP75: 120,
+      applicationsPerMonthMedian: 10, responseRate: 20, interviewRate: 8,
+    }
     rpc
       .mockResolvedValueOnce({ data: [row], error: null })
       .mockResolvedValueOnce({ data: [{ ...row, capability_key_version: 1 }], error: null })
+      .mockResolvedValueOnce({ data: comparison, error: null })
     const repository = createSupabaseSearchBenchmarkRepository()
     await expect(repository.createSearchEpisode(input)).resolves.toEqual(row)
     await expect(repository.getCreateResult({ submissionId: id, dataSubjectId: id }))
       .resolves.toMatchObject({ capability_key_version: 1 })
+    await expect(repository.getLiveComparison({ searchEpisodeId: id }))
+      .resolves.toEqual(comparison)
     expect(rpc).toHaveBeenNthCalledWith(1, 'create_search_episode_v1', expect.objectContaining({
       p_role_slug: 'frontend-developer', p_sector_slug: null,
     }))
+    expect(rpc).toHaveBeenNthCalledWith(3, 'get_search_episode_live_comparison_v1', {
+      p_search_episode_id: id,
+    })
   })
 
   it('returns null for a missing replay and rejects malformed responses', async () => {

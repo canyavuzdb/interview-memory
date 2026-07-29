@@ -2,7 +2,7 @@ begin;
 
 create extension if not exists pgtap with schema extensions;
 
-select extensions.plan(12);
+select extensions.plan(15);
 
 -- Keep this contract test focused on the threshold transition. The transaction
 -- rolls back, so the migration-owned replica seed remains intact for test 019.
@@ -39,10 +39,15 @@ select extensions.ok(
   'browser roles cannot execute the private aggregation function'
 );
 select extensions.throws_ok(
-  $$select api.get_public_benchmark_report_v1(9, 6)$$,
+  $$select api.get_public_benchmark_report_v1(0, 6)$$,
   '22023',
   'public_benchmark_query_invalid',
-  'the database refuses a publication threshold below ten'
+  'the database refuses a publication threshold below one'
+);
+select extensions.is(
+  (api.get_public_benchmark_report_v1(1, 6) #>> '{meta,minPublicCohortSize}')::integer,
+  1,
+  'the public report accepts a first-contribution threshold'
 );
 select extensions.results_eq(
   $query$
@@ -58,7 +63,10 @@ select extensions.results_eq(
   'an empty database returns a collecting DTO without counts'
 );
 
-create function pg_temp.seed_b12_search(p_index integer)
+create function pg_temp.seed_b12_search(
+  p_index integer,
+  p_started_month date default null
+)
 returns void
 language plpgsql
 as $$
@@ -111,6 +119,7 @@ begin
     id,
     submission_id,
     role_id,
+    sector_id,
     role_level,
     experience_band,
     target_region,
@@ -126,12 +135,16 @@ begin
     episode_id,
     submission_id,
     'b8000000-0000-4000-8200-000000000002',
+    1001,
     'mid',
     '3-5',
     'turkiye',
     'full_time',
     'hybrid',
-    (date_trunc('month', current_date) - interval '2 months')::date,
+    coalesce(
+      p_started_month,
+      (date_trunc('month', current_date) - interval '2 months')::date
+    ),
     date_trunc('month', current_date)::date,
     'offer_accepted',
     false,
@@ -163,7 +176,10 @@ begin
 end;
 $$;
 
-select pg_temp.seed_b12_search(seed.index)
+select pg_temp.seed_b12_search(
+  seed.index,
+  (date_trunc('month', current_date) - interval '13 months')::date
+)
 from generate_series(1, 9) as seed(index);
 
 select extensions.results_eq(
@@ -180,7 +196,10 @@ select extensions.results_eq(
   'nine contributors remain fully suppressed'
 );
 
-select pg_temp.seed_b12_search(10);
+select pg_temp.seed_b12_search(
+  10,
+  (date_trunc('month', current_date) - interval '13 months')::date
+);
 
 select extensions.results_eq(
   $query$
@@ -193,7 +212,7 @@ select extensions.results_eq(
     ) as result
   $query$,
   $$values ('live'::text, 10, 10)$$,
-  'the public meta becomes visible at exactly ten contributors'
+  'a recently completed long-running search remains visible at exactly ten contributors'
 );
 select extensions.is(
   jsonb_array_length(
@@ -224,6 +243,29 @@ select extensions.results_eq(
     6
   )$$,
   'the role DTO contains only aggregate cohort values'
+);
+select extensions.is(
+  (
+    select sum((month ->> 'count')::numeric)
+    from jsonb_array_elements(
+      api.get_public_benchmark_report_v1(10, 6)
+        #> '{roleMonthly,0,monthlyApplications}'
+    ) as month
+  ),
+  62.4::numeric,
+  'a completed long-running search contributes normalized monthly activity across its visible months'
+);
+select extensions.results_eq(
+  $query$
+    select
+      (row ->> 'applicationsCount')::integer,
+      (row ->> 'monthlyAverageApplications')::numeric
+    from jsonb_array_elements(
+      api.get_public_benchmark_report_v1(10, 6) -> 'roleMonthly'
+    ) as row
+  $query$,
+  $$values (145, 1.0::numeric)$$,
+  'role rows expose total applications and the duration-normalized monthly pace'
 );
 select extensions.is(
   jsonb_array_length(

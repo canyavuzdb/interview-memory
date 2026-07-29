@@ -370,7 +370,21 @@ export type Database = {
         Args: { p_auth_user_id: string }
         Returns: Json
       }
-      get_public_benchmark_report_v1: {
+      get_public_benchmark_report_v1:
+        | {
+            Args: { p_min_cohort_size?: number; p_months?: number }
+            Returns: Json
+          }
+        | {
+            Args: {
+              p_min_cohort_size?: number
+              p_months?: number
+              p_role_limit?: number
+              p_role_offset?: number
+            }
+            Returns: Json
+          }
+      get_public_role_benchmark_report_v1: {
         Args: { p_min_cohort_size?: number; p_months?: number }
         Returns: Json
       }
@@ -382,6 +396,10 @@ export type Database = {
           search_episode_id: string
           submission_id: string
         }[]
+      }
+      get_search_episode_live_comparison_v1: {
+        Args: { p_min_cohort_size?: number; p_search_episode_id: string }
+        Returns: Json
       }
       get_submission_quota_status_v1: {
         Args: {
@@ -439,6 +457,24 @@ export type Database = {
           upper_bound: string
           valid_from: string
           valid_to: string
+        }[]
+      }
+      list_active_localized_roles_v1: {
+        Args: {
+          p_after_id?: string
+          p_after_sort_order?: number
+          p_limit?: number
+          p_locale?: string
+          p_role_family_id: string
+          p_taxonomy_version: string
+        }
+        Returns: {
+          display_name: string
+          id: string
+          role_family_id: string
+          slug: string
+          sort_order: number
+          taxonomy_version: string
         }[]
       }
       list_active_role_families_v1: {
@@ -893,6 +929,35 @@ export type Database = {
           taxonomy_version?: string
         }
         Relationships: []
+      }
+      role_translations: {
+        Row: {
+          created_at: string
+          display_name: string
+          locale: string
+          role_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name: string
+          locale: string
+          role_id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string
+          locale?: string
+          role_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "role_translations_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       roles: {
         Row: {

@@ -3,6 +3,7 @@ import 'server-only'
 import { z } from 'zod'
 
 import { SearchBenchmarkPersistenceError } from '@/lib/search-benchmark/errors'
+import { searchBenchmarkLiveComparisonSchema, type SearchBenchmarkLiveComparison } from '@/lib/search-benchmark/contracts'
 import { createAdminSupabaseClient } from '@/lib/supabase/admin'
 
 const postgresSha256Schema = z.string().regex(/^\\x[0-9a-f]{64}$/u)
@@ -75,6 +76,9 @@ export interface SearchBenchmarkRepository {
     submissionId: string
     dataSubjectId: string
   }): Promise<SearchEpisodeReplayRecord | null>
+  getLiveComparison(input: {
+    searchEpisodeId: string
+  }): Promise<SearchBenchmarkLiveComparison>
 }
 
 function checkedHash(value: string) {
@@ -218,6 +222,27 @@ export function createSupabaseSearchBenchmarkRepository(): SearchBenchmarkReposi
       if (!data?.[0]) return null
 
       const result = replayResultSchema.safeParse(data[0])
+      if (!result.success) {
+        throw new SearchBenchmarkPersistenceError(
+          'SEARCH_BENCHMARK_RESPONSE_INVALID',
+        )
+      }
+      return result.data
+    },
+
+    async getLiveComparison(input) {
+      const { data, error } = await client.rpc(
+        'get_search_episode_live_comparison_v1',
+        { p_search_episode_id: input.searchEpisodeId },
+      )
+
+      if (error) {
+        throw new SearchBenchmarkPersistenceError(
+          'SEARCH_BENCHMARK_RESPONSE_INVALID',
+        )
+      }
+
+      const result = searchBenchmarkLiveComparisonSchema.safeParse(data)
       if (!result.success) {
         throw new SearchBenchmarkPersistenceError(
           'SEARCH_BENCHMARK_RESPONSE_INVALID',

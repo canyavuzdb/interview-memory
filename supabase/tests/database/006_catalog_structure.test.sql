@@ -2,7 +2,7 @@ begin;
 
 create extension if not exists pgtap with schema extensions;
 
-select extensions.plan(50);
+select extensions.plan(54);
 
 select extensions.has_schema('catalog', 'private catalog schema exists');
 
@@ -20,6 +20,11 @@ select extensions.has_table(
   'catalog',
   'roles',
   'T12 roles table exists'
+);
+select extensions.has_table(
+  'catalog',
+  'role_translations',
+  'T12a role translations table exists'
 );
 select extensions.has_table(
   'catalog',
@@ -72,6 +77,16 @@ select extensions.is(
     select count(*)::integer
     from information_schema.columns
     where table_schema = 'catalog'
+      and table_name = 'role_translations'
+  ),
+  4,
+  'T12a has exactly 4 columns'
+);
+select extensions.is(
+  (
+    select count(*)::integer
+    from information_schema.columns
+    where table_schema = 'catalog'
       and table_name = 'companies'
   ),
   15,
@@ -108,8 +123,8 @@ select extensions.is(
       and relation.relkind = 'r'
       and relation.relrowsecurity
   ),
-  8,
-  'RLS is enabled on all eight catalog tables'
+  9,
+  'RLS is enabled on all nine catalog tables'
 );
 
 select extensions.is(
@@ -122,8 +137,8 @@ select extensions.is(
       and relation.relkind = 'r'
       and relation.relforcerowsecurity
   ),
-  8,
-  'RLS is forced on all eight catalog tables'
+  9,
+  'RLS is forced on all nine catalog tables'
 );
 
 select extensions.is(
@@ -193,8 +208,25 @@ select extensions.is(
     where namespace.nspname = 'catalog'
       and constraint_record.contype = 'p'
   ),
-  8,
-  'all eight catalog tables have a primary key'
+  9,
+  'all nine catalog tables have a primary key'
+);
+
+select extensions.ok(
+  exists (
+    select 1
+    from pg_constraint as constraint_record
+    join pg_class as relation
+      on relation.oid = constraint_record.conrelid
+    join pg_namespace as namespace
+      on namespace.oid = relation.relnamespace
+    where namespace.nspname = 'catalog'
+      and relation.relname = 'role_translations'
+      and constraint_record.contype = 'f'
+      and pg_get_constraintdef(constraint_record.oid) like
+        'FOREIGN KEY (role_id)%ON DELETE CASCADE'
+  ),
+  'translations are removed when their canonical role is removed'
 );
 
 select extensions.is(
@@ -380,6 +412,7 @@ select extensions.is(
         'enforce_sector_identity',
         'list_active_compensation_bands_v1',
         'list_active_role_families_v1',
+        'list_active_localized_roles_v1',
         'list_active_roles_v1',
         'list_active_sectors_v1',
         'list_published_companies_v1',
@@ -388,7 +421,7 @@ select extensions.is(
       )
       and procedure.prosecdef
   ),
-  11,
+  12,
   'all privileged catalog functions are SECURITY DEFINER'
 );
 
@@ -406,6 +439,7 @@ select extensions.is(
         'enforce_sector_identity',
         'list_active_compensation_bands_v1',
         'list_active_role_families_v1',
+        'list_active_localized_roles_v1',
         'list_active_roles_v1',
         'list_active_sectors_v1',
         'list_published_companies_v1',
@@ -414,7 +448,7 @@ select extensions.is(
       )
       and procedure.proconfig = array['search_path=""']::text[]
   ),
-  11,
+  12,
   'all privileged catalog functions use an empty fixed search_path'
 );
 
@@ -433,6 +467,14 @@ select extensions.ok(
     'EXECUTE'
   ),
   'anon can execute the active role-family projection'
+);
+select extensions.ok(
+  has_function_privilege(
+    'anon',
+    'api.list_active_localized_roles_v1(uuid,text,text,integer,uuid,integer)',
+    'EXECUTE'
+  ),
+  'anon can execute the localized active-role projection'
 );
 select extensions.ok(
   has_function_privilege(
@@ -493,6 +535,7 @@ select extensions.is(
       and procedure.proname in (
         'list_active_compensation_bands_v1',
         'list_active_role_families_v1',
+        'list_active_localized_roles_v1',
         'list_active_roles_v1',
         'list_active_sectors_v1',
         'list_published_companies_v1',

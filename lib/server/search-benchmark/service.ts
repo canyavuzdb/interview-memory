@@ -1,5 +1,6 @@
 import 'server-only'
 
+import { revalidateTag } from 'next/cache'
 import { z } from 'zod'
 
 import { getServerIntakeEnvironment, getServerSecurityEnvironment } from '@/lib/env/server'
@@ -34,6 +35,7 @@ import {
   createSupabaseSearchBenchmarkRepository,
   type SearchBenchmarkRepository,
 } from '@/lib/server/search-benchmark/repository'
+import { PUBLIC_BENCHMARK_REPORT_CACHE_TAG } from '@/lib/server/public-benchmark/cache'
 
 const OPERATION_CODE = 'survey.search-benchmark.create'
 const IDEMPOTENCY_TTL_SECONDS = 24 * 60 * 60
@@ -134,6 +136,16 @@ export function createSearchBenchmarkService(
       await dependencies.security.failIdempotency({ claim, responseCode })
     } catch {
       // Preserve the primary error. Processing claims also expire after 24h.
+    }
+  }
+
+  async function getComparison(searchEpisodeId: string) {
+    try {
+      return await dependencies.repository.getLiveComparison({ searchEpisodeId })
+    } catch {
+      // Saving an accepted contribution must not fail because its optional
+      // read-model comparison is temporarily unavailable.
+      return null
     }
   }
 
@@ -243,11 +255,14 @@ export function createSearchBenchmarkService(
               )
             : null
 
+        const comparison = await getComparison(replay.search_episode_id)
+
         return searchBenchmarkCreateResultSchema.parse({
           receiptId: replay.receipt_id,
           searchEpisodeId: replay.search_episode_id,
           submissionCapability,
           replayed: true,
+          comparison,
         })
       }
 
@@ -364,11 +379,21 @@ export function createSearchBenchmarkService(
           employmentStartedCount: body.employmentStartedCount,
         })
 
+        try {
+          revalidateTag(PUBLIC_BENCHMARK_REPORT_CACHE_TAG, 'max')
+        } catch {
+          // Caching is an acceleration layer. A completed contribution must
+          // remain successful when this service is used outside a Next request.
+        }
+
+        const comparison = await getComparison(created.search_episode_id)
+
         return searchBenchmarkCreateResultSchema.parse({
           receiptId: created.receipt_id,
           searchEpisodeId: created.search_episode_id,
           submissionCapability,
           replayed: false,
+          comparison,
         })
       } catch (error) {
         const responseCode =

@@ -54,6 +54,17 @@ function dependencies(options: {
       search_episode_id: episodeId,
       capability_key_version: options.actorKind === 'authenticated' ? null : 2,
     }),
+    getLiveComparison: vi.fn().mockResolvedValue({
+      status: 'live',
+      matchLevel: 'exact',
+      cohortSize: 8,
+      durationDaysMedian: 90,
+      durationDaysP25: 60,
+      durationDaysP75: 120,
+      applicationsPerMonthMedian: 12,
+      responseRate: 18.5,
+      interviewRate: 6.2,
+    }),
   }
   const security = {
     consumeQuota: vi.fn().mockResolvedValue({ allowed: true }),
@@ -114,6 +125,9 @@ describe('search benchmark service', () => {
         consentSubjectProofKeyVersion: 3,
       }),
     )
+    expect(first.comparison).toMatchObject({
+      status: 'live', cohortSize: 8, matchLevel: 'exact',
+    })
   })
 
   it('creates authenticated submissions without a capability', async () => {
@@ -134,6 +148,9 @@ describe('search benchmark service', () => {
     expect(setup.repository.createSearchEpisode).not.toHaveBeenCalled()
     expect(setup.repository.getCreateResult).toHaveBeenCalledWith({
       submissionId, dataSubjectId: subjectId,
+    })
+    expect(setup.repository.getLiveComparison).toHaveBeenCalledWith({
+      searchEpisodeId: episodeId,
     })
   })
 

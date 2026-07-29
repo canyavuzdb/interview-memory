@@ -55,45 +55,45 @@ select extensions.results_eq(
       select api.get_public_benchmark_report_v1(10, 6) as report
     ) as result
   $query$,
-  $$values ('live'::text, 72, 36)$$,
-  'the existing public benchmark report is live from replica records'
+  $$values ('collecting'::text, 0, 0)$$,
+  'research replicas are excluded from the public benchmark report'
 );
 select extensions.is(
   jsonb_array_length(
     api.get_public_benchmark_report_v1(10, 6) -> 'roleMonthly'
   ),
-  3,
-  'three role benchmark cohorts are visible'
+  0,
+  'replica role cohorts are not visible'
 );
 select extensions.is(
   jsonb_array_length(
     api.get_public_benchmark_report_v1(10, 6) -> 'companyFunnel'
   ),
-  3,
-  'three company funnel cohorts are visible'
+  0,
+  'replica company funnel cohorts are not visible'
 );
 select extensions.is(
   jsonb_array_length(
     api.get_public_benchmark_report_v1(10, 6)
       #> '{activityTiming,candidateTempo,rows}'
   ),
-  3,
-  'three candidate tempo rows are visible'
+  0,
+  'replica candidate tempo rows are not visible'
 );
 select extensions.is(
   jsonb_array_length(
     api.get_public_benchmark_report_v1(10, 6)
       #> '{activityTiming,companyResponseTempo,rows}'
   ),
-  3,
-  'three company response tempo rows are visible'
+  0,
+  'replica company response tempo rows are not visible'
 );
 select extensions.is(
   jsonb_array_length(
     api.get_public_benchmark_report_v1(10, 6) -> 'companyResponsiveness'
   ),
-  3,
-  'three company responsiveness cohorts are visible'
+  0,
+  'replica company responsiveness cohorts are not visible'
 );
 select extensions.ok(
   api.get_public_benchmark_report_v1(10, 6)::text

@@ -30,7 +30,27 @@ function Metric({ label, suffix, value }) {
   )
 }
 
-export default function BenchmarkResultPreview({ contextCopy, copy, state }) {
+function formatNumber(value, locale) {
+  return value === null || value === undefined ? '—' : new Intl.NumberFormat(locale).format(value)
+}
+
+function getSignal({ comparison, personalInterviewRate, personalMonthlyApplications, personalResponseRate, copy }) {
+  if (!comparison || comparison.status !== 'live') {
+    return copy.collectingSignal
+  }
+  if (personalMonthlyApplications < comparison.applicationsPerMonthMedian * 0.7) {
+    return copy.signals.activity
+  }
+  if (personalResponseRate < comparison.responseRate * 0.7) {
+    return copy.signals.response
+  }
+  if (personalInterviewRate < comparison.interviewRate * 0.7) {
+    return copy.signals.interview
+  }
+  return copy.signals.withinRange
+}
+
+export default function BenchmarkResultPreview({ contextCopy, copy, locale, state }) {
   const applications = Number(state.applicationsCount) || 0
   const humanResponses = Number(state.humanResponsesCount) || 0
   const technicalInterviews = Number(state.technicalInterviewsCount) || 0
@@ -42,17 +62,28 @@ export default function BenchmarkResultPreview({ contextCopy, copy, state }) {
     { label: copy.offerLabel, value: Number(state.offersCount) || 0 },
   ]
   const durationDays = getDurationDays(state)
-  const applicationsPerTechnicalInterview = technicalInterviews > 0
-    ? Math.ceil(applications / technicalInterviews)
-    : null
+  const durationMonths = durationDays === '—' ? null : Math.max(1, durationDays / 30)
+  const personalMonthlyApplications = durationMonths === null
+    ? null
+    : Math.round(applications / durationMonths)
   const responseRate = applications > 0
-    ? Math.round((humanResponses / applications) * 100)
+    ? (humanResponses / applications) * 100
     : null
-  const personalSignal = applicationsPerTechnicalInterview !== null
-    ? `${applicationsPerTechnicalInterview} ${copy.applicationsPerTechnicalSuffix}`
-    : copy.noTechnicalInterviewSignal
+  const interviewRate = applications > 0
+    ? (Number(state.anyInterviewsCount) / applications) * 100
+    : null
+  const comparison = state.comparison
+  const personalSignal = personalMonthlyApplications === null || responseRate === null || interviewRate === null
+    ? copy.collectingSignal
+    : getSignal({
+        comparison,
+        personalInterviewRate: interviewRate,
+        personalMonthlyApplications,
+        personalResponseRate: responseRate,
+        copy,
+      })
   const cohort = [
-    contextCopy.fields.role.options[state.role],
+    state.roleLabel || contextCopy.fields.role.options[state.role] || state.role,
     contextCopy.fields.roleLevel.options[state.roleLevel],
     contextCopy.fields.experienceBand.options[state.experienceBand],
     contextCopy.fields.targetRegion.options[state.targetRegion],
@@ -64,28 +95,28 @@ export default function BenchmarkResultPreview({ contextCopy, copy, state }) {
         <Check size={22} aria-hidden="true" />
       </div>
       <p className="mt-7 font-mono text-[9px] font-bold uppercase tracking-[0.12em] text-muted">
-        {copy.mockLabel}
+        {comparison?.status === 'live' ? copy.mockLabel : copy.collectingLabel}
       </p>
       <h2 className="mt-4 text-3xl font-semibold tracking-[-0.045em] text-ink sm:text-4xl">
         {copy.title}
       </h2>
       <p className="mt-4 max-w-xl text-base leading-7 text-muted">
-        {copy.description}
+        {comparison?.status === 'live' ? copy.description : copy.collectingDescription}
       </p>
 
       <p className="mt-6 font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-accentDark">
-        {copy.cohortLabel}: {cohort}
+        {copy.cohortLabel}: {cohort}{comparison?.status === 'live' ? ` · ${copy.matchLevels[comparison.matchLevel]}` : ''}
       </p>
 
       <div className="mt-5 grid grid-cols-2 divide-x divide-y divide-[var(--line-strong)] border border-[var(--line-strong)] sm:grid-cols-4 sm:divide-y-0">
         <Metric label={copy.yourDurationLabel} suffix={copy.dayUnit} value={durationDays} />
-        <Metric label={copy.communityDurationLabel} suffix={copy.dayUnit} value="72" />
+        <Metric label={copy.communityDurationLabel} suffix={copy.dayUnit} value={formatNumber(comparison?.durationDaysMedian, locale)} />
         <Metric
-          label={copy.yourTechnicalEffortLabel}
-          suffix={applicationsPerTechnicalInterview !== null ? copy.applicationUnit : undefined}
-          value={applicationsPerTechnicalInterview ?? '—'}
+          label={copy.yourMonthlyApplicationsLabel}
+          suffix={personalMonthlyApplications !== null ? copy.applicationUnit : undefined}
+          value={formatNumber(personalMonthlyApplications, locale)}
         />
-        <Metric label={copy.communityTechnicalEffortLabel} suffix={copy.applicationUnit} value="14" />
+        <Metric label={copy.communityMonthlyApplicationsLabel} suffix={copy.applicationUnit} value={formatNumber(comparison?.applicationsPerMonthMedian, locale)} />
       </div>
 
       <div className="mt-7 border-l-2 border-accent bg-[var(--accent-soft)] px-5 py-4">
@@ -93,9 +124,9 @@ export default function BenchmarkResultPreview({ contextCopy, copy, state }) {
           {copy.personalSignalLabel}
         </p>
         <p className="mt-2 text-lg font-semibold tracking-[-0.02em] text-ink">{personalSignal}</p>
-        {responseRate !== null && (
+        {responseRate !== null && comparison?.status === 'live' && (
           <p className="mt-2 text-sm leading-6 text-muted">
-            {copy.responseRatePrefix} <span className="font-semibold text-ink">%{responseRate}</span> {copy.responseRateSuffix}
+            {copy.responseRatePrefix} <span className="font-semibold text-ink">%{formatNumber(Math.round(responseRate), locale)}</span> {copy.responseRateSuffix} <span className="font-semibold text-ink">%{formatNumber(Math.round(comparison.responseRate), locale)}</span>.
           </p>
         )}
       </div>
@@ -125,7 +156,11 @@ export default function BenchmarkResultPreview({ contextCopy, copy, state }) {
         </div>
       </div>
 
-      <p className="mt-6 max-w-2xl text-xs leading-5 text-muted">{copy.previewNote}</p>
+      <p className="mt-6 max-w-2xl text-xs leading-5 text-muted">
+        {comparison?.status === 'live'
+          ? copy.liveNote.replace('{count}', formatNumber(comparison.cohortSize, locale))
+          : copy.previewNote}
+      </p>
     </div>
   )
 }

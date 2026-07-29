@@ -36,6 +36,7 @@ function reducer(state, action) {
         replayed: action.result.replayed,
         searchEpisodeId: action.result.searchEpisodeId,
         submissionCapability: action.result.submissionCapability,
+        comparison: action.result.comparison,
         submitStatus: 'success',
         dirty: false,
       }

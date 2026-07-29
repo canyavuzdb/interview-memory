@@ -24,7 +24,7 @@ beforeEach(() => {
   vi.mocked(resolveSearchBenchmarkActor).mockResolvedValue(actor as never)
   vi.mocked(createDefaultSearchBenchmarkService).mockReturnValue({ create } as never)
   create.mockResolvedValue({
-    receiptId: key, searchEpisodeId: key, submissionCapability: null, replayed: false,
+    receiptId: key, searchEpisodeId: key, submissionCapability: null, replayed: false, comparison: null,
   })
 })
 
