@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { createEmptyPublicBenchmarkReport } from '@/lib/public-benchmark/contracts'
+import {
+  createEmptyPublicBenchmarkReport,
+  type PublicRoleBenchmarkReport,
+} from '@/lib/public-benchmark/contracts'
 import {
   PublicBenchmarkPersistenceError,
   PublicBenchmarkServiceError,
@@ -21,11 +24,16 @@ const report = createEmptyPublicBenchmarkReport(
   'collecting',
   new Date('2026-07-26T12:00:00.000Z'),
 )
+const roleReport: PublicRoleBenchmarkReport = {
+  roleCohortCount: 0,
+  roleMonthly: [],
+}
 
 describe('public benchmark service', () => {
   it('returns the already privacy-filtered public DTO', async () => {
     const repository: PublicBenchmarkRepository = {
       getReport: vi.fn().mockResolvedValue(report),
+      getRoleReport: vi.fn().mockResolvedValue(roleReport),
     }
 
     await expect(
@@ -36,6 +44,7 @@ describe('public benchmark service', () => {
   it('builds the default service with the Supabase repository', async () => {
     const repository: PublicBenchmarkRepository = {
       getReport: vi.fn().mockResolvedValue(report),
+      getRoleReport: vi.fn().mockResolvedValue(roleReport),
     }
     repositoryFactory.mockReturnValue(repository)
 
@@ -51,6 +60,7 @@ describe('public benchmark service', () => {
   ])('maps repository failures to one public error', async (failure) => {
     const repository: PublicBenchmarkRepository = {
       getReport: vi.fn().mockRejectedValue(failure),
+      getRoleReport: vi.fn().mockResolvedValue(roleReport),
     }
 
     await expect(

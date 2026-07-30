@@ -14,7 +14,7 @@ import PublicHeader from '@/components/PublicHeader'
 import SiteFooter from '@/components/SiteFooter'
 import { getMessages, isSupportedLocale } from '@/data/i18n'
 import { createEmptyPublicBenchmarkReport } from '@/lib/public-benchmark/contracts'
-import { createDefaultPublicBenchmarkService } from '@/lib/server/public-benchmark/service'
+import { getCachedPublicBenchmarkReport } from '@/lib/server/public-benchmark/cache'
 import { resolveActiveAccount } from '@/lib/server/auth/session'
 import { createDefaultPersonalBenchmarkService } from '@/lib/server/personal-benchmark/service'
 
@@ -22,7 +22,7 @@ export const dynamic = 'force-dynamic'
 
 async function loadPublicBenchmarkReport() {
   try {
-    return await createDefaultPublicBenchmarkService().getReport()
+    return await getCachedPublicBenchmarkReport()
   } catch {
     return createEmptyPublicBenchmarkReport('unavailable')
   }

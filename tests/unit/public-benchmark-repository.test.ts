@@ -1,6 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { createEmptyPublicBenchmarkReport } from '@/lib/public-benchmark/contracts'
+import {
+  createEmptyPublicBenchmarkReport,
+  type PublicRoleBenchmarkReport,
+} from '@/lib/public-benchmark/contracts'
 import { PublicBenchmarkPersistenceError } from '@/lib/public-benchmark/errors'
 import { createSupabasePublicBenchmarkRepository } from '@/lib/server/public-benchmark/repository'
 import { createAdminSupabaseClient } from '@/lib/supabase/admin'
@@ -14,6 +17,10 @@ const report = createEmptyPublicBenchmarkReport(
   'collecting',
   new Date('2026-07-26T12:00:00.000Z'),
 )
+const roleReport: PublicRoleBenchmarkReport = {
+  roleCohortCount: 0,
+  roleMonthly: [],
+}
 
 beforeEach(() => {
   rpc.mockReset()
@@ -22,13 +29,25 @@ beforeEach(() => {
 
 describe('public benchmark repository', () => {
   it('uses the server-only aggregate RPC and validates the DTO', async () => {
-    rpc.mockResolvedValue({ data: report, error: null })
+    rpc
+      .mockResolvedValueOnce({ data: report, error: null })
+      .mockResolvedValueOnce({ data: roleReport, error: null })
 
     await expect(
       createSupabasePublicBenchmarkRepository().getReport(),
     ).resolves.toEqual(report)
     expect(rpc).toHaveBeenCalledWith('get_public_benchmark_report_v1', {
-      p_min_cohort_size: 10,
+      p_min_cohort_size: 1,
+      p_months: 6,
+      p_role_offset: 0,
+      p_role_limit: 100,
+    })
+
+    await expect(
+      createSupabasePublicBenchmarkRepository().getRoleReport(),
+    ).resolves.toEqual(roleReport)
+    expect(rpc).toHaveBeenCalledWith('get_public_role_benchmark_report_v1', {
+      p_min_cohort_size: 1,
       p_months: 6,
     })
   })

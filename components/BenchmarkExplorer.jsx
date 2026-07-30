@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import {
   ArrowRight,
@@ -13,8 +13,8 @@ import {
 } from 'lucide-react'
 import ReportMethodology from './ReportMethodology'
 
-const BENCHMARK_MIN_SAMPLE_OPTIONS = [10, 25, 50]
 const BENCHMARK_PAGE_SIZE_OPTIONS = [10, 25, 50]
+const BENCHMARK_MIN_SAMPLE_OPTIONS = [1, 10, 25, 50]
 
 function localeTag(locale) {
   return locale === 'tr' ? 'tr-TR' : 'en-US'
@@ -22,6 +22,10 @@ function localeTag(locale) {
 
 function formatNumber(value, locale) {
   return new Intl.NumberFormat(localeTag(locale)).format(value)
+}
+
+function formatMonthlyApplications(value, locale) {
+  return formatNumber(Math.round(value), locale)
 }
 
 function formatPercent(numerator, denominator, locale) {
@@ -71,16 +75,23 @@ function formatSalary(row, meta, copy, locale) {
 }
 
 function roleApplications(row) {
-  return row.monthlyApplications.reduce((total, item) => total + item.count, 0)
+  return row.applicationsCount
 }
 
-function roleLabel(row, copy) {
+function humanizeRoleSlug(value) {
+  return value
+    .replace(/[-_]+/g, ' ')
+    .replace(/\b\p{L}/gu, (character) => character.toLocaleUpperCase())
+}
+
+function roleLabel(row, copy, localizedRoleLabels = {}) {
   if (!row.roleSpecialization) {
     return copy.roles[row.roleFamily] ?? row.roleFamily
   }
 
-  const specialization = copy.roleSpecializations[row.roleSpecialization]
-    ?? row.roleSpecialization
+  const specialization = localizedRoleLabels[row.roleSpecialization]
+    ?? copy.roleSpecializations[row.roleSpecialization]
+    ?? humanizeRoleSlug(row.roleSpecialization)
   const seniority = copy.roleSeniorities[row.seniority] ?? row.seniority
 
   return interpolateCopy(copy.roleLabelTemplate, {
@@ -129,7 +140,7 @@ function RateCell({ count, denominator, locale }) {
   )
 }
 
-function RoleTable({ copy, locale, rows }) {
+function RoleTable({ copy, locale, localizedRoleLabels, rows }) {
   const months = rows[0]?.monthlyApplications.map((item) => item.month) ?? []
 
   return (
@@ -175,12 +186,12 @@ function RoleTable({ copy, locale, rows }) {
             return (
               <tr key={row.id} className="h-16 border-b border-line last:border-b-0">
                 <th scope="row" className="sticky left-0 z-10 bg-surface px-4 py-4 text-left text-sm font-semibold text-ink [background-clip:padding-box]">
-                  {roleLabel(row, copy)}
+                  {roleLabel(row, copy, localizedRoleLabels)}
                 </th>
                 <td className="px-3 py-3"><MiniTrend copy={copy} values={values} /></td>
                 {row.monthlyApplications.map((item) => (
                   <td key={item.month} className="px-3 py-3 text-right font-mono text-xs font-bold text-ink">
-                    {formatNumber(item.count, locale)}
+                    {formatMonthlyApplications(item.count, locale)}
                   </td>
                 ))}
                 <td className="px-3 py-3 text-right font-mono text-xs font-bold text-ink">
@@ -270,7 +281,7 @@ function CompanyTable({ copy, locale, meta, rows }) {
   )
 }
 
-function RoleMobileCards({ copy, locale, rows }) {
+function RoleMobileCards({ copy, locale, localizedRoleLabels, rows }) {
   return (
     <ul className="divide-y divide-line">
       {rows.map((row) => {
@@ -281,7 +292,7 @@ function RoleMobileCards({ copy, locale, rows }) {
           <li key={row.id} className="p-5">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-base font-semibold text-ink">{roleLabel(row, copy)}</p>
+                <p className="text-base font-semibold text-ink">{roleLabel(row, copy, localizedRoleLabels)}</p>
                 <p className="mt-1 font-mono text-[8px] font-bold uppercase tracking-[0.08em] text-muted">
                   n={formatNumber(row.uniqueCandidates, locale)}
                 </p>
@@ -297,7 +308,7 @@ function RoleMobileCards({ copy, locale, rows }) {
               {row.monthlyApplications.map((item) => (
                 <div key={item.month} className="px-1 py-1 text-center">
                   <p className="font-mono text-[8px] font-bold uppercase text-muted">{formatMonth(item.month, locale)}</p>
-                  <p className="mt-1 font-mono text-[10px] font-bold text-ink">{formatNumber(item.count, locale)}</p>
+                  <p className="mt-1 font-mono text-[10px] font-bold text-ink">{formatMonthlyApplications(item.count, locale)}</p>
                 </div>
               ))}
             </div>
@@ -320,6 +331,7 @@ function MobileMetric({ label, value }) {
 function SecondaryFilters({
   controls,
   minimumSample,
+  minimumSampleOptions = BENCHMARK_MIN_SAMPLE_OPTIONS,
   onMinimumSampleChange,
   onPageSizeChange,
   pageSize,
@@ -350,7 +362,7 @@ function SecondaryFilters({
             onChange={onMinimumSampleChange}
             className="report-filter-control w-full px-1 font-mono text-xs font-semibold"
           >
-            {BENCHMARK_MIN_SAMPLE_OPTIONS.map((value) => (
+            {minimumSampleOptions.map((value) => (
               <option key={value} value={value}>n ≥ {value}</option>
             ))}
           </select>
@@ -425,13 +437,42 @@ function roleMetric(row, metric) {
   return -1
 }
 
-function RoleDataExplorer({ copy, locale, meta, rows }) {
+function RoleDataExplorer({ copy, locale, localizedRoleLabels, meta, rows }) {
   const controls = copy.roleExplorer
   const [query, setQuery] = useState('')
   const [sortMetric, setSortMetric] = useState('applications')
-  const [minimumSample, setMinimumSample] = useState(meta.minPublicCohortSize)
+  const [minimumSample, setMinimumSample] = useState(BENCHMARK_MIN_SAMPLE_OPTIONS[0])
   const [pageSize, setPageSize] = useState(10)
   const [page, setPage] = useState(1)
+  const [loadedRows, setLoadedRows] = useState(rows)
+  const [totalCohorts, setTotalCohorts] = useState(meta.roleCohortCount ?? rows.length)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
+  const minimumSampleOptions = BENCHMARK_MIN_SAMPLE_OPTIONS
+
+  const loadRolePage = useCallback(async ({ minimum, offset, append }) => {
+    setIsLoadingMore(true)
+
+    try {
+      const search = new URLSearchParams({
+        minimumSample: String(minimum),
+        roleOffset: String(offset),
+        roleLimit: '100',
+      })
+      const response = await fetch(`/api/v1/benchmarks?${search.toString()}`)
+      const payload = await response.json()
+
+      if (!response.ok || !payload?.data?.roleMonthly) return
+
+      setLoadedRows((currentRows) => (
+        append ? [...currentRows, ...payload.data.roleMonthly] : payload.data.roleMonthly
+      ))
+      setTotalCohorts(payload.data.roleCohortCount ?? payload.data.roleMonthly.length)
+    } catch {
+      // The currently loaded rows remain usable if the next page cannot load.
+    } finally {
+      setIsLoadingMore(false)
+    }
+  }, [])
 
   const collator = useMemo(() => new Intl.Collator(localeTag(locale), {
     numeric: true,
@@ -441,10 +482,10 @@ function RoleDataExplorer({ copy, locale, meta, rows }) {
   const filteredRows = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase(localeTag(locale))
 
-    return rows
+    return loadedRows
       .map((row) => ({
         familyLabel: copy.roles[row.roleFamily] ?? row.roleFamily,
-        label: roleLabel(row, copy),
+        label: roleLabel(row, copy, localizedRoleLabels),
         row,
       }))
       .filter(({ familyLabel, label, row }) => (
@@ -467,7 +508,7 @@ function RoleDataExplorer({ copy, locale, meta, rows }) {
         )
       })
       .map(({ row }) => row)
-  }, [collator, copy, locale, minimumSample, query, rows, sortMetric])
+  }, [collator, copy, locale, loadedRows, localizedRoleLabels, minimumSample, query, sortMetric])
 
   const pageCount = Math.max(1, Math.ceil(filteredRows.length / pageSize))
   const currentPage = Math.min(page, pageCount)
@@ -477,7 +518,8 @@ function RoleDataExplorer({ copy, locale, meta, rows }) {
   const visibleEnd = Math.min(pageStart + pageSize, filteredRows.length)
   const resultsCopy = interpolateCopy(controls.results, {
     count: formatNumber(filteredRows.length, locale),
-    total: formatNumber(rows.length, locale),
+    shown: formatNumber(loadedRows.length, locale),
+    total: formatNumber(totalCohorts, locale),
   })
   const pageCopy = interpolateCopy(controls.pagination.page, {
     current: formatNumber(currentPage, locale),
@@ -492,9 +534,26 @@ function RoleDataExplorer({ copy, locale, meta, rows }) {
   function resetFilters() {
     setQuery('')
     setSortMetric('applications')
-    setMinimumSample(meta.minPublicCohortSize)
+    setMinimumSample(BENCHMARK_MIN_SAMPLE_OPTIONS[0])
+    setLoadedRows(rows)
+    setTotalCohorts(meta.roleCohortCount ?? rows.length)
     setPageSize(10)
     setPage(1)
+  }
+
+  function goToNextPage() {
+    if (currentPage < pageCount) {
+      setPage(currentPage + 1)
+      return
+    }
+
+    if (loadedRows.length >= totalCohorts || isLoadingMore) return
+
+    void loadRolePage({
+      append: true,
+      minimum: minimumSample,
+      offset: loadedRows.length,
+    }).then(() => setPage(currentPage + 1))
   }
 
   return (
@@ -545,9 +604,17 @@ function RoleDataExplorer({ copy, locale, meta, rows }) {
         <SecondaryFilters
           controls={controls}
           minimumSample={minimumSample}
-          onMinimumSampleChange={(event) => resetPageAnd(
-            () => setMinimumSample(Number(event.target.value)),
-          )}
+          minimumSampleOptions={minimumSampleOptions}
+          onMinimumSampleChange={(event) => {
+            const nextMinimumSample = Number(event.target.value)
+            setMinimumSample(nextMinimumSample)
+            setPage(1)
+            void loadRolePage({
+              append: false,
+              minimum: nextMinimumSample,
+              offset: 0,
+            })
+          }}
           onPageSizeChange={(event) => resetPageAnd(
             () => setPageSize(Number(event.target.value)),
           )}
@@ -572,10 +639,10 @@ function RoleDataExplorer({ copy, locale, meta, rows }) {
       {pageRows.length > 0 ? (
         <>
           <div className="hidden md:block">
-            <RoleTable copy={copy} locale={locale} rows={pageRows} />
+            <RoleTable copy={copy} locale={locale} localizedRoleLabels={localizedRoleLabels} rows={pageRows} />
           </div>
           <div className="md:hidden">
-            <RoleMobileCards copy={copy} locale={locale} rows={pageRows} />
+            <RoleMobileCards copy={copy} locale={locale} localizedRoleLabels={localizedRoleLabels} rows={pageRows} />
           </div>
         </>
       ) : (
@@ -614,14 +681,34 @@ function RoleDataExplorer({ copy, locale, meta, rows }) {
         </p>
         <button
           type="button"
-          disabled={currentPage >= pageCount || filteredRows.length === 0}
-          onClick={() => setPage(Math.min(pageCount, currentPage + 1))}
+          disabled={(
+            filteredRows.length === 0
+            || isLoadingMore
+            || (currentPage >= pageCount && loadedRows.length >= totalCohorts)
+          )}
+          onClick={goToNextPage}
           className="inline-flex min-h-11 items-center gap-2 justify-self-end px-2 font-mono text-[8px] font-bold uppercase tracking-[0.07em] text-ink transition-colors hover:text-accentDark disabled:cursor-not-allowed disabled:opacity-35"
         >
           <span className="hidden sm:inline">{controls.pagination.next}</span>
           <ChevronRight size={14} aria-hidden="true" />
         </button>
       </nav>
+      {loadedRows.length < totalCohorts && (
+        <div className="border-t border-line px-5 py-4 text-center sm:px-6">
+          <button
+            type="button"
+            disabled={isLoadingMore}
+            onClick={() => void loadRolePage({
+              append: true,
+              minimum: minimumSample,
+              offset: loadedRows.length,
+            })}
+            className="report-action disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isLoadingMore ? controls.loadingMore : controls.loadMore}
+          </button>
+        </div>
+      )}
     </section>
   )
 }
@@ -848,6 +935,7 @@ function SummaryStrip({ copy, locale, meta }) {
   const items = [
     { label: copy.summary.records, value: formatNumber(meta.recordCount, locale) },
     { label: copy.summary.candidates, value: formatNumber(meta.uniqueCandidates, locale) },
+    { label: copy.summary.cohorts, value: formatNumber(meta.roleCohortCount ?? 0, locale) },
     { label: copy.summary.period, value: `${formatMonth(meta.periodStart, locale)}–${formatMonth(meta.periodEnd, locale)}` },
   ]
 
@@ -871,12 +959,32 @@ export default function BenchmarkExplorer({
   report,
 }) {
   const [activeView, setActiveView] = useState('roles')
+  const [localizedRoleLabels, setLocalizedRoleLabels] = useState({})
   const tabRefs = useRef([])
   const views = ['roles', 'companies']
   const roleRows = compact ? report.roleMonthly.slice(0, 4) : report.roleMonthly
   const companyRows = compact ? report.companyFunnel.slice(0, 4) : report.companyFunnel
   const activeIndex = views.indexOf(activeView)
   const contribution = copy.contribution[activeView]
+
+  useEffect(() => {
+    let cancelled = false
+
+    fetch(`/api/v1/roles?locale=${locale}`)
+      .then((response) => response.ok ? response.json() : null)
+      .then((payload) => {
+        if (cancelled || !payload?.data?.items) return
+
+        setLocalizedRoleLabels(Object.fromEntries(
+          payload.data.items.map((item) => [item.value, item.label]),
+        ))
+      })
+      .catch(() => {})
+
+    return () => {
+      cancelled = true
+    }
+  }, [locale])
 
   function selectTab(index) {
     const normalizedIndex = (index + views.length) % views.length
@@ -978,16 +1086,17 @@ export default function BenchmarkExplorer({
             {view === 'roles' && compact ? (
               <>
                 <div className="hidden md:block">
-                  <RoleTable copy={copy} locale={locale} rows={roleRows} />
+                  <RoleTable copy={copy} locale={locale} localizedRoleLabels={localizedRoleLabels} rows={roleRows} />
                 </div>
                 <div className="md:hidden">
-                  <RoleMobileCards copy={copy} locale={locale} rows={roleRows} />
+                  <RoleMobileCards copy={copy} locale={locale} localizedRoleLabels={localizedRoleLabels} rows={roleRows} />
                 </div>
               </>
             ) : view === 'roles' ? (
               <RoleDataExplorer
                 copy={copy}
                 locale={locale}
+                localizedRoleLabels={localizedRoleLabels}
                 meta={report.meta}
                 rows={report.roleMonthly}
               />
