@@ -63,4 +63,30 @@ describe('public benchmark repository', () => {
       createSupabasePublicBenchmarkRepository().getReport(),
     ).rejects.toBeInstanceOf(PublicBenchmarkPersistenceError)
   })
+
+  it.each([
+    null,
+    [],
+    { ...report, meta: null },
+    { ...report, activityTiming: null },
+    { ...report, activityTiming: { ...report.activityTiming, meta: null } },
+  ])('fails closed when a report shape cannot be normalized: %o', async (data) => {
+    rpc.mockResolvedValueOnce({ data, error: null })
+
+    await expect(
+      createSupabasePublicBenchmarkRepository().getReport(),
+    ).rejects.toBeInstanceOf(PublicBenchmarkPersistenceError)
+  })
+
+  it('fails closed for invalid dedicated role-report responses', async () => {
+    rpc
+      .mockResolvedValueOnce({ data: null, error: { message: 'private' } })
+      .mockResolvedValueOnce({ data: { raw: 'private' }, error: null })
+    const repository = createSupabasePublicBenchmarkRepository()
+
+    await expect(repository.getRoleReport())
+      .rejects.toBeInstanceOf(PublicBenchmarkPersistenceError)
+    await expect(repository.getRoleReport())
+      .rejects.toBeInstanceOf(PublicBenchmarkPersistenceError)
+  })
 })

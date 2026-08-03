@@ -348,7 +348,7 @@ describe('search benchmark service', () => {
     })).rejects.toMatchObject({ code: 'SEARCH_BENCHMARK_WRITE_FAILED' })
   })
 
-  it('normalizes nullable optional fields and uses the system clock by default', async () => {
+  it('accepts nullable optional fields and uses the system clock by default', async () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date('2026-07-21T12:00:00.000Z'))
     const setup = dependencies()
@@ -360,7 +360,7 @@ describe('search benchmark service', () => {
       subjectProofKeys: { active: { version: 3, secret: activeSecret }, previous: null },
     })
     const ongoingBody = {
-      ...body, sector: null, employmentType: null, workMode: null,
+      ...body, employmentType: null, workMode: null,
       searchStatus: 'ongoing' as const, searchEndedAt: null,
       acceptedOffersCount: 0, employmentStartedCount: 0,
     }
@@ -369,8 +369,17 @@ describe('search benchmark service', () => {
       idempotencyKey, body: ongoingBody,
     })
     expect(setup.repository.createSearchEpisode).toHaveBeenCalledWith(
-      expect.objectContaining({ sectorSlug: null, endedMonth: null, observedThrough: '2026-07-21' }),
+      expect.objectContaining({ sectorSlug: 'technology', endedMonth: null, observedThrough: '2026-07-21' }),
     )
     vi.useRealTimers()
+  })
+
+  it('keeps an accepted submission when the optional comparison is unavailable', async () => {
+    const setup = dependencies()
+    setup.repository.getLiveComparison.mockRejectedValue(new Error('private'))
+
+    await expect(setup.service.create({
+      actor: { kind: 'anonymous', dataSubjectId: subjectId }, idempotencyKey, body,
+    })).resolves.toMatchObject({ comparison: null })
   })
 })

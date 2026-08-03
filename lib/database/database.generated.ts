@@ -377,10 +377,10 @@ export type Database = {
           }
         | {
             Args: {
-              p_min_cohort_size?: number
-              p_months?: number
-              p_role_limit?: number
-              p_role_offset?: number
+              p_min_cohort_size: number
+              p_months: number
+              p_role_limit: number
+              p_role_offset: number
             }
             Returns: Json
           }

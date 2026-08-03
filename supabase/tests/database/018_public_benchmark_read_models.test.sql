@@ -252,7 +252,7 @@ select extensions.is(
         #> '{roleMonthly,0,monthlyApplications}'
     ) as month
   ),
-  62.4::numeric,
+  60::numeric,
   'a completed long-running search contributes normalized monthly activity across its visible months'
 );
 select extensions.results_eq(

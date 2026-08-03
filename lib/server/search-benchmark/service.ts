@@ -354,7 +354,7 @@ export function createSearchBenchmarkService(
           quotaPolicyHash: acceptedQuota.policyHash,
           quotaExpiresAt: acceptedQuota.expiresAt,
           roleSlug: body.role.replaceAll('_', '-'),
-          sectorSlug: body.sector?.replaceAll('_', '-') ?? null,
+          sectorSlug: body.sector.replaceAll('_', '-'),
           roleLevel: body.roleLevel,
           experienceBand: body.experienceBand,
           targetRegion: body.targetRegion,

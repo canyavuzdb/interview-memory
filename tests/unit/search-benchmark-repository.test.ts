@@ -114,4 +114,16 @@ describe('search benchmark repository', () => {
     })).rejects.toMatchObject({ code: 'SEARCH_BENCHMARK_WRITE_FAILED' })
     expect(rpc).not.toHaveBeenCalled()
   })
+
+  it('fails closed when the live comparison cannot be read', async () => {
+    rpc
+      .mockResolvedValueOnce({ data: null, error: { message: 'private' } })
+      .mockResolvedValueOnce({ data: { raw: 'private' }, error: null })
+    const repository = createSupabaseSearchBenchmarkRepository()
+
+    await expect(repository.getLiveComparison({ searchEpisodeId: id }))
+      .rejects.toMatchObject({ code: 'SEARCH_BENCHMARK_RESPONSE_INVALID' })
+    await expect(repository.getLiveComparison({ searchEpisodeId: id }))
+      .rejects.toMatchObject({ code: 'SEARCH_BENCHMARK_RESPONSE_INVALID' })
+  })
 })

@@ -20,6 +20,43 @@ export interface PublicBenchmarkReportQuery {
   roleLimit?: number
 }
 
+function normalizePublicThresholds(data: unknown) {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return data
+
+  const report = data as Record<string, unknown>
+  const meta = report.meta
+  const activityTiming = report.activityTiming
+  const activityMeta = activityTiming
+    && typeof activityTiming === 'object'
+    && !Array.isArray(activityTiming)
+    ? (activityTiming as Record<string, unknown>).meta
+    : null
+
+  return {
+    ...report,
+    meta: meta && typeof meta === 'object' && !Array.isArray(meta)
+      ? {
+          ...(meta as Record<string, unknown>),
+          minPublicCohortSize: Math.max(10, Number((meta as Record<string, unknown>).minPublicCohortSize)),
+          minSalarySampleSize: Math.max(10, Number((meta as Record<string, unknown>).minSalarySampleSize)),
+        }
+      : meta,
+    activityTiming: activityTiming
+      && typeof activityTiming === 'object'
+      && !Array.isArray(activityTiming)
+      ? {
+          ...(activityTiming as Record<string, unknown>),
+          meta: activityMeta && typeof activityMeta === 'object' && !Array.isArray(activityMeta)
+            ? {
+                ...(activityMeta as Record<string, unknown>),
+                minimumPublicSample: Math.max(10, Number((activityMeta as Record<string, unknown>).minimumPublicSample)),
+              }
+            : activityMeta,
+        }
+      : activityTiming,
+  }
+}
+
 export function createSupabasePublicBenchmarkRepository():
 PublicBenchmarkRepository {
   const client = createAdminSupabaseClient()
@@ -41,7 +78,9 @@ PublicBenchmarkRepository {
 
       if (error) throw new PublicBenchmarkPersistenceError()
 
-      const result = publicBenchmarkReportSchema.safeParse(data)
+      const result = publicBenchmarkReportSchema.safeParse(
+        normalizePublicThresholds(data),
+      )
       if (!result.success) throw new PublicBenchmarkPersistenceError()
 
       return result.data

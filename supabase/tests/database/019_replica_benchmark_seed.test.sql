@@ -4,6 +4,15 @@ create extension if not exists pgtap with schema extensions;
 
 select extensions.plan(12);
 
+-- The role-market baseline intentionally participates in the production
+-- public report. This test covers the earlier historical replica sources,
+-- so isolate it from that distinct, publication-eligible dataset.
+set local session_replication_role = replica;
+delete from intake.survey_submissions
+where data_origin = 'research_replica'
+  and source_key = 'eurostat-occupation-region-vacancies-2025';
+set local session_replication_role = origin;
+
 select extensions.has_column(
   'intake',
   'survey_submissions',
@@ -22,6 +31,7 @@ select extensions.is(
     from intake.survey_submissions
     where data_origin = 'research_replica'
       and survey_type = 'search_benchmark'
+      and source_key = 'us-cps-job-search-2018'
   ),
   36,
   '36 search benchmark replicas are seeded'
@@ -32,6 +42,7 @@ select extensions.is(
     from intake.survey_submissions
     where data_origin = 'research_replica'
       and survey_type = 'company_experience'
+      and source_key = 'uk-ea-response-time-2018-2022'
   ),
   36,
   '36 company experience replicas are seeded'
@@ -41,6 +52,10 @@ select extensions.is(
     select count(distinct data_subject_id)::integer
     from intake.survey_submissions
     where data_origin = 'research_replica'
+      and source_key in (
+        'us-cps-job-search-2018',
+        'uk-ea-response-time-2018-2022'
+      )
   ),
   36,
   'replicas represent 36 distinct anonymous subjects'
