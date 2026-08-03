@@ -1,7 +1,7 @@
 import { SurveyFieldError } from '@/components/survey-flow/SurveyField'
 
-export default function SurveyChoiceGroup({ error, label, name, onChange, options, value }) {
-  const errorId = error ? `${name}-error` : undefined
+export default function SurveyChoiceGroup({ error, hideError = false, label, name, onChange, options, required = false, value }) {
+  const errorId = error && !hideError ? `${name}-error` : undefined
   const normalizedOptions = Array.isArray(options)
     ? options
     : Object.entries(options ?? {}).map(([optionValue, optionLabel]) => ({
@@ -11,7 +11,9 @@ export default function SurveyChoiceGroup({ error, label, name, onChange, option
 
   return (
     <fieldset aria-describedby={errorId} aria-invalid={Boolean(error)}>
-      <legend className="text-sm font-semibold text-ink">{label}</legend>
+      <legend className={`text-sm font-semibold ${error ? 'text-danger' : 'text-ink'}`}>
+        {label}{required ? <span aria-hidden="true" className={`ml-1 ${error ? 'text-danger' : 'text-accent'}`}>*</span> : null}
+      </legend>
       <div className="mt-3 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
         {normalizedOptions.map((option) => {
           const selected = value === option.value
@@ -34,7 +36,7 @@ export default function SurveyChoiceGroup({ error, label, name, onChange, option
           )
         })}
       </div>
-      <SurveyFieldError id={errorId}>{error}</SurveyFieldError>
+      {!hideError && <SurveyFieldError id={errorId}>{error}</SurveyFieldError>}
     </fieldset>
   )
 }

@@ -18,7 +18,7 @@ describe('application benchmark API adapter', () => {
       data: {
         receiptId,
         searchEpisodeId: episodeId,
-        submissionCapability: Buffer.alloc(32, 7).toString('base64url'),
+        submissionCapability: Buffer.alloc(32, 7).toString('base64url'), comparison: null,
         replayed: false,
       },
     }), { status: 201, headers: { 'Content-Type': 'application/json' } }))

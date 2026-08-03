@@ -6,7 +6,7 @@ const cohortStatusSchema = z.enum(['live', 'collecting', 'unavailable'])
 
 const monthlyCountSchema = z.strictObject({
   month: monthSchema,
-  count: nonnegativeInteger,
+  count: z.number().nonnegative(),
 })
 
 const reportMetaSchema = z.strictObject({
@@ -21,19 +21,30 @@ const reportMetaSchema = z.strictObject({
   minSalarySampleSize: z.number().int().min(10).max(100),
 })
 
-const roleRowSchema = z.strictObject({
+export const roleRowSchema = z.strictObject({
   id: z.string().min(1).max(260),
   roleFamily: z.string().min(1).max(80),
   roleSpecialization: z.string().min(1).max(120),
   seniority: z.enum(['intern', 'junior', 'mid', 'senior', 'lead_manager']),
   uniqueCandidates: nonnegativeInteger,
   matureSearchEpisodesCount: nonnegativeInteger,
+  applicationsCount: nonnegativeInteger,
+  monthlyAverageApplications: z.number().nonnegative(),
   responsesCount: nonnegativeInteger,
   interviewsCount: nonnegativeInteger,
   offersCount: nonnegativeInteger,
   employmentStartedCount: nonnegativeInteger,
   monthlyApplications: z.array(monthlyCountSchema).min(3).max(12),
 })
+
+export const publicRoleBenchmarkReportSchema = z.strictObject({
+  roleCohortCount: nonnegativeInteger,
+  roleMonthly: z.array(roleRowSchema),
+})
+
+export type PublicRoleBenchmarkReport = z.infer<
+  typeof publicRoleBenchmarkReportSchema
+>
 
 const salarySchema = z.strictObject({
   min: nonnegativeInteger,
@@ -137,6 +148,7 @@ const responsivenessRowSchema = z.strictObject({
 
 export const publicBenchmarkReportSchema = z.strictObject({
   meta: reportMetaSchema,
+  roleCohortCount: nonnegativeInteger.optional().default(0),
   roleMonthly: z.array(roleRowSchema),
   companyFunnel: z.array(companyFunnelRowSchema),
   activityTiming: activityTimingSchema,
@@ -176,6 +188,7 @@ export function createEmptyPublicBenchmarkReport(
       minPublicCohortSize: 10,
       minSalarySampleSize: 10,
     },
+    roleCohortCount: 0,
     roleMonthly: [],
     companyFunnel: [],
     activityTiming: {

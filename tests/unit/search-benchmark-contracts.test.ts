@@ -37,6 +37,7 @@ describe('search benchmark contracts', () => {
       receiptId: '11111111-1111-4111-8111-111111111111',
       searchEpisodeId: '22222222-2222-4222-8222-222222222222',
       submissionCapability: null,
+      comparison: null,
       replayed: false,
     })).toMatchObject({ replayed: false })
   })
@@ -51,9 +52,8 @@ describe('search benchmark contracts', () => {
     { technicalInterviewsCount: 7 },
     { acceptedOffersCount: 3 },
     { employmentStartedCount: 2 },
-    { searchStatus: 'offer_accepted', acceptedOffersCount: 0, employmentStartedCount: 0 },
-    { searchStatus: 'employment_started', employmentStartedCount: 0 },
-    { searchStatus: 'offer_rejected', offersCount: 0, acceptedOffersCount: 0, employmentStartedCount: 0 },
+    { applicationsCount: 10_001 },
+    { sector: null },
     { consentGranted: false },
     { freeNote: 'must not be accepted' },
   ])('rejects inconsistent or non-allowlisted payloads: %o', (change) => {
@@ -61,5 +61,14 @@ describe('search benchmark contracts', () => {
       ...validBody,
       ...change,
     }).success).toBe(false)
+  })
+
+  it('accepts a completed status when optional funnel details are unavailable', () => {
+    expect(searchBenchmarkCreateBodySchema.safeParse({
+      ...validBody,
+      offersCount: 0,
+      acceptedOffersCount: 0,
+      employmentStartedCount: 0,
+    }).success).toBe(true)
   })
 })

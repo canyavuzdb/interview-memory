@@ -54,7 +54,7 @@ const messages = {
       applicationBenchmark: {
         title: 'İş Arama Sürecini Karşılaştır',
         description:
-          'Başvuru sürecini anonim olarak paylaş ve temsili aday grubu verileriyle karşılaştır.',
+          'Başvuru sürecini anonim olarak paylaş; yeterli örneklem olduğunda benzer adaylardan hesaplanan canlı karşılaştırmanı gör.',
       },
       benchmarks: {
         title: 'Detaylı İşe Alım Benchmarkları',
@@ -760,6 +760,7 @@ const messages = {
         summary: {
           records: 'Süreç kaydı',
           candidates: 'Anonim katkı sahibi',
+          cohorts: 'Meslek + kıdem kümesi',
           period: 'Gösterilen dönem',
           threshold: 'Yayın eşiği',
         },
@@ -773,11 +774,11 @@ const messages = {
           other: 'Diğer',
         },
         roleSeniorities: {
-          intern: 'Stajyer',
-          junior: 'Junior',
+          intern: 'Stajyer / öğrenci',
+          junior: 'Başlangıç seviyesi',
           mid: 'Orta seviye',
-          senior: 'Senior',
-          lead_manager: 'Lead / yönetici',
+          senior: 'Kıdemli',
+          lead_manager: 'Liderlik / yönetim',
         },
         roleSpecializations: {
           software_engineering: 'Yazılım mühendisliği',
@@ -863,7 +864,9 @@ const messages = {
           filtersLabel: 'Diğer filtreler',
           minSampleLabel: 'Minimum aday',
           pageSizeLabel: 'Sayfa başına',
-          results: '{count} / {total} meslek grubu',
+          results: '{count} eşleşme · ilk {shown} / {total} meslek + kıdem kümesi',
+          loadMore: 'Sonraki 100 kümeyi yükle',
+          loadingMore: 'Kümeler yükleniyor…',
           sort: {
             applications: 'En çok başvuru',
             response: 'En yüksek dönüş oranı',
@@ -930,7 +933,7 @@ const messages = {
         },
         methodologyLabel: 'Veri ve hesaplama notu',
         methodology:
-          'Temsili değerler · Üretim verisi değildir. İş bulma, doğrulanmış işe başlangıç / olgun iş arama dönemi olarak; şirket oranları başvuru kaydı üzerinden hesaplanır. Maaş, yeterli örneklem yoksa gizlenir.',
+          'Rol görünümü, Eurostat iş ilanı göstergeleriyle kalibre edilmiş referans kayıtlarını ve gelen anonim katkıları toplulaştırır. Aylık başvuru temposu, süreç toplamı ve arama süresinden hesaplanır; tekil yanıtlar gösterilmez.',
       },
       cards: [
         {
@@ -1355,11 +1358,11 @@ const messages = {
     },
     benchmarkForm: {
       trustPanel: {
-        dataLabel: 'Veri dosyası · Örnek veri',
+        dataLabel: 'Anonim katkı · Toplu karşılaştırma',
         title: 'Sürecin gerçekten bu kadar mı sürüyor?',
         description:
-          'Yaklaşık 2 dakikada iş arama sürecini tanımla ve temsili aday grubu verileriyle karşılaştır.',
-        quota: { anonymousTitle: 'Anonim katkı', loading: 'Katkı hakkın kontrol ediliyor…', available: 'Bu anket için günde en fazla {limit} anonim katkı gönderebilirsin.', remaining: 'Bugün bu anket için {remaining} / {limit} anonim katkı hakkın kaldı.', exhausted: 'Bugünkü anonim katkı sınırına ulaştın. Yeni bir deneyimini yarın paylaşabilirsin.', memberTitle: 'Hesabınla katkı veriyorsun', memberDescription: 'Gönderimlerin kişisel görünümüne eklenir; günlük anonim katkı sınırı uygulanmaz.' },
+          'İş arama sürecini kısa biçimde tanımla; sonuçta aynı hedefteki adaylardan hesaplanan canlı karşılaştırmayı gör.',
+        quota: { anonymousTitle: 'Anonim katkı', loading: 'Katkı hakkın kontrol ediliyor…', available: 'Bu anket için günde en fazla {limit} anonim katkı gönderebilirsin.', remaining: 'Bugün bu anket için {remaining} / {limit} anonim katkı hakkın kaldı.', exhausted: 'Bugünkü anonim katkı sınırına ulaştın. Yeni bir deneyimini yarın paylaşabilirsin.', blockedTitle: 'Bugünkü anonim katkı hakkın doldu.', blockedDescription: 'Formu doldurup sonunda hata almanı istemiyoruz. Yeni bir anonim deneyimini yarın paylaşabilirsin; hesabınla devam edersen günlük anonim sınır uygulanmaz.', blockedAction: 'Hesabınla devam et', memberTitle: 'Hesabınla katkı veriyorsun', memberDescription: 'Gönderimlerin kişisel görünümüne eklenir; günlük anonim katkı sınırı uygulanmaz.' },
         items: [
           'Kayıt gerekmiyor',
           'İsim veya e-posta istenmiyor',
@@ -1379,7 +1382,8 @@ const messages = {
       steps: {
         step1: {
           title: 'Seni neyle karşılaştırıyoruz?',
-          description: 'Yalnızca benzer adaylarla eşleşmek için kısa bir bağlam paylaş. Zorunlu alanlar karşılaştırmanın temelini oluşturur.',
+          description: 'Bu bilgiler seni aynı rol, seviye, deneyim ve hedef pazardaki adaylarla eşleştirir. Böylece süre ve dönüşüm sonuçları doğrudan bu kümeden hesaplanır.',
+          requiredNote: '* Zorunlu alan',
           selectPlaceholder: 'Seçiniz',
           optional: 'Opsiyonel',
           optionalContextTitle: 'Karşılaştırmayı daralt',
@@ -1391,6 +1395,7 @@ const messages = {
           fields: {
             role: {
               label: 'Pozisyon / rol',
+              searchPlaceholder: 'Pozisyon ara…',
               options: {
                 software_engineer: 'Software Engineer',
                 frontend_developer: 'Frontend Developer',
@@ -1416,10 +1421,10 @@ const messages = {
               },
             },
             roleLevel: {
-              label: 'Pozisyon seviyesi',
+              label: 'Kariyer seviyesi',
               options: {
-                intern: 'Stajyer', junior: 'Junior', mid: 'Mid-level',
-                senior: 'Senior', lead_manager: 'Lead / Yönetici',
+                intern: 'Stajyer / öğrenci', junior: 'Başlangıç seviyesi', mid: 'Orta seviye',
+                senior: 'Kıdemli', lead_manager: 'Liderlik / yönetim',
               },
             },
             experienceBand: {
@@ -1461,11 +1466,14 @@ const messages = {
         },
         step2: {
           title: 'Başvuru hunin',
-          description: 'Yaklaşık sayılar yeterli. Amaç, başvurunun hangi aşamada daraldığını birlikte görmek.',
+          description: 'Toplam başvuru, insan dönüşü ve görüşmeye ulaşan başvuru sayılarını paylaş. Toplam başvurun, seçtiğin iş arama dönemine bölünerek aylık başvuru tempona dönüştürülür. Dönüş veya görüşme olmadıysa ilgili alana 0 yaz.',
+          optional: 'Opsiyonel',
+          detailFieldsTitle: 'Görüşme ve teklif ayrıntılarını ekle',
+          detailFieldsNote: 'İK, teknik görüşme ve teklif sayıları teşhisi güçlendirir; bilmiyorsan sıfır bırakabilirsin.',
           countFields: [
-            { name: 'applicationsCount', label: 'Kaç başvuru yaptın?' },
-            { name: 'humanResponsesCount', label: 'Otomatik mesajlar hariç kaç insan dönüşü aldın?' },
-            { name: 'anyInterviewsCount', label: 'Kaç benzersiz başvuru en az bir görüşmeye ulaştı?' },
+            { name: 'applicationsCount', label: 'Toplam başvuru', required: true },
+            { name: 'humanResponsesCount', label: 'İnsan dönüşü', hint: 'Otomatik mesajlar hariç', required: true },
+            { name: 'anyInterviewsCount', label: 'Görüşmeye ulaşan başvuru', hint: 'En az bir görüşme yapılan', required: true },
             { name: 'hrInterviewsCount', label: 'Kaç şirketle İK görüşmesi yaptın?' },
             { name: 'technicalInterviewsCount', label: 'Kaç şirketle teknik görüşme yaptın?' },
             { name: 'offersCount', label: 'Kaç teklif aldın?' },
@@ -1484,7 +1492,7 @@ const messages = {
         },
         step3: {
           title: 'Yanıtını gözden geçir ve onayla',
-          description: 'Göndermeden önce verinin nasıl saklanacağını ve hangi koşulda kullanılacağını onayla.',
+          description: 'Göndermeden önce verinin nasıl saklanacağını ve hangi koşulda kullanılacağını onayla. Toplam başvurun, seçtiğin iş arama dönemine bölünerek aylık başvuru tempona dönüştürülür.',
           reviewTitle: 'Bu gönderimde',
           reviewItems: [
             'İsim, e-posta, belge veya serbest metin gönderilmeyecek.',
@@ -1492,7 +1500,7 @@ const messages = {
             'Yalnız minimum örneklem eşiği oluştuğunda toplu benchmark verisine katılacak.',
           ],
           consentEyebrow: 'Gerekli onay',
-          consentNotice: 'Göndererek; yanıtımda isim, e-posta veya serbest metin bulunmadan saklanmasını, giriş yaptıysam hesabımla ilişkilendirilmesini ve yalnız yeterli örneklem oluştuğunda toplu benchmark üretiminde kullanılmasını kabul ediyorum.',
+          consentNotice: 'Yanıtımın isim, e-posta veya serbest metin içermeden anonim olarak saklanmasını; giriş yaptıysam hesabımla ilişkilendirilmesini ve yeterli katılım oluştuğunda yalnızca toplu benchmark sonuçlarında kullanılmasını onaylıyorum.',
         },
       },
       navigation: {
@@ -1505,7 +1513,7 @@ const messages = {
         required: 'Bu alan gerekli.',
         endDateRequired: 'Süreç sonuçlandıysa bitiş ayı gerekli.',
         endDateBeforeStart: 'Bitiş ayı başlangıç ayından önce olamaz.',
-        nonNegativeNumber: '0 veya daha büyük tam sayı gir.',
+        nonNegativeNumber: '0 ile 10.000 arasında tam sayı gir.',
         countOrder: 'Bu sayı başvuru hunisindeki önceki toplamlarla tutarlı olmalı.',
         statusCountMismatch: 'Seçtiğin süreç durumuyla uyumlu, 0’dan büyük bir değer gir.',
         consentRequired: 'Yanıtını göndermek için bu kullanımı onaylamalısın.',
@@ -1513,14 +1521,14 @@ const messages = {
       },
       submitError: 'Yanıt kaydedilemedi. Bilgilerini kontrol edip tekrar dene.',
       success: {
-        mockLabel: 'Yanıt kaydedildi · Karşılaştırma temsili',
+        mockLabel: 'Yanıt kaydedildi · Canlı karşılaştırma',
         title: 'Yanıtın güvenli şekilde kaydedildi.',
         description:
-          'İş arama dönemin toplu benchmark veri setine alındı. Aşağıdaki karşılaştırma, yeterli gerçek örneklem oluşana kadar temsili veriler kullanır.',
+          'İş arama dönemin toplu benchmark veri setine alındı. Uygun bir eşleşme varsa aşağıdaki değerler benzer adayların kayıtlarından anlık hesaplanır.',
         yourDurationLabel: 'Senin arama süren',
-        communityDurationLabel: 'Temsili karşılaştırma grubu medyanı',
-        yourTechnicalEffortLabel: '1 teknik görüşme için',
-        communityTechnicalEffortLabel: 'Temsili grup medyanı',
+        communityDurationLabel: 'Benzer adayların medyanı',
+        yourMonthlyApplicationsLabel: 'Aylık başvuru tempon',
+        communityMonthlyApplicationsLabel: 'Benzer adayların medyanı',
         yourApplicationsLabel: 'Başvuru',
         conversionTitle: 'Senin başvuru akışın',
         responseLabel: 'Dönüş',
@@ -1530,12 +1538,26 @@ const messages = {
         dayUnit: 'gün',
         applicationUnit: 'başvuru',
         cohortLabel: 'Karşılaştırma grubu',
+        matchLevels: {
+          exact: 'tam eşleşme',
+          role_level_region: 'aynı rol, seviye ve pazar',
+          role_level: 'aynı rol ve seviye',
+          role: 'aynı rol',
+        },
         personalSignalLabel: 'Sürecindeki temel bulgu',
-        applicationsPerTechnicalSuffix: 'başvuruda 1 teknik görüşme',
-        noTechnicalInterviewSignal: 'Teknik görüşmeye ulaşmadan önce süreç durmuş görünüyor.',
+        signals: {
+          activity: 'Aylık başvuru tempon bu kümenin medyanının altında. Hedefi genişletmek veya daha düzenli başvuru ritmi kurmak iyi bir sonraki adım olabilir.',
+          response: 'Başvuru hacmine göre insan dönüşün bu kümenin altında. CV, portföy veya hedefleme yaklaşımını gözden geçirmek en güçlü kaldıraç olabilir.',
+          interview: 'Dönüş aldıktan sonra görüşmeye geçişin bu kümenin altında. Görüşme pratiği ve ilk görüşme anlatısını güçlendirmek faydalı olabilir.',
+          withinRange: 'Arama ritmin ve dönüşümün benzer adayların aralığında görünüyor. Süreci aynı düzenle izlemeye devam et.',
+        },
+        collectingSignal: 'Bu kadar dar bir eşleşme için henüz yeterli anonim kayıt yok. Katkın bu kümenin oluşmasına yardımcı oldu.',
         responseRatePrefix: 'Başvurularının',
         responseRateSuffix: 'i dönüş aldı.',
-        previewNote: 'Yanıtın kaydedildi; bu karşılaştırma panelindeki topluluk değerleri henüz temsili veridir.',
+        previewNote: 'Küme, yalnızca yeterli sayıda benzer anonim kayıt olduğunda gösterilir; tekil yanıtlar hiçbir zaman açığa çıkmaz.',
+        collectingLabel: 'Yanıt kaydedildi · Küme oluşturuluyor',
+        collectingDescription: 'Yanıtın güvenli biçimde kaydedildi. Aynı role ait yeterli sayıda benzer anonim kayıt oluştuğunda karşılaştırma otomatik olarak canlı hesaplanır.',
+        liveNote: 'Karşılaştırma, {count} benzer anonim katkının toplu değerlerinden anlık hesaplanır; tekil yanıtlar gösterilmez.',
       },
       explainer: {
         eyebrow: 'Anketin amacı',
@@ -1801,7 +1823,7 @@ const messages = {
       applicationBenchmark: {
         title: 'Benchmark Your Job Search',
         description:
-          'Share your application funnel anonymously and compare it with illustrative peer benchmarks.',
+          'Share your application funnel anonymously and, once a sufficient sample exists, see a live comparison calculated from similar candidates.',
       },
       benchmarks: {
         title: 'Detailed Hiring Benchmarks',
@@ -2497,6 +2519,7 @@ const messages = {
         summary: {
           records: 'Process records',
           candidates: 'Anonymous contributors',
+          cohorts: 'Role + seniority cohorts',
           period: 'Displayed period',
           threshold: 'Publication threshold',
         },
@@ -2510,11 +2533,11 @@ const messages = {
           other: 'Other',
         },
         roleSeniorities: {
-          intern: 'Intern',
-          junior: 'Junior',
+          intern: 'Intern / student',
+          junior: 'Entry level',
           mid: 'Mid-level',
           senior: 'Senior',
-          lead_manager: 'Lead / manager',
+          lead_manager: 'Leadership / management',
         },
         roleSpecializations: {
           software_engineering: 'Software engineering',
@@ -2600,7 +2623,9 @@ const messages = {
           filtersLabel: 'More filters',
           minSampleLabel: 'Minimum candidates',
           pageSizeLabel: 'Per page',
-          results: '{count} / {total} role groups',
+          results: '{count} matches · first {shown} / {total} role + seniority cohorts',
+          loadMore: 'Load the next 100 cohorts',
+          loadingMore: 'Loading cohorts…',
           sort: {
             applications: 'Most applications',
             response: 'Highest response rate',
@@ -2667,7 +2692,7 @@ const messages = {
         },
         methodologyLabel: 'Data and calculation note',
         methodology:
-          'Illustrative values · Not production data. Job found means confirmed employment starts divided by mature job-search episodes; company rates use application records. Salary is suppressed below the minimum sample.',
+          'The role view aggregates reference records calibrated with Eurostat job-vacancy indicators alongside incoming anonymous contributions. Monthly application pace is calculated from the episode total and search duration; individual responses are never shown.',
       },
       cards: [
         {
@@ -3090,11 +3115,11 @@ const messages = {
     },
     benchmarkForm: {
       trustPanel: {
-        dataLabel: 'Data file · Sample data',
+        dataLabel: 'Anonymous contribution · Aggregate comparison',
         title: 'Does the process really take this long?',
         description:
-          'Describe your job search in about 2 minutes and compare it with an illustrative peer-group benchmark.',
-        quota: { anonymousTitle: 'Anonymous contribution', loading: 'Checking your contribution allowance…', available: 'You can send up to {limit} anonymous contributions to this survey per day.', remaining: 'You have {remaining} of {limit} anonymous contributions left for this survey today.', exhausted: 'You have reached today’s anonymous contribution limit. You can share another experience tomorrow.', memberTitle: 'You are contributing with your account', memberDescription: 'Your submissions are added to your personal view; the daily anonymous contribution limit does not apply.' },
+          'Describe your job search briefly, then see a live comparison calculated from candidates pursuing a similar target.',
+        quota: { anonymousTitle: 'Anonymous contribution', loading: 'Checking your contribution allowance…', available: 'You can send up to {limit} anonymous contributions to this survey per day.', remaining: 'You have {remaining} of {limit} anonymous contributions left for this survey today.', exhausted: 'You have reached today’s anonymous contribution limit. You can share another experience tomorrow.', blockedTitle: 'Your anonymous contribution allowance is used for today.', blockedDescription: 'We do not want you to complete the form only to hit an error at the end. You can share another anonymous experience tomorrow, or continue with an account without the daily anonymous limit.', blockedAction: 'Continue with your account', memberTitle: 'You are contributing with your account', memberDescription: 'Your submissions are added to your personal view; the daily anonymous contribution limit does not apply.' },
         items: [
           'No account required',
           'No name or email requested',
@@ -3114,7 +3139,8 @@ const messages = {
       steps: {
         step1: {
           title: 'What should we compare you with?',
-          description: 'Share only the brief context needed to match you with similar candidates. The required fields form the basis of the comparison.',
+          description: 'These details match you with candidates in the same role, level, experience band, and target market. Your time and conversion results are then calculated from that cohort.',
+          requiredNote: '* Required field',
           selectPlaceholder: 'Select',
           optional: 'Optional',
           optionalContextTitle: 'Narrow the comparison',
@@ -3126,6 +3152,7 @@ const messages = {
           fields: {
             role: {
               label: 'Position / role',
+              searchPlaceholder: 'Search positions…',
               options: {
                 software_engineer: 'Software Engineer',
                 frontend_developer: 'Frontend Developer',
@@ -3151,10 +3178,10 @@ const messages = {
               },
             },
             roleLevel: {
-              label: 'Position level',
+              label: 'Career level',
               options: {
-                intern: 'Intern', junior: 'Junior', mid: 'Mid-level',
-                senior: 'Senior', lead_manager: 'Lead / Manager',
+                intern: 'Intern / student', junior: 'Entry level', mid: 'Mid-level',
+                senior: 'Senior', lead_manager: 'Leadership / management',
               },
             },
             experienceBand: {
@@ -3196,11 +3223,14 @@ const messages = {
         },
         step2: {
           title: 'Your application funnel',
-          description: 'Approximate counts are enough. The goal is to identify where funnel conversion declines.',
+          description: 'Share your total applications, human responses, and applications reaching interview. Your total applications are divided by the job-search period you selected to calculate your monthly application pace. Enter 0 when a response or interview did not happen.',
+          optional: 'Optional',
+          detailFieldsTitle: 'Add interview and offer detail',
+          detailFieldsNote: 'Recruiter, technical-interview, and offer counts strengthen the diagnosis; leave them at zero if you do not know them.',
           countFields: [
-            { name: 'applicationsCount', label: 'How many applications did you submit?' },
-            { name: 'humanResponsesCount', label: 'How many human responses did you receive, excluding automated messages?' },
-            { name: 'anyInterviewsCount', label: 'How many unique applications reached at least one interview?' },
+            { name: 'applicationsCount', label: 'Total applications', required: true },
+            { name: 'humanResponsesCount', label: 'Human responses', hint: 'Excluding automated messages', required: true },
+            { name: 'anyInterviewsCount', label: 'Applications reaching interview', hint: 'Reached at least one interview', required: true },
             { name: 'hrInterviewsCount', label: 'How many companies invited you to a recruiter interview?' },
             { name: 'technicalInterviewsCount', label: 'How many companies invited you to a technical interview?' },
             { name: 'offersCount', label: 'How many offers did you receive?' },
@@ -3219,7 +3249,7 @@ const messages = {
         },
         step3: {
           title: 'Review and consent to submit',
-          description: 'Before submitting, confirm how the data will be stored and under which conditions it may be used.',
+          description: 'Before submitting, confirm how the data will be stored and under which conditions it may be used. Your total applications are divided by the job-search period you selected to calculate your monthly application pace.',
           reviewTitle: 'This submission',
           reviewItems: [
             'Will not include a name, email address, document, or free text.',
@@ -3240,7 +3270,7 @@ const messages = {
         required: 'This field is required.',
         endDateRequired: 'An end month is required when the process has ended.',
         endDateBeforeStart: 'The end month cannot be before the start month.',
-        nonNegativeNumber: 'Enter a whole number equal to or greater than 0.',
+        nonNegativeNumber: 'Enter a whole number between 0 and 10,000.',
         countOrder: 'This count must be consistent with the preceding application-funnel totals.',
         statusCountMismatch: 'Enter a value greater than 0 that matches the selected search status.',
         consentRequired: 'You must consent to this use before submitting your response.',
@@ -3248,14 +3278,14 @@ const messages = {
       },
       submitError: 'Your response could not be saved. Check the information and try again.',
       success: {
-        mockLabel: 'Response saved · Illustrative benchmark',
+        mockLabel: 'Response saved · Live comparison',
         title: 'Your response was saved securely.',
         description:
-          'Your job-search episode is now part of the aggregate benchmark dataset. The comparison below uses illustrative values until enough real responses are available.',
+          'Your job-search episode is now part of the aggregate benchmark dataset. When a suitable match exists, the values below are calculated live from similar candidate records.',
         yourDurationLabel: 'Your search duration',
-        communityDurationLabel: 'Illustrative peer-group median',
-        yourTechnicalEffortLabel: 'For one technical interview',
-        communityTechnicalEffortLabel: 'Illustrative cohort median',
+        communityDurationLabel: 'Similar-candidate median',
+        yourMonthlyApplicationsLabel: 'Your monthly application pace',
+        communityMonthlyApplicationsLabel: 'Similar-candidate median',
         yourApplicationsLabel: 'Applications',
         conversionTitle: 'Your application flow',
         responseLabel: 'Responses',
@@ -3265,12 +3295,26 @@ const messages = {
         dayUnit: 'days',
         applicationUnit: 'applications',
         cohortLabel: 'Comparison cohort',
+        matchLevels: {
+          exact: 'exact match',
+          role_level_region: 'same role, level, and market',
+          role_level: 'same role and level',
+          role: 'same role',
+        },
         personalSignalLabel: 'Primary finding',
-        applicationsPerTechnicalSuffix: 'applications for one technical interview',
-        noTechnicalInterviewSignal: 'The process appears to have stopped before a technical interview.',
+        signals: {
+          activity: 'Your monthly application pace is below this cohort’s median. Broadening the target or creating a steadier application rhythm may be the most useful next step.',
+          response: 'Your human-response rate is below this cohort after accounting for application volume. Reviewing your CV, portfolio, or targeting may have the biggest impact.',
+          interview: 'Your conversion from response to interview is below this cohort. Interview practice and strengthening your first-conversation narrative may help.',
+          withinRange: 'Your search pace and conversion are within the range of similar candidates. Keep tracking the process with the same rhythm.',
+        },
+        collectingSignal: 'There are not yet enough anonymous records for a comparison this specific. Your contribution helps build this cohort.',
         responseRatePrefix: 'Of your applications,',
         responseRateSuffix: 'received a response.',
-        previewNote: 'Your response was saved; the community values in this comparison panel are still illustrative.',
+        previewNote: 'A cohort is shown only when enough similar anonymous records exist; individual responses are never exposed.',
+        collectingLabel: 'Response saved · Cohort building',
+        collectingDescription: 'Your response was saved securely. Once enough similar anonymous records exist for the same role, the comparison will be calculated live.',
+        liveNote: 'This comparison is calculated live from the aggregate values of {count} similar anonymous contributions; individual responses are never shown.',
       },
       explainer: {
         eyebrow: 'Survey purpose',

@@ -10,10 +10,17 @@ export default function SurveyWizardFrame({
   onBack,
   onNext,
   onSkip,
+  suppressValidationSummary = false,
   stepCopy,
   submitError,
   submitStatus,
 }) {
+  const visibleError = submitStatus === 'error'
+    ? submitError
+    : suppressValidationSummary
+      ? ''
+      : errorMessage
+
   return (
     <form onSubmit={(event) => event.preventDefault()} noValidate>
       <SurveyStepIndicator current={current} labels={copy.stepIndicator} />
@@ -37,10 +44,11 @@ export default function SurveyWizardFrame({
 
       <div className="mt-8 sm:mt-9">{children}</div>
 
-      <div aria-live="polite" className="mt-7 min-h-5">
-        {(errorMessage || submitStatus === 'error') && (
+      <div aria-live="polite" className={submitStatus === 'error' ? 'mt-7' : ''}>
+        {suppressValidationSummary && errorMessage && <p role="alert" className="sr-only">{errorMessage}</p>}
+        {visibleError && (
           <p role="alert" className="border-l-2 border-danger bg-[rgba(155,74,69,0.06)] px-4 py-3 text-sm leading-6 text-danger">
-            {errorMessage || submitError}
+            {visibleError}
           </p>
         )}
       </div>

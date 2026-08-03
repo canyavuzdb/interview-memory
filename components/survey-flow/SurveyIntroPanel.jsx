@@ -4,7 +4,7 @@ import SurveyQuotaNotice from '@/components/survey-flow/SurveyQuotaNotice'
 
 const icons = [UserRoundX, EyeOff, ShieldCheck]
 
-export default function SurveyIntroPanel({ copy, sampleSize, survey }) {
+export default function SurveyIntroPanel({ copy, onQuotaChange, sampleSize, survey }) {
   return (
     <aside className="py-4 lg:sticky lg:top-24 lg:py-8">
       <SampleDataBadge label={copy.dataLabel} value={sampleSize} />
@@ -14,7 +14,7 @@ export default function SurveyIntroPanel({ copy, sampleSize, survey }) {
       <p className="mt-5 max-w-lg text-base leading-7 text-muted">
         {copy.description}
       </p>
-      {survey && copy.quota && <SurveyQuotaNotice copy={copy.quota} survey={survey} />}
+      {survey && copy.quota && <SurveyQuotaNotice copy={copy.quota} onQuotaChange={onQuotaChange} survey={survey} />}
 
       <div className="mt-9 hidden border-t border-line pt-6 lg:block">
         <ul className="space-y-5">

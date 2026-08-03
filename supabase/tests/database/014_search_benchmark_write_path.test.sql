@@ -2,7 +2,7 @@ begin;
 
 create extension if not exists pgtap with schema extensions;
 
-select extensions.plan(26);
+select extensions.plan(28);
 
 select extensions.has_table('intake', 'search_episodes', 'T24 exists');
 select extensions.has_table('intake', 'episode_funnel_totals', 'T25 exists');
@@ -40,7 +40,7 @@ select extensions.ok(
   and not has_function_privilege('anon', 'api.get_search_episode_create_result_v1(uuid,uuid)', 'EXECUTE'),
   'replay lookup is server-only'
 );
-select extensions.is((select count(*)::integer from catalog.roles where taxonomy_version = '2026.1'), 13, 'canonical roles are seeded');
+select extensions.is((select count(*)::integer from catalog.roles where taxonomy_version = '2026.1'), 414, 'canonical and market-reference roles are seeded');
 select extensions.is((select count(*)::integer from catalog.sectors where id between 1001 and 1010), 10, 'canonical sectors are seeded');
 select extensions.ok((
   select notice.content_sha256 = extensions.digest(
@@ -142,21 +142,33 @@ select extensions.throws_ok(
   $$delete from intake.episode_funnel_totals$$,
   '55000', 'search_benchmark_snapshot_is_immutable', 'T25 is immutable'
 );
-select extensions.throws_ok(
-  $$select * from api.create_search_episode_v1(
-    (select data_subject_id from b08_subject), 1, 'tr',
-    'b8000000-0000-4000-8300-000000000001', decode(repeat('91', 32), 'hex'),
-    decode(repeat('92', 32), 'hex'), null, decode(repeat('93', 32), 'hex'),
-    1::smallint, now() + interval '30 days', decode(repeat('94', 32), 'hex'),
-    1::smallint, gen_random_uuid(), decode(repeat('95', 32), 'hex'),
-    decode(repeat('96', 32), 'hex'), decode(repeat('97', 32), 'hex'),
-    decode(repeat('98', 32), 'hex'), date_trunc('day', now()), 1, 'v1',
-    decode(repeat('99', 32), 'hex'), now() + interval '30 days',
-    'frontend-developer', null, 'senior', '5-8', 'turkiye', null, null,
-    '2026-01-01', '2026-02-01', 'offer_accepted', true, true, current_date,
-    10, 5, 2, 2, 1, 1, 0, 0
-  )$$,
-  '22023', 'search_episode_status_count_mismatch', 'DB rejects status/count mismatch'
+select extensions.ok(
+  position(
+    'search_episode_status_count_mismatch'
+    in pg_get_functiondef(
+      'api.create_search_episode_v1(uuid,integer,text,uuid,bytea,bytea,uuid,bytea,smallint,timestamptz,bytea,smallint,uuid,bytea,bytea,bytea,bytea,timestamptz,integer,text,bytea,timestamptz,text,text,text,text,text,text,text,date,date,text,boolean,boolean,date,integer,integer,integer,integer,integer,integer,integer,integer)'::regprocedure
+    )
+  ) = 0,
+  'DB allows a known outcome when optional funnel details are unavailable'
+);
+select extensions.ok(
+  exists (
+    select 1
+    from pg_constraint
+    where conrelid = 'intake.search_episodes'::regclass
+      and conname = 'search_episodes_sector_required_for_new_writes'
+      and not convalidated
+  ),
+  'new search episodes must carry a sector without fabricating legacy values'
+);
+select extensions.ok(
+  position(
+    'search_episode_sector_required'
+    in pg_get_functiondef(
+      'api.create_search_episode_v1(uuid,integer,text,uuid,bytea,bytea,uuid,bytea,smallint,timestamptz,bytea,smallint,uuid,bytea,bytea,bytea,bytea,timestamptz,integer,text,bytea,timestamptz,text,text,text,text,text,text,text,date,date,text,boolean,boolean,date,integer,integer,integer,integer,integer,integer,integer,integer)'::regprocedure
+    )
+  ) > 0,
+  'search episode command rejects a missing sector'
 );
 select extensions.is((
   select count(*)::integer
