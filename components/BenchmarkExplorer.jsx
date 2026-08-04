@@ -28,6 +28,12 @@ function formatMonthlyApplications(value, locale) {
   return formatNumber(Math.round(value), locale)
 }
 
+function formatAverage(value, locale) {
+  return new Intl.NumberFormat(localeTag(locale), {
+    maximumFractionDigits: 1,
+  }).format(value)
+}
+
 function formatPercent(numerator, denominator, locale) {
   if (!denominator) return '—'
 
@@ -131,11 +137,13 @@ function MiniTrend({ copy, values }) {
 
 function RateCell({ count, denominator, locale }) {
   return (
-    <div className="whitespace-nowrap">
+    <div className="whitespace-nowrap" title={formatPercent(count, denominator, locale)}>
       <span className="font-mono text-xs font-semibold text-ink">
+        {formatNumber(count, locale)}
+      </span>
+      <span className="mt-1 block font-mono text-[8px] font-bold text-muted">
         {formatPercent(count, denominator, locale)}
       </span>
-      <span className="sr-only"> · {formatNumber(count, locale)}</span>
     </div>
   )
 }
@@ -165,12 +173,15 @@ function RoleTable({ copy, locale, localizedRoleLabels, rows }) {
               </th>
             ))}
             <th scope="col" className="min-w-24 px-3 py-3 text-right font-mono text-[8px] font-bold uppercase leading-4 tracking-[0.08em] text-muted xl:min-w-20 2xl:min-w-24">
+              {copy.table.averageApplications}
+            </th>
+            <th scope="col" className="min-w-32 px-3 py-3 text-right font-mono text-[8px] font-bold uppercase leading-4 tracking-[0.08em] text-muted xl:min-w-28 2xl:min-w-32">
               {copy.table.responseRate}
             </th>
-            <th scope="col" className="min-w-24 px-3 py-3 text-right font-mono text-[8px] font-bold uppercase leading-4 tracking-[0.08em] text-muted xl:min-w-20 2xl:min-w-24">
+            <th scope="col" className="min-w-32 px-3 py-3 text-right font-mono text-[8px] font-bold uppercase leading-4 tracking-[0.08em] text-muted xl:min-w-28 2xl:min-w-32">
               {copy.table.interviewRate}
             </th>
-            <th scope="col" className="min-w-24 px-3 py-3 text-right font-mono text-[8px] font-bold uppercase leading-4 tracking-[0.08em] text-muted xl:min-w-20 2xl:min-w-24">
+            <th scope="col" className="min-w-32 px-3 py-3 text-right font-mono text-[8px] font-bold uppercase leading-4 tracking-[0.08em] text-muted xl:min-w-28 2xl:min-w-32">
               {copy.table.employmentRate}
             </th>
             <th scope="col" className="min-w-16 px-4 py-3 text-right font-mono text-[8px] font-bold uppercase tracking-[0.08em] text-muted xl:min-w-14 2xl:min-w-16">
@@ -195,18 +206,12 @@ function RoleTable({ copy, locale, localizedRoleLabels, rows }) {
                   </td>
                 ))}
                 <td className="px-3 py-3 text-right font-mono text-xs font-bold text-ink">
-                  {formatPercent(row.responsesCount, applications, locale)}
+                  {formatAverage(row.uniqueCandidates ? applications / row.uniqueCandidates : 0, locale)}
                 </td>
-                <td className="px-3 py-3 text-right font-mono text-xs font-bold text-ink">
-                  {formatPercent(row.interviewsCount, applications, locale)}
-                </td>
+                <td className="px-3 py-3 text-right"><RateCell count={row.responsesCount} denominator={applications} locale={locale} /></td>
+                <td className="px-3 py-3 text-right"><RateCell count={row.interviewsCount} denominator={applications} locale={locale} /></td>
                 <td className="px-3 py-3 text-right">
-                  <span className="block font-mono text-xs font-bold text-accentDark">
-                    {formatPercent(row.employmentStartedCount, row.matureSearchEpisodesCount, locale)}
-                  </span>
-                  <span className="sr-only">
-                    {row.employmentStartedCount}/{row.matureSearchEpisodesCount}
-                  </span>
+                  <RateCell count={row.employmentStartedCount} denominator={applications} locale={locale} />
                 </td>
                 <td className="px-4 py-3 text-right font-mono text-xs font-bold text-muted">
                   {formatNumber(row.uniqueCandidates, locale)}
@@ -300,9 +305,9 @@ function RoleMobileCards({ copy, locale, localizedRoleLabels, rows }) {
               <MiniTrend copy={copy} values={values} />
             </div>
             <div className="mt-5 grid grid-cols-3 gap-5 border-t border-line pt-4">
-              <MobileMetric label={copy.table.applications} value={formatNumber(applications, locale)} />
-              <MobileMetric label={copy.table.interviewRate} value={formatPercent(row.interviewsCount, applications, locale)} />
-              <MobileMetric label={copy.table.employmentRate} value={formatPercent(row.employmentStartedCount, row.matureSearchEpisodesCount, locale)} />
+              <MobileMetric label={copy.table.averageApplications} value={formatAverage(row.uniqueCandidates ? applications / row.uniqueCandidates : 0, locale)} />
+              <MobileMetric label={copy.table.interviewRate} value={`${formatNumber(row.interviewsCount, locale)} · ${formatPercent(row.interviewsCount, applications, locale)}`} />
+              <MobileMetric label={copy.table.employmentRate} value={`${formatNumber(row.employmentStartedCount, locale)} · ${formatPercent(row.employmentStartedCount, applications, locale)}`} />
             </div>
             <div className="mt-5 grid grid-cols-6 gap-2 border-t border-line pt-4" aria-label={copy.table.monthlyApplications}>
               {row.monthlyApplications.map((item) => (
@@ -429,8 +434,8 @@ function roleMetric(row, metric) {
     return applications ? row.interviewsCount / applications : -1
   }
   if (metric === 'employment') {
-    return row.matureSearchEpisodesCount
-      ? row.employmentStartedCount / row.matureSearchEpisodesCount
+    return applications
+      ? row.employmentStartedCount / applications
       : -1
   }
 
@@ -976,7 +981,12 @@ export default function BenchmarkExplorer({
         if (cancelled || !payload?.data?.items) return
 
         setLocalizedRoleLabels(Object.fromEntries(
-          payload.data.items.map((item) => [item.value, item.label]),
+          payload.data.items.flatMap((item) => [
+            [item.value, item.label],
+            // Public benchmark rows use underscore-normalized role slugs,
+            // while the catalog endpoint returns the canonical hyphenated slug.
+            [item.value.replace(/-/g, '_'), item.label],
+          ]),
         ))
       })
       .catch(() => {})
