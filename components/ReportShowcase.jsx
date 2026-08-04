@@ -113,7 +113,7 @@ function RoleBenchmarkPreview({ copy, locale, report }) {
                 <p className="hidden text-right font-mono text-xs font-bold text-ink sm:block">{formatNumber(applications, locale)}</p>
                 <p className="text-right font-mono text-xs font-bold text-ink">{formatPercent(row.responsesCount, applications, locale)}</p>
                 <p className="text-right font-mono text-xs font-bold text-accentDark">
-                  {formatPercent(row.employmentStartedCount, row.matureSearchEpisodesCount, locale)}
+                  {formatPercent(row.employmentStartedCount, applications, locale)}
                 </p>
               </div>
             )
