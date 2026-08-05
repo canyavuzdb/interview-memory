@@ -111,7 +111,7 @@ export default function ApplicationBenchmarkWizard({ copy, locale, sampleSize })
           </Link>
         </div>
       ) : state.submitStatus === 'success' ? (
-        <BenchmarkResultPreview copy={copy.success} contextCopy={copy.steps.step1} locale={locale} state={state} />
+        <BenchmarkResultPreview copy={copy.success} contextCopy={copy.steps.step1} locale={locale} onRefreshComparison={completeForm} state={state} />
       ) : (
         <SurveyWizardFrame
           copy={copy}
