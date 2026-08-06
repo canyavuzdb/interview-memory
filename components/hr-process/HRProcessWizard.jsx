@@ -115,6 +115,7 @@ export default function HRProcessWizard({ copy, locale, sampleSize }) {
               booleanOptions={copy.booleanOptions}
               copy={stepCopy}
               errors={state.errors}
+              locale={locale}
               selectPlaceholder={copy.selectPlaceholder}
               setField={setField}
               state={state}

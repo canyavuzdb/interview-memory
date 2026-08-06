@@ -4,6 +4,8 @@ import {
   SurveySelect,
   surveyControlClass,
 } from '@/components/survey-flow/SurveyField'
+import SurveyCompanyCombobox from '@/components/survey-flow/SurveyCompanyCombobox'
+import SurveyRoleCombobox from '@/components/survey-flow/SurveyRoleCombobox'
 import {
   APPLICATION_CHANNELS,
   PROCESS_YEARS,
@@ -13,6 +15,7 @@ export default function StepCompanyInfo({
   booleanOptions,
   copy,
   errors,
+  locale,
   selectPlaceholder,
   setField,
   state,
@@ -20,24 +23,24 @@ export default function StepCompanyInfo({
   return (
     <div className="space-y-6">
       <SurveyField id="hr-company-name" label={copy.fields.companyName.label} error={errors.companyName}>
-        <input
+        <SurveyCompanyCombobox
           id="hr-company-name"
+          error={errors.companyName}
+          locale={locale}
           value={state.companyName}
-          onChange={(event) => setField('companyName', event.target.value)}
+          onChange={(company) => setField('companyName', company?.label ?? '')}
           placeholder={copy.fields.companyName.placeholder}
-          aria-invalid={Boolean(errors.companyName)}
-          className={surveyControlClass}
         />
       </SurveyField>
 
       <SurveyField id="hr-applied-role" label={copy.fields.appliedRole.label} error={errors.appliedRole}>
-        <input
+        <SurveyRoleCombobox
           id="hr-applied-role"
-          value={state.appliedRole}
-          onChange={(event) => setField('appliedRole', event.target.value)}
+          error={errors.appliedRole}
+          locale={locale}
           placeholder={copy.fields.appliedRole.placeholder}
-          aria-invalid={Boolean(errors.appliedRole)}
-          className={surveyControlClass}
+          value={state.appliedRole ? { value: state.appliedRole, label: state.appliedRole } : null}
+          onChange={(role) => setField('appliedRole', role?.label ?? '')}
         />
       </SurveyField>
 

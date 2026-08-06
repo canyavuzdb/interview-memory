@@ -534,6 +534,19 @@ export type Database = {
           slug: string
         }[]
       }
+      search_published_companies_v1: {
+        Args: {
+          p_limit?: number
+          p_query: string
+        }
+        Returns: {
+          country_code: string
+          display_name: string
+          id: string
+          sector_id: number
+          slug: string
+        }[]
+      }
       merge_anonymous_subject_v1: {
         Args: {
           p_active_anonymous_hmac: string
