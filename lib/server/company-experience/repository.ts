@@ -48,7 +48,7 @@ export type CreateCompanyExperienceInput = HashFields & {
   quota30dLimit: number
   quota30dExpiresAt: string
   quotaPolicyVersion: string
-  companyName: string
+  companyName: string | null
   appliedRole: string
   processYear: number
   promisedTimeline: string
@@ -155,7 +155,7 @@ export function createSupabaseCompanyExperienceRepository(): CompanyExperienceRe
         p_quota_30d_expires_at: input.quota30dExpiresAt,
         p_quota_policy_version: input.quotaPolicyVersion,
         p_quota_policy_hash: checkedHash(input.quotaPolicyHash),
-        p_company_name: input.companyName,
+        p_company_name: nullableRpcArgument(input.companyName),
         p_applied_role: input.appliedRole,
         p_process_year: input.processYear,
         p_promised_timeline: input.promisedTimeline,

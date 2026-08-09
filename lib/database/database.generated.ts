@@ -101,7 +101,7 @@ export type Database = {
           p_capability_hmac: string
           p_capability_key_version: number
           p_command_fingerprint: string
-          p_company_name: string
+          p_company_name: string | null
           p_consent_idempotency_key: string
           p_consent_subject_proof_hmac: string
           p_consent_subject_proof_key_version: number
@@ -154,7 +154,7 @@ export type Database = {
           p_capability_hmac: string
           p_capability_key_version: number
           p_command_fingerprint: string
-          p_company_name: string
+          p_company_name: string | null
           p_consent_idempotency_key: string
           p_consent_subject_proof_hmac: string
           p_consent_subject_proof_key_version: number

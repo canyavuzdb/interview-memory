@@ -10,19 +10,17 @@ const COPY = {
     empty: 'Eşleşen şirket bulunamadı.',
     loadFailed: 'Şirket kataloğu şu anda yüklenemiyor.',
     loading: 'Aranıyor…',
-    manual: (query) => `“${query}” listede yok`,
-    prompt: 'Şirket adı için en az 2 karakter yaz.',
+    manual: 'Şirket listede yok',
   },
   en: {
     empty: 'No matching company was found.',
     loadFailed: 'The company catalogue is unavailable right now.',
     loading: 'Searching…',
-    manual: (query) => `“${query}” is not in the list`,
-    prompt: 'Enter at least 2 characters to search companies.',
+    manual: 'Company is not in the list',
   },
 }
 
-export default function SurveyCompanyCombobox({ error, id, locale = 'tr', onChange, placeholder, value }) {
+export default function SurveyCompanyCombobox({ error, id, locale = 'tr', onChange, onNotListed, placeholder, value }) {
   const listId = useId()
   const copy = COPY[locale === 'en' ? 'en' : 'tr']
   const [isOpen, setIsOpen] = useState(false)
@@ -33,7 +31,7 @@ export default function SurveyCompanyCombobox({ error, id, locale = 'tr', onChan
   const normalizedQuery = query.trim()
 
   useEffect(() => {
-    if (!isOpen || normalizedQuery.length < 2) {
+    if (!isOpen) {
       return undefined
     }
 
@@ -57,7 +55,7 @@ export default function SurveyCompanyCombobox({ error, id, locale = 'tr', onChan
       } finally {
         if (!controller.signal.aborted) setIsLoading(false)
       }
-    }, 180)
+    }, normalizedQuery ? 180 : 0)
 
     return () => {
       controller.abort()
@@ -81,7 +79,7 @@ export default function SurveyCompanyCombobox({ error, id, locale = 'tr', onChan
       <Search aria-hidden="true" className="pointer-events-none absolute left-4 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-muted" strokeWidth={1.8} />
       <input
         id={id}
-        autoComplete="organization"
+        autoComplete="off"
         aria-controls={isOpen ? listId : undefined}
         aria-expanded={isOpen}
         aria-invalid={Boolean(error)}
@@ -111,18 +109,21 @@ export default function SurveyCompanyCombobox({ error, id, locale = 'tr', onChan
       <ChevronDown aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" strokeWidth={1.8} />
       {isOpen && (
         <div id={listId} role="listbox" className="absolute inset-x-0 top-full z-50 mt-2 max-h-80 overflow-y-auto border border-[var(--line-strong)] bg-surface shadow-[5px_5px_0_var(--line)]">
-          {normalizedQuery.length < 2 && <p className="px-4 py-3 text-sm text-muted">{copy.prompt}</p>}
           {isLoading && <p className="px-4 py-3 text-sm text-muted">{copy.loading}</p>}
           {loadFailed && <p className="px-4 py-3 text-sm text-danger">{copy.loadFailed}</p>}
-          {!isLoading && !loadFailed && normalizedQuery.length >= 2 && companies.map((company) => (
+          {!isLoading && !loadFailed && companies.map((company) => (
             <button key={company.value} type="button" role="option" aria-selected={value === company.label} className="block w-full border-b border-line px-4 py-3 text-left text-sm text-ink transition-colors last:border-b-0 hover:bg-[var(--accent-soft)] focus:bg-[var(--accent-soft)] focus:outline-none" onMouseDown={(event) => event.preventDefault()} onClick={() => choose(company)}>
               {company.label}
             </button>
           ))}
           {!isLoading && !loadFailed && normalizedQuery.length >= 2 && companies.length === 0 && <p className="border-b border-line px-4 py-3 text-sm text-muted">{copy.empty}</p>}
-          {!isLoading && !loadFailed && normalizedQuery.length >= 2 && (
-            <button type="button" className="block w-full px-4 py-3 text-left text-sm font-semibold text-accent transition-colors hover:bg-[var(--accent-soft)] focus:bg-[var(--accent-soft)] focus:outline-none" onMouseDown={(event) => event.preventDefault()} onClick={() => choose({ value: null, label: normalizedQuery, isCustom: true })}>
-              {copy.manual(normalizedQuery)}
+          {!isLoading && !loadFailed && (
+            <button type="button" className="block w-full px-4 py-3 text-left text-sm font-semibold text-accent transition-colors hover:bg-[var(--accent-soft)] focus:bg-[var(--accent-soft)] focus:outline-none" onMouseDown={(event) => event.preventDefault()} onClick={() => {
+              onNotListed(normalizedQuery)
+              setQuery('')
+              setIsOpen(false)
+            }}>
+              {copy.manual}
             </button>
           )}
         </div>

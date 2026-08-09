@@ -40,9 +40,9 @@ export default function HRProcessWizard({ copy, locale, sampleSize }) {
 
     dispatch({ type: 'SUBMIT_START' })
     const payload = {
-      companyName: state.companyName,
+      companyName: state.companyName || null,
       appliedRole: state.appliedRole,
-      processYear: Number(state.processYear),
+      processYear: Number(state.applicationMonth.slice(0, 4)),
       applicationMonth: state.applicationMonth,
       applicationChannel: state.applicationChannel,
       hadReferral: state.hadReferral,
@@ -106,6 +106,7 @@ export default function HRProcessWizard({ copy, locale, sampleSize }) {
           headingRef={stepHeadingRef}
           onBack={goBack}
           onNext={state.step === 3 ? completeForm : goNext}
+          suppressValidationSummary
           stepCopy={stepCopy}
           submitError={copy.submitError}
           submitStatus={state.submitStatus}

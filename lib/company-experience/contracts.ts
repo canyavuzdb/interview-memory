@@ -49,7 +49,7 @@ const rating = z.int().min(1).max(5)
 
 export const companyExperienceCreateBodySchema = z
   .strictObject({
-    companyName: cleanText(200),
+    companyName: optionalCleanText(200),
     appliedRole: cleanText(120),
     processYear: z.int().min(2000).max(2100),
     promisedTimeline: z.enum(companyExperiencePromisedTimelines),
