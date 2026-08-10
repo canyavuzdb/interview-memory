@@ -97,7 +97,7 @@ export default function HRProcessWizard({ copy, locale, sampleSize }) {
   return (
     <SurveyFlowLayout introCopy={copy.trustPanel} sampleSize={sampleSize} survey="company-experience">
       {state.submitStatus === 'success' ? (
-        <HRResultPreview copy={copy.success} state={state} />
+        <HRResultPreview copy={copy.success} outcomeCopy={copy.steps.step2.fields.currentOutcome.options} state={state} />
       ) : (
         <SurveyWizardFrame
           copy={copy}
@@ -135,6 +135,7 @@ export default function HRProcessWizard({ copy, locale, sampleSize }) {
           )}
           {state.step === 3 && (
             <StepRatings
+              consentCopy={copy}
               copy={stepCopy}
               errors={state.errors}
               selectPlaceholder={copy.selectPlaceholder}

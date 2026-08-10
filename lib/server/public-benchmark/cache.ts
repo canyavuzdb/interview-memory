@@ -25,7 +25,7 @@ export function getCachedPublicBenchmarkReport(
           roleLimit,
         })
     ),
-    ['public-benchmark-report-v11', String(minimumSample), String(roleOffset), String(roleLimit)],
+    ['public-benchmark-report-v14', String(minimumSample), String(roleOffset), String(roleLimit)],
     {
       revalidate: 300,
       tags: [PUBLIC_BENCHMARK_REPORT_CACHE_TAG],

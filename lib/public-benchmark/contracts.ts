@@ -140,10 +140,37 @@ const responsivenessRowSchema = z.strictObject({
   id: z.string().min(1).max(120),
   company: z.string().min(1).max(200),
   eligibleMatureApplicationsCount: nonnegativeInteger,
+  respondedApplicationsCount: nonnegativeInteger,
+  hrScreenApplicationsCount: nonnegativeInteger,
   noSubstantiveUpdateCount: nonnegativeInteger,
   interviewedApplicationsCount: nonnegativeInteger,
+  technicalApplicationsCount: nonnegativeInteger,
+  finalApplicationsCount: nonnegativeInteger,
+  offeredApplicationsCount: nonnegativeInteger,
+  employmentStartedApplicationsCount: nonnegativeInteger,
   postInterviewNoFollowUpCount: nonnegativeInteger,
   contributorsCount: nonnegativeInteger,
+  averageTransparency: z.number().min(1).max(5).nullable(),
+  averageProfessionalism: z.number().min(1).max(5).nullable(),
+  feedbackSharedCount: nonnegativeInteger,
+  irrelevantQuestionCount: nonnegativeInteger,
+  roles: z.array(z.strictObject({
+    role: z.string().min(1).max(120),
+    applicationsCount: nonnegativeInteger,
+    contributorsCount: nonnegativeInteger,
+    respondedApplicationsCount: nonnegativeInteger,
+    hrScreenApplicationsCount: nonnegativeInteger,
+    interviewedApplicationsCount: nonnegativeInteger,
+    technicalApplicationsCount: nonnegativeInteger,
+    finalApplicationsCount: nonnegativeInteger,
+    offeredApplicationsCount: nonnegativeInteger,
+    employmentStartedApplicationsCount: nonnegativeInteger,
+  })),
+})
+
+export const companyProcessReportSchema = z.strictObject({
+  meta: responsivenessMetaSchema,
+  rows: z.array(responsivenessRowSchema),
 })
 
 export const publicBenchmarkReportSchema = z.strictObject({
@@ -206,7 +233,7 @@ export function createEmptyPublicBenchmarkReport(
       responseWindowDays: 30,
       period: 'rolling_6_months',
       source: 'candidate_reported_aggregate',
-      metricDefinitionVersion: '2.0',
+      metricDefinitionVersion: '3.0',
     },
     companyResponsiveness: [],
   }

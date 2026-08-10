@@ -2,6 +2,7 @@ import 'server-only'
 
 import {
   publicBenchmarkReportSchema,
+  companyProcessReportSchema,
   publicRoleBenchmarkReportSchema,
   type PublicBenchmarkReport,
   type PublicRoleBenchmarkReport,
@@ -66,20 +67,30 @@ PublicBenchmarkRepository {
       const minimumSample = options?.minimumSample ?? 1
       const roleOffset = options?.roleOffset ?? 0
       const roleLimit = options?.roleLimit ?? 100
-      const { data, error } = await client.rpc(
-        'get_public_benchmark_report_v1',
-        {
+      const [{ data, error }, { data: companyProcessData, error: companyProcessError }] = await Promise.all([
+        client.rpc('get_public_benchmark_report_v1', {
           p_min_cohort_size: minimumSample,
           p_months: 6,
           p_role_offset: roleOffset,
           p_role_limit: roleLimit,
-        },
-      )
+        }),
+        client.rpc('get_company_process_report_v1', {
+          p_min_cohort_size: minimumSample,
+          p_months: 6,
+        }),
+      ])
 
-      if (error) throw new PublicBenchmarkPersistenceError()
+      if (error || companyProcessError) throw new PublicBenchmarkPersistenceError()
+
+      const companyProcess = companyProcessReportSchema.safeParse(companyProcessData)
+      if (!companyProcess.success) throw new PublicBenchmarkPersistenceError()
 
       const result = publicBenchmarkReportSchema.safeParse(
-        normalizePublicThresholds(data),
+        normalizePublicThresholds({
+          ...(data as Record<string, unknown>),
+          companyResponsivenessMeta: companyProcess.data.meta,
+          companyResponsiveness: companyProcess.data.rows,
+        }),
       )
       if (!result.success) throw new PublicBenchmarkPersistenceError()
 

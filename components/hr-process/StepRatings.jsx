@@ -2,7 +2,7 @@ import SurveyChoiceGroup from '@/components/survey-flow/SurveyChoiceGroup'
 import { SurveyField, SurveyFieldError, SurveySelect, surveyControlClass } from '@/components/survey-flow/SurveyField'
 import { RATING_SCALE, REJECTION_DETAIL_LEVELS } from '@/lib/constants/hrProcess'
 
-export default function StepRatings({ copy, errors, selectPlaceholder, setField, state }) {
+export default function StepRatings({ consentCopy, copy, errors, selectPlaceholder, setField, state }) {
   return (
     <div className="space-y-7">
       <SurveyChoiceGroup
@@ -99,7 +99,7 @@ export default function StepRatings({ copy, errors, selectPlaceholder, setField,
 
       <section className="border-l-2 border-accent bg-[var(--accent-soft)] px-5 py-5">
         <p className="font-mono text-[9px] font-bold uppercase tracking-[0.1em] text-accentDark">
-          {copy.consentEyebrow}
+          {consentCopy.consentEyebrow}
         </p>
         <label
           htmlFor="company-experience-consent"
@@ -114,7 +114,7 @@ export default function StepRatings({ copy, errors, selectPlaceholder, setField,
             aria-describedby={errors.consentGranted ? 'company-experience-consent-error' : undefined}
             className="mt-1 h-4 w-4 shrink-0 accent-[var(--accent)]"
           />
-          <span>{copy.consentNotice}</span>
+          <span>{consentCopy.consentNotice}</span>
         </label>
         <SurveyFieldError id={errors.consentGranted ? 'company-experience-consent-error' : undefined}>
           {errors.consentGranted}
