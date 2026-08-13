@@ -93,6 +93,14 @@ export type Database = {
           remaining: number
         }[]
       }
+      create_application_candidate_context_v1: {
+        Args: {
+          p_application_id: string
+          p_experience_band: string
+          p_seniority: string
+        }
+        Returns: undefined
+      }
       create_company_experience_v1: {
         Args: {
           p_actual_days: number
@@ -101,7 +109,7 @@ export type Database = {
           p_capability_hmac: string
           p_capability_key_version: number
           p_command_fingerprint: string
-          p_company_name: string | null
+          p_company_name: string
           p_consent_idempotency_key: string
           p_consent_subject_proof_hmac: string
           p_consent_subject_proof_key_version: number
@@ -154,7 +162,7 @@ export type Database = {
           p_capability_hmac: string
           p_capability_key_version: number
           p_command_fingerprint: string
-          p_company_name: string | null
+          p_company_name: string
           p_consent_idempotency_key: string
           p_consent_subject_proof_hmac: string
           p_consent_subject_proof_key_version: number
@@ -202,14 +210,6 @@ export type Database = {
           receipt_id: string
           submission_id: string
         }[]
-      }
-      create_application_candidate_context_v1: {
-        Args: {
-          p_application_id: string
-          p_experience_band: string
-          p_seniority: string
-        }
-        Returns: undefined
       }
       create_interview_preparation_contribution_v1: {
         Args: {
@@ -342,6 +342,14 @@ export type Database = {
           submission_id: string
         }[]
       }
+      get_company_process_context_report_v1: {
+        Args: { p_min_cohort_size?: number; p_months?: number }
+        Returns: Json
+      }
+      get_company_process_report_v1: {
+        Args: { p_min_cohort_size?: number; p_months?: number }
+        Returns: Json
+      }
       get_current_notice_v1: {
         Args: { p_document_type: string; p_locale: string }
         Returns: {
@@ -376,14 +384,6 @@ export type Database = {
       }
       get_my_personal_report_v1: {
         Args: { p_auth_user_id: string }
-        Returns: Json
-      }
-      get_company_process_report_v1: {
-        Args: { p_min_cohort_size?: number; p_months?: number }
-        Returns: Json
-      }
-      get_company_process_context_report_v1: {
-        Args: { p_min_cohort_size?: number; p_months?: number }
         Returns: Json
       }
       get_public_benchmark_report_v1:
@@ -550,19 +550,6 @@ export type Database = {
           slug: string
         }[]
       }
-      search_published_companies_v1: {
-        Args: {
-          p_limit?: number
-          p_query: string
-        }
-        Returns: {
-          country_code: string
-          display_name: string
-          id: string
-          sector_id: number
-          slug: string
-        }[]
-      }
       merge_anonymous_subject_v1: {
         Args: {
           p_active_anonymous_hmac: string
@@ -616,6 +603,16 @@ export type Database = {
         Args: { p_alias: string; p_country_code?: string; p_locale?: string }
         Returns: {
           company_id: string
+        }[]
+      }
+      search_published_companies_v1: {
+        Args: { p_limit?: number; p_query: string }
+        Returns: {
+          country_code: string
+          display_name: string
+          id: string
+          sector_id: number
+          slug: string
         }[]
       }
     }

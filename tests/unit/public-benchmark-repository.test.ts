@@ -21,6 +21,11 @@ const roleReport: PublicRoleBenchmarkReport = {
   roleCohortCount: 0,
   roleMonthly: [],
 }
+const companyProcessReport = {
+  meta: report.companyResponsivenessMeta,
+  rows: [],
+}
+const companyContextReport = { rows: [] }
 
 beforeEach(() => {
   rpc.mockReset()
@@ -31,6 +36,8 @@ describe('public benchmark repository', () => {
   it('uses the server-only aggregate RPC and validates the DTO', async () => {
     rpc
       .mockResolvedValueOnce({ data: report, error: null })
+      .mockResolvedValueOnce({ data: companyProcessReport, error: null })
+      .mockResolvedValueOnce({ data: companyContextReport, error: null })
       .mockResolvedValueOnce({ data: roleReport, error: null })
 
     await expect(
@@ -53,12 +60,18 @@ describe('public benchmark repository', () => {
   })
 
   it('fails closed for database and malformed-response failures', async () => {
-    rpc.mockResolvedValueOnce({ data: null, error: { message: 'private' } })
+    rpc
+      .mockResolvedValueOnce({ data: null, error: { message: 'private' } })
+      .mockResolvedValueOnce({ data: companyProcessReport, error: null })
+      .mockResolvedValueOnce({ data: companyContextReport, error: null })
     await expect(
       createSupabasePublicBenchmarkRepository().getReport(),
     ).rejects.toBeInstanceOf(PublicBenchmarkPersistenceError)
 
-    rpc.mockResolvedValueOnce({ data: { raw: 'private' }, error: null })
+    rpc
+      .mockResolvedValueOnce({ data: { raw: 'private' }, error: null })
+      .mockResolvedValueOnce({ data: companyProcessReport, error: null })
+      .mockResolvedValueOnce({ data: companyContextReport, error: null })
     await expect(
       createSupabasePublicBenchmarkRepository().getReport(),
     ).rejects.toBeInstanceOf(PublicBenchmarkPersistenceError)
@@ -71,7 +84,10 @@ describe('public benchmark repository', () => {
     { ...report, activityTiming: null },
     { ...report, activityTiming: { ...report.activityTiming, meta: null } },
   ])('fails closed when a report shape cannot be normalized: %o', async (data) => {
-    rpc.mockResolvedValueOnce({ data, error: null })
+    rpc
+      .mockResolvedValueOnce({ data, error: null })
+      .mockResolvedValueOnce({ data: companyProcessReport, error: null })
+      .mockResolvedValueOnce({ data: companyContextReport, error: null })
 
     await expect(
       createSupabasePublicBenchmarkRepository().getReport(),
