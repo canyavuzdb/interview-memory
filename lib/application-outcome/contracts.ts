@@ -9,6 +9,22 @@ export const applicationChannels = [
   'other',
 ] as const
 
+export const applicationSeniorities = [
+  'intern',
+  'junior',
+  'mid',
+  'senior',
+  'lead_manager',
+] as const
+
+export const applicationExperienceBands = [
+  '0-1',
+  '1-3',
+  '3-5',
+  '5-8',
+  '8+',
+] as const
+
 export const applicationStages = [
   'application',
   'hr_screen',

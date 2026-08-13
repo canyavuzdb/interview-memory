@@ -40,9 +40,11 @@ export default function HRProcessWizard({ copy, locale, sampleSize }) {
 
     dispatch({ type: 'SUBMIT_START' })
     const payload = {
-      companyName: state.companyName,
+      companyName: state.companyName || null,
       appliedRole: state.appliedRole,
-      processYear: Number(state.processYear),
+      seniority: state.seniority,
+      experienceBand: state.experienceBand,
+      processYear: Number(state.applicationMonth.slice(0, 4)),
       applicationMonth: state.applicationMonth,
       applicationChannel: state.applicationChannel,
       hadReferral: state.hadReferral,
@@ -97,7 +99,7 @@ export default function HRProcessWizard({ copy, locale, sampleSize }) {
   return (
     <SurveyFlowLayout introCopy={copy.trustPanel} sampleSize={sampleSize} survey="company-experience">
       {state.submitStatus === 'success' ? (
-        <HRResultPreview copy={copy.success} state={state} />
+        <HRResultPreview copy={copy.success} outcomeCopy={copy.steps.step2.fields.currentOutcome.options} state={state} />
       ) : (
         <SurveyWizardFrame
           copy={copy}
@@ -106,6 +108,7 @@ export default function HRProcessWizard({ copy, locale, sampleSize }) {
           headingRef={stepHeadingRef}
           onBack={goBack}
           onNext={state.step === 3 ? completeForm : goNext}
+          suppressValidationSummary
           stepCopy={stepCopy}
           submitError={copy.submitError}
           submitStatus={state.submitStatus}
@@ -115,6 +118,7 @@ export default function HRProcessWizard({ copy, locale, sampleSize }) {
               booleanOptions={copy.booleanOptions}
               copy={stepCopy}
               errors={state.errors}
+              locale={locale}
               selectPlaceholder={copy.selectPlaceholder}
               setField={setField}
               state={state}
@@ -133,6 +137,7 @@ export default function HRProcessWizard({ copy, locale, sampleSize }) {
           )}
           {state.step === 3 && (
             <StepRatings
+              consentCopy={copy}
               copy={stepCopy}
               errors={state.errors}
               selectPlaceholder={copy.selectPlaceholder}

@@ -20,6 +20,7 @@ const previousSecret = Buffer.alloc(32, 2).toString('base64url')
 
 const body = {
   companyName: 'Example Corp', appliedRole: 'Frontend Developer', processYear: 2026,
+  seniority: 'mid', experienceBand: '3-5',
   promisedTimeline: 'yes', promisedDays: 7, actualDays: 10,
   wasGhosted: false, ghostedAfterStage: null, interviewerPrepared: 4,
   wasAskedIrrelevant: true, irrelevantTypes: ['age', 'age'],
@@ -56,6 +57,7 @@ function dependencies(options: {
       job_application_id: applicationId,
       capability_key_version: options.actorKind === 'authenticated' ? null : 2,
     }),
+    createApplicationCandidateContext: vi.fn().mockResolvedValue(undefined),
   }
   const quota = (windowKind: string) => ({
     scope: 'experience.repeatable', subjectType: 'data_subject', subjectHmac: hash,

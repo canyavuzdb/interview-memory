@@ -131,7 +131,7 @@ export default function InterviewPreparationContributionForm({ copy, locale }) {
   }
 
   if (status === 'success') {
-    return <div className="border border-line bg-surface p-8"><Check size={22} className="text-accent" /><h1 className="mt-4 text-2xl font-semibold">{copy.successTitle}</h1><p className="mt-3 text-sm leading-7 text-muted">{copy.successDescription}</p><Link href={`/${locale}/benchmarks#interview-preparation-report`} className="mt-6 inline-flex border border-ink px-4 py-3 text-sm font-semibold">{copy.backToReport}</Link></div>
+    return <div className="border border-line bg-surface p-8"><Check size={22} className="text-accent" /><h1 className="mt-4 text-2xl font-semibold">{copy.successTitle}</h1><p className="mt-3 text-sm leading-7 text-muted">{copy.successDescription}</p><Link href={`/${locale}/benchmarks#interview-preparation-report`} prefetch={false} className="mt-6 inline-flex border border-ink px-4 py-3 text-sm font-semibold">{copy.backToReport}</Link></div>
   }
 
   return (

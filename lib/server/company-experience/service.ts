@@ -1,6 +1,7 @@
 import 'server-only'
 
 import { z } from 'zod'
+import { revalidateTag } from 'next/cache'
 
 import {
   companyExperienceCreateBodySchema,
@@ -31,6 +32,7 @@ import {
 import { createSupabaseSecurityRepository } from '@/lib/server/security/repository'
 import { createSecurityService, type PreparedQuota } from '@/lib/server/security/service'
 import { SecurityServiceError } from '@/lib/security/errors'
+import { PUBLIC_BENCHMARK_REPORT_CACHE_TAG } from '@/lib/server/public-benchmark/cache'
 
 const OPERATION_CODE = 'survey.company-experience.create'
 const IDEMPOTENCY_TTL_SECONDS = 24 * 60 * 60
@@ -166,6 +168,15 @@ export function createCompanyExperienceService(
         if (!replay) {
           throw new CompanyExperienceServiceError('COMPANY_EXPERIENCE_REPLAY_FAILED')
         }
+        try {
+          await dependencies.repository.createApplicationCandidateContext({
+            applicationId: replay.job_application_id,
+            seniority: body.seniority,
+            experienceBand: body.experienceBand,
+          })
+        } catch {
+          throw new CompanyExperienceServiceError('COMPANY_EXPERIENCE_WRITE_FAILED')
+        }
         const submissionCapability =
           input.actor.kind === 'anonymous'
             ? deriveCapability(
@@ -262,6 +273,8 @@ export function createCompanyExperienceService(
           quotaPolicyHash: quota24h.policyHash,
           companyName: body.companyName,
           appliedRole: body.appliedRole,
+          seniority: body.seniority,
+          experienceBand: body.experienceBand,
           processYear: body.processYear,
           promisedTimeline: body.promisedTimeline,
           promisedDays: body.promisedDays,
@@ -289,6 +302,20 @@ export function createCompanyExperienceService(
               ? null
               : `${body.plannedStartMonth}-01`,
         })
+
+        await dependencies.repository.createApplicationCandidateContext({
+          applicationId: created.job_application_id,
+          seniority: body.seniority,
+          experienceBand: body.experienceBand,
+        })
+
+        try {
+          revalidateTag(PUBLIC_BENCHMARK_REPORT_CACHE_TAG, 'max')
+        } catch {
+          // A completed contribution remains valid when this service runs
+          // outside a Next.js request context.
+        }
+
         return companyExperienceCreateResultSchema.parse({
           receiptId: created.receipt_id,
           companyExperienceId: created.company_experience_id,

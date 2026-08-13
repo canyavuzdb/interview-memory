@@ -4,51 +4,113 @@ import {
   SurveySelect,
   surveyControlClass,
 } from '@/components/survey-flow/SurveyField'
+import SurveyCompanyCombobox from '@/components/survey-flow/SurveyCompanyCombobox'
+import SurveyRoleCombobox from '@/components/survey-flow/SurveyRoleCombobox'
 import {
   APPLICATION_CHANNELS,
-  PROCESS_YEARS,
+  APPLICATION_EXPERIENCE_BANDS,
+  APPLICATION_SENIORITIES,
 } from '@/lib/constants/hrProcess'
 
 export default function StepCompanyInfo({
   booleanOptions,
   copy,
   errors,
+  locale,
   selectPlaceholder,
   setField,
   state,
 }) {
   return (
     <div className="space-y-6">
-      <SurveyField id="hr-company-name" label={copy.fields.companyName.label} error={errors.companyName}>
-        <input
-          id="hr-company-name"
-          value={state.companyName}
-          onChange={(event) => setField('companyName', event.target.value)}
-          placeholder={copy.fields.companyName.placeholder}
-          aria-invalid={Boolean(errors.companyName)}
-          className={surveyControlClass}
-        />
-      </SurveyField>
+      {state.companySelection === 'not_listed' ? (
+        <div className="border border-[var(--line-strong)] bg-[var(--accent-soft)] px-4 py-3">
+          <p className="text-sm font-semibold text-accentDark">Şirket katalogda yok</p>
+          <button
+            type="button"
+            className="mt-2 text-sm font-semibold text-accent underline underline-offset-4"
+            onClick={() => {
+              setField('companyName', '')
+              setField('companySelection', '')
+            }}
+          >
+            Katalogdan şirket seç
+          </button>
+        </div>
+      ) : (
+        <SurveyField id="hr-company-name" label={copy.fields.companyName.label} error={errors.companyName}>
+          <SurveyCompanyCombobox
+            id="hr-company-name"
+            error={errors.companyName}
+            locale={locale}
+            value={state.companyName}
+            onChange={(company) => {
+              setField('companyName', company?.label ?? '')
+              setField('companySelection', 'catalog')
+            }}
+            onNotListed={(query) => {
+              setField('companyName', query)
+              setField('companySelection', 'not_listed')
+            }}
+            placeholder={copy.fields.companyName.placeholder}
+          />
+        </SurveyField>
+      )}
+
+      {state.companySelection === 'not_listed' && (
+        <SurveyField
+          id="hr-unlisted-company-name"
+          label="Şirketin tam adı (opsiyonel)"
+          hint="Boş bırakabilirsin. Yazdığın ad katalogda zaten varsa eşleştirilir; yoksa doğrulanana kadar görünmeyen bir öneri olarak tutulur."
+        >
+          <input
+            id="hr-unlisted-company-name"
+            value={state.companyName}
+            onChange={(event) => setField('companyName', event.target.value)}
+            placeholder="Örn. Trendyol"
+            className={surveyControlClass}
+          />
+        </SurveyField>
+      )}
 
       <SurveyField id="hr-applied-role" label={copy.fields.appliedRole.label} error={errors.appliedRole}>
-        <input
+        <SurveyRoleCombobox
           id="hr-applied-role"
-          value={state.appliedRole}
-          onChange={(event) => setField('appliedRole', event.target.value)}
+          error={errors.appliedRole}
+          locale={locale}
           placeholder={copy.fields.appliedRole.placeholder}
-          aria-invalid={Boolean(errors.appliedRole)}
-          className={surveyControlClass}
+          value={state.appliedRole ? { value: state.appliedRole, label: state.appliedRole } : null}
+          onChange={(role) => setField('appliedRole', role?.label ?? '')}
         />
       </SurveyField>
 
-      <SurveyChoiceGroup
-        name="process-year"
-        label={copy.fields.processYear.label}
-        value={state.processYear}
-        onChange={(value) => setField('processYear', value)}
-        options={PROCESS_YEARS.map((year) => ({ value: year, label: year }))}
-        error={errors.processYear}
-      />
+      <div className="grid gap-6 sm:grid-cols-2">
+        <SurveyField id="hr-seniority" label={copy.fields.seniority.label} error={errors.seniority}>
+          <SurveySelect
+            id="hr-seniority"
+            value={state.seniority}
+            onChange={(event) => setField('seniority', event.target.value)}
+          >
+            <option value="">{selectPlaceholder}</option>
+            {APPLICATION_SENIORITIES.map((seniority) => (
+              <option key={seniority} value={seniority}>{copy.fields.seniority.options[seniority]}</option>
+            ))}
+          </SurveySelect>
+        </SurveyField>
+
+        <SurveyField id="hr-experience-band" label={copy.fields.experienceBand.label} error={errors.experienceBand}>
+          <SurveySelect
+            id="hr-experience-band"
+            value={state.experienceBand}
+            onChange={(event) => setField('experienceBand', event.target.value)}
+          >
+            <option value="">{selectPlaceholder}</option>
+            {APPLICATION_EXPERIENCE_BANDS.map((band) => (
+              <option key={band} value={band}>{copy.fields.experienceBand.options[band]}</option>
+            ))}
+          </SurveySelect>
+        </SurveyField>
+      </div>
 
       <SurveyField
         id="hr-application-month"
@@ -61,9 +123,7 @@ export default function StepCompanyInfo({
           value={state.applicationMonth}
           onChange={(event) => {
             setField('applicationMonth', event.target.value)
-            if (event.target.value) {
-              setField('processYear', event.target.value.slice(0, 4))
-            }
+            setField('processYear', event.target.value.slice(0, 4))
           }}
           aria-invalid={Boolean(errors.applicationMonth)}
           className={surveyControlClass}

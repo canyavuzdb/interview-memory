@@ -93,6 +93,14 @@ export type Database = {
           remaining: number
         }[]
       }
+      create_application_candidate_context_v1: {
+        Args: {
+          p_application_id: string
+          p_experience_band: string
+          p_seniority: string
+        }
+        Returns: undefined
+      }
       create_company_experience_v1: {
         Args: {
           p_actual_days: number
@@ -333,6 +341,14 @@ export type Database = {
           receipt_id: string
           submission_id: string
         }[]
+      }
+      get_company_process_context_report_v1: {
+        Args: { p_min_cohort_size?: number; p_months?: number }
+        Returns: Json
+      }
+      get_company_process_report_v1: {
+        Args: { p_min_cohort_size?: number; p_months?: number }
+        Returns: Json
       }
       get_current_notice_v1: {
         Args: { p_document_type: string; p_locale: string }
@@ -587,6 +603,16 @@ export type Database = {
         Args: { p_alias: string; p_country_code?: string; p_locale?: string }
         Returns: {
           company_id: string
+        }[]
+      }
+      search_published_companies_v1: {
+        Args: { p_limit?: number; p_query: string }
+        Returns: {
+          country_code: string
+          display_name: string
+          id: string
+          sector_id: number
+          slug: string
         }[]
       }
     }

@@ -1,24 +1,13 @@
 'use client'
 
-import {
-  ArrowRight,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  Search,
-  SlidersHorizontal,
-} from 'lucide-react'
-import {
-  useId,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { ChevronDown, Search } from 'lucide-react'
+import { useId, useMemo, useState } from 'react'
 import ReportMethodology from './ReportMethodology'
 
-const MIN_SAMPLE_OPTIONS = [10, 25, 50]
-const PAGE_SIZE_OPTIONS = [10, 25, 50]
-const OVERVIEW_SAMPLE_THRESHOLD = 10
+// Temporary testing mode: make every eligible aggregate row inspectable.
+// Restore the public default to 10 before a production release.
+const MIN_SAMPLE_OPTIONS = [1, 5, 10, 25, 50]
+const OVERVIEW_SAMPLE_THRESHOLD = 1
 
 function localeTag(locale) {
   return locale === 'tr' ? 'tr-TR' : 'en-US'
@@ -28,8 +17,8 @@ function formatNumber(value, locale) {
   return new Intl.NumberFormat(localeTag(locale)).format(value)
 }
 
-function formatRate(numerator, denominator, locale, minimumSample = OVERVIEW_SAMPLE_THRESHOLD) {
-  if (!denominator || denominator < minimumSample) return '—'
+function formatRate(numerator, denominator, locale) {
+  if (!denominator) return '—'
 
   return new Intl.NumberFormat(localeTag(locale), {
     maximumFractionDigits: 1,
@@ -37,24 +26,37 @@ function formatRate(numerator, denominator, locale, minimumSample = OVERVIEW_SAM
   }).format(numerator / denominator)
 }
 
-function formatPercentValue(value, locale) {
+function formatScore(value, locale) {
   if (value === null) return '—'
 
   return new Intl.NumberFormat(localeTag(locale), {
     maximumFractionDigits: 1,
-    style: 'percent',
   }).format(value)
 }
 
-function median(values) {
-  if (!values.length) return null
+function roleNarrative({ company, copy, locale, role }) {
+  return interpolateCopy(copy.treemap.roleNarrative, {
+    applications: formatNumber(role.applicationsCount, locale),
+    candidates: formatNumber(role.contributorsCount, locale),
+    company,
+    employment: formatNumber(role.employmentStartedApplicationsCount, locale),
+    final: formatNumber(role.finalApplicationsCount, locale),
+    hr: formatNumber(role.hrScreenApplicationsCount, locale),
+    interview: formatNumber(role.interviewedApplicationsCount, locale),
+    offer: formatNumber(role.offeredApplicationsCount, locale),
+    response: formatNumber(role.respondedApplicationsCount, locale),
+    role: role.role,
+    technical: formatNumber(role.technicalApplicationsCount, locale),
+  })
+}
 
-  const ordered = [...values].sort((first, second) => first - second)
-  const middle = Math.floor(ordered.length / 2)
+function contextTitle(context, copy) {
+  const seniority = copy.treemap.context.seniorities[context.seniority] ?? context.seniority
+  const experience = copy.treemap.context.experienceBands[context.experienceBand] ?? context.experienceBand
+  const channel = copy.treemap.context.applicationChannels[context.applicationChannel] ?? context.applicationChannel
+  const referral = context.hadReferral ? ` · ${copy.treemap.context.referral}` : ''
 
-  return ordered.length % 2 === 0
-    ? (ordered[middle - 1] + ordered[middle]) / 2
-    : ordered[middle]
+  return `${context.role} · ${seniority} · ${experience} · ${channel}${referral}`
 }
 
 function interpolateCopy(template, values) {
@@ -65,593 +67,394 @@ function interpolateCopy(template, values) {
   ))
 }
 
-function denominatorFor(row, metric) {
-  if (metric === 'postInterview') return row.interviewedApplicationsCount
-  if (metric === 'sample') return row.contributorsCount
+function responseRate(item) {
+  if (!item.applicationsCount && !item.eligibleMatureApplicationsCount) return 0
 
-  return row.eligibleMatureApplicationsCount
+  const applications = item.applicationsCount ?? item.eligibleMatureApplicationsCount
+  return item.respondedApplicationsCount / applications
 }
 
-function noResponseRate(row) {
-  if (!row.eligibleMatureApplicationsCount) return -1
-  return row.noSubstantiveUpdateCount / row.eligibleMatureApplicationsCount
+function itemWeight(item) {
+  return item.applicationsCount ?? item.eligibleMatureApplicationsCount
 }
 
-function postInterviewRate(row) {
-  if (!row.interviewedApplicationsCount) return -1
-  return row.postInterviewNoFollowUpCount / row.interviewedApplicationsCount
+/**
+ * A binary, weight-proportional layout. Unlike a CSS grid, each rectangle's
+ * area represents the number of applications it contains.
+ */
+function treemapLayout(items, bounds = { height: 100, width: 100, x: 0, y: 0 }) {
+  if (!items.length) return []
+  if (items.length === 1) return [{ ...items[0], ...bounds }]
+
+  const total = items.reduce((sum, item) => sum + itemWeight(item), 0)
+  let runningWeight = 0
+  let splitIndex = 1
+
+  for (let index = 0; index < items.length - 1; index += 1) {
+    runningWeight += itemWeight(items[index])
+    splitIndex = index + 1
+    if (runningWeight >= total / 2) break
+  }
+
+  const first = items.slice(0, splitIndex)
+  const second = items.slice(splitIndex)
+  const firstWeight = first.reduce((sum, item) => sum + itemWeight(item), 0)
+  const firstShare = firstWeight / total
+
+  if (bounds.width >= bounds.height) {
+    const firstWidth = bounds.width * firstShare
+    return [
+      ...treemapLayout(first, { ...bounds, width: firstWidth }),
+      ...treemapLayout(second, {
+        ...bounds,
+        width: bounds.width - firstWidth,
+        x: bounds.x + firstWidth,
+      }),
+    ]
+  }
+
+  const firstHeight = bounds.height * firstShare
+  return [
+    ...treemapLayout(first, { ...bounds, height: firstHeight }),
+    ...treemapLayout(second, {
+      ...bounds,
+      height: bounds.height - firstHeight,
+      y: bounds.y + firstHeight,
+    }),
+  ]
 }
 
-function rateBarWidth(row) {
-  return `${Math.max(0, Math.min(100, Math.round(noResponseRate(row) * 100)))}%`
+function tintFor(rate) {
+  const accentShare = 12 + Math.round(rate * 50)
+  return `color-mix(in srgb, var(--accent) ${accentShare}%, var(--surface))`
 }
 
-function CompanyTable({
-  copy,
-  locale,
-  minimumDisplaySample,
-  rankOffset = 0,
-  rows,
-}) {
+function treemapHeightClass(count) {
+  if (count <= 3) return 'h-72 sm:h-80'
+  if (count <= 8) return 'h-80 sm:h-96'
+  return 'h-[28rem] sm:h-[32rem]'
+}
+
+function Funnel({ copy, locale, row }) {
+  const applications = row.eligibleMatureApplicationsCount
+  const steps = [
+    { label: copy.columns.applications, value: applications },
+    { label: copy.columns.response, value: row.respondedApplicationsCount },
+    { label: copy.columns.hrScreen, value: row.hrScreenApplicationsCount },
+    { label: copy.columns.interview, value: row.interviewedApplicationsCount },
+    { label: copy.columns.offer, value: row.offeredApplicationsCount },
+    { label: copy.columns.employment, value: row.employmentStartedApplicationsCount },
+  ]
+
   return (
-    <div
-      className="hidden overflow-x-auto focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent md:block"
-      tabIndex="0"
-      aria-label={copy.tableScrollLabel}
-    >
-      <table className="w-full min-w-[850px] border-collapse">
-        <caption className="sr-only">{copy.tableCaption}</caption>
-        <thead>
-          <tr className="border-b border-line">
-            {[
-              copy.columns.rank,
-              copy.columns.company,
-              copy.columns.noResponse,
-              copy.columns.postInterview,
-              copy.columns.sample,
-            ].map((label, index) => (
-              <th
-                key={label}
-                scope="col"
-                className={`px-5 py-3 font-mono text-[8px] font-bold uppercase tracking-[0.07em] text-muted ${
-                  index < 2 ? 'text-left' : 'text-right'
-                }`}
-              >
-                {label}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, index) => (
-            <tr
-              key={row.id}
-              className="h-[68px] border-b border-line last:border-b-0"
-            >
-              <td className="w-16 px-5 py-4 font-mono text-[9px] font-bold text-muted">
-                {String(rankOffset + index + 1).padStart(2, '0')}
-              </td>
-              <th scope="row" className="min-w-56 px-5 py-4 text-left">
-                <p className="text-sm font-semibold text-ink">{row.company}</p>
-                <div className="mt-2 h-px max-w-52 bg-line">
-                  <span
-                    className="block h-full bg-accent"
-                    style={{ width: rateBarWidth(row) }}
-                  />
-                </div>
-              </th>
-              <td className="px-5 py-4 text-right">
-                <p className="font-mono text-sm font-semibold text-ink">
-                  {formatRate(
-                    row.noSubstantiveUpdateCount,
-                    row.eligibleMatureApplicationsCount,
-                    locale,
-                    minimumDisplaySample,
-                  )}
-                </p>
-                <p className="sr-only">
-                  {formatNumber(row.noSubstantiveUpdateCount, locale)}/
-                  {formatNumber(row.eligibleMatureApplicationsCount, locale)}
-                </p>
-              </td>
-              <td className="px-5 py-4 text-right">
-                <p className="font-mono text-sm font-semibold text-ink">
-                  {formatRate(
-                    row.postInterviewNoFollowUpCount,
-                    row.interviewedApplicationsCount,
-                    locale,
-                    minimumDisplaySample,
-                  )}
-                </p>
-                <p className="sr-only">
-                  {formatNumber(row.postInterviewNoFollowUpCount, locale)}/
-                  {formatNumber(row.interviewedApplicationsCount, locale)}
-                </p>
-              </td>
-              <td className="px-5 py-4 text-right font-mono text-xs font-bold text-muted">
-                {formatNumber(row.contributorsCount, locale)}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
-}
-
-function CompanyCards({
-  copy,
-  locale,
-  minimumDisplaySample,
-  rankOffset = 0,
-  rows,
-}) {
-  return (
-    <ol className="divide-y divide-line md:hidden">
-      {rows.map((row, index) => (
-        <li key={row.id} className="p-5">
-          <div className="flex items-baseline justify-between gap-4">
-            <p className="min-w-0 text-sm font-semibold text-ink">
-              <span className="mr-2 font-mono text-[8px] text-muted">
-                {String(rankOffset + index + 1).padStart(2, '0')}
-              </span>
-              {row.company}
-            </p>
-            <span className="shrink-0 font-mono text-[8px] font-bold text-muted">
-              n={formatNumber(row.contributorsCount, locale)}
-            </span>
+    <ol className="grid gap-0 border-y border-line sm:grid-cols-3 lg:grid-cols-6">
+      {steps.map((step) => (
+        <li key={step.label} className="min-w-0 border-b border-line p-4 last:border-b-0 lg:border-b-0 lg:border-r lg:last:border-r-0">
+          <div className="h-1 bg-line">
+            <span
+              className="block h-full bg-accent"
+              style={{ width: `${applications ? Math.max(3, (step.value / applications) * 100) : 0}%` }}
+            />
           </div>
-          <dl className="mt-5 grid grid-cols-2 gap-5 border-t border-line pt-4">
-            <div>
-              <dt className="font-mono text-[7px] font-bold uppercase leading-3 tracking-[0.05em] text-muted">
-                {copy.columns.noResponse}
-              </dt>
-              <dd className="mt-1.5 font-mono text-base font-bold text-ink">
-                {formatRate(
-                  row.noSubstantiveUpdateCount,
-                  row.eligibleMatureApplicationsCount,
-                  locale,
-                  minimumDisplaySample,
-                )}
-              </dd>
-            </div>
-            <div>
-              <dt className="font-mono text-[7px] font-bold uppercase leading-3 tracking-[0.05em] text-muted">
-                {copy.columns.postInterview}
-              </dt>
-              <dd className="mt-1.5 font-mono text-base font-bold text-ink">
-                {formatRate(
-                  row.postInterviewNoFollowUpCount,
-                  row.interviewedApplicationsCount,
-                  locale,
-                  minimumDisplaySample,
-                )}
-              </dd>
-            </div>
-          </dl>
+          <p className="mt-3 font-mono text-lg font-bold text-ink">{formatNumber(step.value, locale)}</p>
+          <p className="mt-1 font-mono text-[7px] font-bold uppercase tracking-[0.06em] text-muted">{step.label}</p>
         </li>
       ))}
     </ol>
   )
 }
 
-function CompanyRows(props) {
+function CompanyDetails({ copy, locale, row }) {
+  const applications = row.eligibleMatureApplicationsCount
+  const qualityMetrics = [
+    { label: copy.detail.transparency, value: `${formatScore(row.averageTransparency, locale)}/5` },
+    { label: copy.detail.professionalism, value: `${formatScore(row.averageProfessionalism, locale)}/5` },
+    { label: copy.detail.feedback, value: formatRate(row.feedbackSharedCount, applications, locale) },
+    { label: copy.detail.irrelevant, value: formatRate(row.irrelevantQuestionCount, applications, locale) },
+  ]
+
   return (
-    <>
-      <CompanyTable {...props} />
-      <CompanyCards {...props} />
-    </>
+    <section className="border-t border-line bg-[var(--surface-muted)] px-5 py-6 sm:px-6">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+        <div>
+          <p className="font-mono text-[8px] font-bold uppercase tracking-[0.07em] text-accentDark">{copy.treemap.selectedEyebrow}</p>
+          <h2 className="mt-1 text-xl font-semibold tracking-[-0.03em] text-ink">{row.company}</h2>
+        </div>
+        <p className="font-mono text-[8px] font-bold uppercase tracking-[0.07em] text-muted">
+          {interpolateCopy(copy.treemap.contributorCount, { count: formatNumber(row.contributorsCount, locale) })}
+        </p>
+      </div>
+
+      <div className="mt-5">
+        <p className="max-w-3xl text-sm leading-6 text-muted">
+          {interpolateCopy(copy.treemap.companyNarrative, {
+            applications: formatNumber(applications, locale),
+            candidates: formatNumber(row.contributorsCount, locale),
+            company: row.company,
+            response: formatNumber(row.respondedApplicationsCount, locale),
+          })}
+        </p>
+        <div className="mt-5">
+          <Funnel copy={copy} locale={locale} row={row} />
+        </div>
+      </div>
+
+      <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
+        <div>
+          <p className="font-mono text-[8px] font-bold uppercase tracking-[0.07em] text-muted">{copy.detail.contextsLabel}</p>
+          {row.contexts.length ? (
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+            {row.contexts.map((context) => (
+              <div key={`${context.role}-${context.seniority}-${context.experienceBand}-${context.applicationChannel}-${context.hadReferral}`} className="border border-line bg-surface p-3">
+                <div className="flex items-start justify-between gap-3">
+                  <p className="min-w-0 text-sm font-semibold text-ink">{contextTitle(context, copy)}</p>
+                  <p className="shrink-0 font-mono text-xs font-bold text-ink">{formatNumber(context.applicationsCount, locale)}</p>
+                </div>
+                <p className="mt-2 font-mono text-[8px] font-bold uppercase tracking-[0.06em] text-muted">
+                  {interpolateCopy(copy.treemap.roleSummary, {
+                    response: formatRate(context.respondedApplicationsCount, context.applicationsCount, locale),
+                    interview: formatNumber(context.interviewedApplicationsCount, locale),
+                    offer: formatNumber(context.offeredApplicationsCount, locale),
+                  })}
+                </p>
+                <p className="mt-3 text-xs leading-5 text-muted">
+                  {roleNarrative({ company: row.company, copy, locale, role: context })}
+                </p>
+              </div>
+            ))}
+          </div>
+          ) : (
+            <p className="mt-3 text-sm leading-6 text-muted">{copy.treemap.legacyContextNote}</p>
+          )}
+        </div>
+
+        <dl className="grid grid-cols-2 gap-x-6 gap-y-4 border-t border-line pt-4 lg:w-72 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
+          {qualityMetrics.map((metric) => (
+            <div key={metric.label}>
+              <dt className="font-mono text-[7px] font-bold uppercase tracking-[0.06em] text-muted">{metric.label}</dt>
+              <dd className="mt-1 font-mono text-base font-bold text-ink">{metric.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+      <p className="mt-5 text-xs leading-5 text-muted">{copy.detail.note}</p>
+    </section>
   )
 }
 
-function SecondaryCompanyFilters({
-  copy,
-  minimumSample,
-  onMinimumSampleChange,
-  onPageSizeChange,
-  pageSize,
-}) {
+function CompanyTreemap({ copy, locale, onSelect, rows, selectedId }) {
+  const layout = useMemo(() => (
+    treemapLayout([...rows].toSorted((first, second) => itemWeight(second) - itemWeight(first)))
+  ), [rows])
+
   return (
-    <details className="group relative sm:col-span-2 lg:col-span-1 lg:justify-self-end">
-      <summary className="report-filter-summary flex min-h-10 cursor-pointer list-none items-center gap-2 font-mono text-[8px] font-bold uppercase tracking-[0.06em] text-muted transition-colors hover:text-ink [&::-webkit-details-marker]:hidden">
-        <SlidersHorizontal size={13} strokeWidth={1.7} aria-hidden="true" />
-        {copy.toolbar.filtersLabel}
-        <span className="font-mono text-[7px] font-bold text-accentDark">
-          n≥{minimumSample} · {pageSize}
-        </span>
-        <ChevronDown
-          size={12}
-          strokeWidth={1.7}
-          aria-hidden="true"
-          className="ml-auto transition-transform duration-200 group-open:rotate-180 lg:ml-1"
-        />
-      </summary>
-
-      <div className="report-filter-popover z-30 mt-2 grid grid-cols-2 gap-5 p-4 lg:absolute lg:right-0 lg:top-full lg:w-72">
-        <label className="grid gap-1">
-          <span className="font-mono text-[7px] font-bold uppercase tracking-[0.06em] text-muted">
-            {copy.toolbar.minSampleLabel}
-          </span>
-          <select
-            value={minimumSample}
-            onChange={onMinimumSampleChange}
-            className="report-filter-control w-full px-1 font-mono text-xs font-semibold"
-          >
-            {MIN_SAMPLE_OPTIONS.map((value) => (
-              <option key={value} value={value}>n ≥ {value}</option>
-            ))}
-          </select>
-        </label>
-
-        <label className="grid gap-1">
-          <span className="font-mono text-[7px] font-bold uppercase tracking-[0.06em] text-muted">
-            {copy.toolbar.pageSizeLabel}
-          </span>
-          <select
-            value={pageSize}
-            onChange={onPageSizeChange}
-            className="report-filter-control w-full px-1 font-mono text-xs font-semibold"
-          >
-            {PAGE_SIZE_OPTIONS.map((value) => (
-              <option key={value} value={value}>{value}</option>
-            ))}
-          </select>
-        </label>
+    <div>
+      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b border-line px-5 py-4 sm:px-6">
+        <p className="font-mono text-[8px] font-bold uppercase tracking-[0.07em] text-muted">{copy.treemap.legendArea}</p>
+        <p className="font-mono text-[8px] font-bold uppercase tracking-[0.07em] text-muted">{copy.treemap.legendColor}</p>
       </div>
-    </details>
+      <div
+        className={`relative ${treemapHeightClass(rows.length)} bg-[var(--surface-muted)]`}
+        role="group"
+        aria-label={copy.treemap.ariaLabel}
+      >
+        {layout.map((company) => {
+          const roleLayout = treemapLayout([...company.roles].toSorted((first, second) => itemWeight(second) - itemWeight(first)))
+          const isSelected = company.id === selectedId
+          const showCompanyLabel = company.width >= 16 && company.height >= 16
+
+          return (
+            <button
+              key={company.id}
+              type="button"
+              aria-pressed={isSelected}
+              aria-label={interpolateCopy(copy.treemap.companyAria, {
+                applications: formatNumber(company.eligibleMatureApplicationsCount, locale),
+                company: company.company,
+                response: formatRate(company.respondedApplicationsCount, company.eligibleMatureApplicationsCount, locale),
+              })}
+              onClick={() => onSelect(company.id)}
+              className="absolute overflow-hidden border-2 border-[var(--surface-muted)] text-left transition-shadow focus-visible:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-ink aria-pressed:z-10 aria-pressed:border-accentDark aria-pressed:shadow-[inset_0_0_0_1px_var(--accentDark)]"
+              style={{
+                height: `${company.height}%`,
+                left: `${company.x}%`,
+                top: `${company.y}%`,
+                width: `${company.width}%`,
+                backgroundColor: tintFor(responseRate(company)),
+              }}
+            >
+              {roleLayout.map((role) => (
+                <span
+                  key={role.role}
+                  className="absolute border border-[color:color-mix(in_srgb,var(--surface)_65%,transparent)]"
+                  style={{
+                    height: `${role.height}%`,
+                    left: `${role.x}%`,
+                    top: `${role.y}%`,
+                    width: `${role.width}%`,
+                    backgroundColor: tintFor(responseRate(role)),
+                  }}
+                >
+                  {role.width >= 28 && role.height >= 26 ? (
+                    <span className="absolute inset-x-2 bottom-2 font-mono text-[7px] font-bold leading-3 text-ink">
+                      <span className="block truncate">{role.role}</span>
+                      <span>{formatNumber(role.applicationsCount, locale)}</span>
+                    </span>
+                  ) : null}
+                </span>
+              ))}
+              {showCompanyLabel ? (
+                <span className="pointer-events-none absolute inset-x-2 top-2 z-[1]">
+                  <span className="block truncate text-sm font-semibold tracking-[-0.02em] text-ink">{company.company}</span>
+                  <span className="mt-0.5 block font-mono text-[7px] font-bold uppercase tracking-[0.06em] text-ink">
+                    {formatNumber(company.eligibleMatureApplicationsCount, locale)} · {formatRate(company.respondedApplicationsCount, company.eligibleMatureApplicationsCount, locale)}
+                  </span>
+                </span>
+              ) : null}
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+function SecondaryCompanyFilters({ copy, minimumSample, onMinimumSampleChange }) {
+  return (
+    <label className="grid gap-1">
+      <span className="font-mono text-[8px] font-semibold tracking-[0.04em] text-muted">
+        {copy.toolbar.minSampleLabel}
+      </span>
+      <select
+        value={minimumSample}
+        onChange={onMinimumSampleChange}
+        className="report-filter-control w-full px-1 text-xs font-semibold"
+      >
+        {MIN_SAMPLE_OPTIONS.map((value) => (
+          <option key={value} value={value}>n ≥ {value}</option>
+        ))}
+      </select>
+    </label>
   )
 }
 
 export default function CompanyResponsivenessExplorer({ copy, locale, rows }) {
   const componentId = useId().replaceAll(':', '')
-  const tabRefs = useRef([])
   const [activeView, setActiveView] = useState('overview')
   const [query, setQuery] = useState('')
-  const [sortMetric, setSortMetric] = useState('noResponse')
-  const [minimumSample, setMinimumSample] = useState(10)
-  const [pageSize, setPageSize] = useState(10)
-  const [page, setPage] = useState(1)
+  const [minimumSample, setMinimumSample] = useState(1)
+  const [selectedCompanyId, setSelectedCompanyId] = useState(rows[0]?.id ?? null)
   const views = ['overview', 'all']
-
-  const collator = useMemo(() => new Intl.Collator(localeTag(locale), {
-    numeric: true,
-    sensitivity: 'base',
-  }), [locale])
 
   const overviewRows = useMemo(() => (
     rows
       .filter((row) => row.eligibleMatureApplicationsCount >= OVERVIEW_SAMPLE_THRESHOLD)
-      .toSorted((first, second) => (
-        noResponseRate(second) - noResponseRate(first)
-        || collator.compare(first.company, second.company)
-      ))
-      .slice(0, 5)
-  ), [collator, rows])
-
-  const summary = useMemo(() => {
-    const eligibleRows = rows.filter(
-      (row) => row.eligibleMatureApplicationsCount >= OVERVIEW_SAMPLE_THRESHOLD,
-    )
-    const applications = eligibleRows.reduce(
-      (total, row) => total + row.eligibleMatureApplicationsCount,
-      0,
-    )
-    const noUpdateRates = eligibleRows.map(noResponseRate)
-
-    return {
-      applications,
-      companies: eligibleRows.length,
-      medianNoUpdate: median(noUpdateRates),
-    }
-  }, [rows])
+      .toSorted((first, second) => itemWeight(second) - itemWeight(first))
+      .slice(0, 12)
+  ), [rows])
 
   const filteredRows = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase(localeTag(locale))
 
     return rows
       .filter((row) => (
-        denominatorFor(row, sortMetric) >= minimumSample
-        && (
-          !normalizedQuery
-          || row.company.toLocaleLowerCase(localeTag(locale)).includes(normalizedQuery)
-        )
+        row.contributorsCount >= minimumSample
+        && (!normalizedQuery || row.company.toLocaleLowerCase(localeTag(locale)).includes(normalizedQuery))
       ))
-      .toSorted((first, second) => {
-        if (sortMetric === 'company') {
-          return collator.compare(first.company, second.company)
-        }
+      .toSorted((first, second) => itemWeight(second) - itemWeight(first))
+  }, [locale, minimumSample, query, rows])
 
-        let difference
-
-        if (sortMetric === 'postInterview') {
-          difference = postInterviewRate(second) - postInterviewRate(first)
-        } else if (sortMetric === 'sample') {
-          difference = second.contributorsCount - first.contributorsCount
-        } else {
-          difference = noResponseRate(second) - noResponseRate(first)
-        }
-
-        return difference || collator.compare(first.company, second.company)
-      })
-  }, [collator, locale, minimumSample, query, rows, sortMetric])
-
-  const pageCount = Math.max(1, Math.ceil(filteredRows.length / pageSize))
-  const currentPage = Math.min(page, pageCount)
-  const pageStart = (currentPage - 1) * pageSize
-  const pageRows = filteredRows.slice(pageStart, pageStart + pageSize)
-  const visibleStart = filteredRows.length ? pageStart + 1 : 0
-  const visibleEnd = Math.min(pageStart + pageSize, filteredRows.length)
-
-  function selectView(view, focusTab = false) {
-    setActiveView(view)
-
-    if (focusTab) {
-      const index = views.indexOf(view)
-      window.requestAnimationFrame(() => tabRefs.current[index]?.focus())
-    }
-  }
-
-  function handleTabKeyDown(event, index) {
-    let nextIndex
-
-    if (event.key === 'ArrowRight') {
-      nextIndex = (index + 1) % views.length
-    } else if (event.key === 'ArrowLeft') {
-      nextIndex = (index - 1 + views.length) % views.length
-    } else if (event.key === 'Home') {
-      nextIndex = 0
-    } else if (event.key === 'End') {
-      nextIndex = views.length - 1
-    } else {
-      return
-    }
-
-    event.preventDefault()
-    selectView(views[nextIndex], true)
-  }
-
-  function updateSortMetric(value) {
-    setSortMetric(value)
-    setPage(1)
-  }
-
-  function updateMinimumSample(value) {
-    setMinimumSample(Number(value))
-    setPage(1)
-  }
-
-  function updatePageSize(value) {
-    setPageSize(Number(value))
-    setPage(1)
-  }
-
-  const formattedResults = {
-    count: formatNumber(filteredRows.length, locale),
-    end: formatNumber(visibleEnd, locale),
-    filtered: formatNumber(filteredRows.length, locale),
-    start: formatNumber(visibleStart, locale),
-    total: formatNumber(rows.length, locale),
-    visible: formatNumber(pageRows.length, locale),
-  }
+  const visibleRows = activeView === 'overview' ? overviewRows : filteredRows
+  const selectedRow = visibleRows.find((row) => row.id === selectedCompanyId) ?? visibleRows[0] ?? null
+  const resultCount = formatNumber(filteredRows.length, locale)
   const resultsCopy = copy.toolbar.results.includes('{')
-    ? interpolateCopy(copy.toolbar.results, formattedResults)
-    : `${formattedResults.filtered} ${copy.toolbar.results}`
-  const formattedPage = {
-    current: formatNumber(currentPage, locale),
-    page: formatNumber(currentPage, locale),
-    total: formatNumber(pageCount, locale),
+    ? interpolateCopy(copy.toolbar.results, { count: resultCount })
+    : `${resultCount} ${copy.toolbar.results}`
+
+  function selectView(view) {
+    setActiveView(view)
   }
-  const pageCopy = copy.pagination.page.includes('{')
-    ? interpolateCopy(copy.pagination.page, formattedPage)
-    : `${copy.pagination.page} ${formattedPage.current} / ${formattedPage.total}`
-  const viewAllCopy = interpolateCopy(copy.summary.viewAll, {
-    count: formatNumber(rows.length, locale),
-  })
+
   return (
     <div className="border border-line bg-surface">
       <div className="border-b border-line px-5 sm:px-6">
-        <div
-          role="tablist"
-          aria-label={copy.viewsLabel}
-          className="flex max-w-md gap-8"
-        >
-          {views.map((view, index) => {
-            const active = activeView === view
-
-            return (
-              <button
-                key={view}
-                ref={(element) => {
-                  tabRefs.current[index] = element
-                }}
-                id={`${componentId}-tab-${view}`}
-                type="button"
-                role="tab"
-                tabIndex={active ? 0 : -1}
-                aria-controls={`${componentId}-panel-${view}`}
-                aria-selected={active}
-                onClick={() => selectView(view)}
-                onKeyDown={(event) => handleTabKeyDown(event, index)}
-                className="report-subtab min-h-12"
-              >
-                {copy.views[view]}
-              </button>
-            )
-          })}
+        <div role="tablist" aria-label={copy.viewsLabel} className="flex max-w-md gap-8">
+          {views.map((view) => (
+            <button
+              key={view}
+              id={`${componentId}-tab-${view}`}
+              type="button"
+              role="tab"
+              aria-controls={`${componentId}-panel-${view}`}
+              aria-selected={activeView === view}
+              onClick={() => selectView(view)}
+              className="report-subtab min-h-12"
+            >
+              {copy.views[view]}
+            </button>
+          ))}
         </div>
       </div>
 
       <section
-        id={`${componentId}-panel-overview`}
+        id={`${componentId}-panel-${activeView}`}
         role="tabpanel"
-        aria-labelledby={`${componentId}-tab-overview`}
-        hidden={activeView !== 'overview'}
+        aria-labelledby={`${componentId}-tab-${activeView}`}
       >
-        <div className="border-b border-line p-6 sm:p-8">
-          <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
-            <div>
-              <p className="text-base font-semibold tracking-[-0.02em] text-ink">
-                {copy.summary.heading}
-              </p>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
-                {copy.summary.description}
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={() => selectView('all', true)}
-              className="report-action justify-self-start lg:justify-self-end"
-            >
-              {viewAllCopy}
-              <ArrowRight size={13} strokeWidth={1.7} aria-hidden="true" />
-            </button>
+        {activeView === 'overview' ? (
+          <div className="border-b border-line px-5 py-6 sm:px-6">
+            <p className="text-base font-semibold tracking-[-0.02em] text-ink">{copy.summary.heading}</p>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">{copy.treemap.description}</p>
           </div>
+        ) : (
+          <div className="grid gap-5 border-b border-line px-5 py-5 sm:grid-cols-2 sm:px-6">
+            <label className="grid gap-1">
+              <span className="font-mono text-[8px] font-semibold tracking-[0.04em] text-muted">{copy.toolbar.searchLabel}</span>
+              <span className="relative block">
+                <Search size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" aria-hidden="true" />
+                <input
+                  type="search"
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder={copy.toolbar.searchPlaceholder}
+                  className="report-filter-control w-full pl-9 pr-2 text-xs placeholder:text-muted"
+                />
+              </span>
+            </label>
+            <SecondaryCompanyFilters
+              copy={copy}
+              minimumSample={minimumSample}
+              onMinimumSampleChange={(event) => setMinimumSample(Number(event.target.value))}
+            />
+          </div>
+        )}
 
-          <dl className="mt-7 grid gap-6 border-t border-line pt-5 sm:grid-cols-3">
-            {[
-              {
-                label: copy.summary.companies,
-                value: formatNumber(summary.companies, locale),
-              },
-              {
-                label: copy.summary.applications,
-                value: formatNumber(summary.applications, locale),
-              },
-              {
-                label: copy.summary.medianNoUpdate,
-                value: formatPercentValue(summary.medianNoUpdate, locale),
-              },
-            ].map((item) => (
-              <div key={item.label}>
-                <dt className="font-mono text-[7px] font-bold uppercase tracking-[0.07em] text-muted">
-                  {item.label}
-                </dt>
-                <dd className="mt-1.5 font-mono text-lg font-bold tracking-[-0.03em] text-ink">
-                  {item.value}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </div>
+        {activeView === 'all' ? (
+          <div className="flex min-h-12 items-center border-b border-line px-5 sm:px-6">
+            <p className="font-mono text-[8px] font-bold uppercase tracking-[0.07em] text-muted" aria-live="polite">{resultsCopy}</p>
+          </div>
+        ) : null}
 
-        <CompanyRows
-          copy={copy}
-          locale={locale}
-          minimumDisplaySample={OVERVIEW_SAMPLE_THRESHOLD}
-          rows={overviewRows}
-        />
-      </section>
-
-      <section
-        id={`${componentId}-panel-all`}
-        role="tabpanel"
-        aria-labelledby={`${componentId}-tab-all`}
-        hidden={activeView !== 'all'}
-      >
-        <div className="grid gap-5 border-b border-line px-5 py-5 sm:grid-cols-2 sm:px-6 lg:grid-cols-[minmax(15rem,1fr)_15rem_auto] lg:items-end">
-          <label className="grid gap-1">
-            <span className="font-mono text-[8px] font-semibold tracking-[0.04em] text-muted">
-              {copy.toolbar.searchLabel}
-            </span>
-            <span className="relative block">
-              <Search
-                size={15}
-                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
-                aria-hidden="true"
-              />
-              <input
-                type="search"
-                value={query}
-                onChange={(event) => {
-                  setQuery(event.target.value)
-                  setPage(1)
-                }}
-                placeholder={copy.toolbar.searchPlaceholder}
-                className="report-filter-control w-full pl-9 pr-2 text-xs placeholder:text-muted"
-              />
-            </span>
-          </label>
-
-          <label className="grid gap-1">
-            <span className="font-mono text-[8px] font-semibold tracking-[0.04em] text-muted">
-              {copy.toolbar.sortLabel}
-            </span>
-            <select
-              value={sortMetric}
-              onChange={(event) => updateSortMetric(event.target.value)}
-              className="report-filter-control w-full px-1 text-xs font-semibold"
-            >
-              {['noResponse', 'postInterview', 'sample', 'company'].map((metric) => (
-                <option key={metric} value={metric}>{copy.sort[metric]}</option>
-              ))}
-            </select>
-          </label>
-
-          <SecondaryCompanyFilters
-            copy={copy}
-            minimumSample={minimumSample}
-            onMinimumSampleChange={(event) => updateMinimumSample(event.target.value)}
-            onPageSizeChange={(event) => updatePageSize(event.target.value)}
-            pageSize={pageSize}
-          />
-        </div>
-
-        <div className="flex min-h-12 items-center border-b border-line px-5 sm:px-6">
-          <p
-            className="font-mono text-[8px] font-bold uppercase tracking-[0.07em] text-muted"
-            aria-live="polite"
-          >
-            {resultsCopy}
-          </p>
-        </div>
-
-        {pageRows.length > 0 ? (
-          <CompanyRows
-            copy={copy}
-            locale={locale}
-            minimumDisplaySample={minimumSample}
-            rankOffset={pageStart}
-            rows={pageRows}
-          />
+        {visibleRows.length ? (
+          <>
+            <CompanyTreemap
+              copy={copy}
+              locale={locale}
+              rows={visibleRows}
+              selectedId={selectedRow?.id}
+              onSelect={setSelectedCompanyId}
+            />
+            {selectedRow ? <CompanyDetails copy={copy} locale={locale} row={selectedRow} /> : null}
+          </>
         ) : (
           <div className="px-6 py-16 text-center">
             <p className="text-lg font-semibold tracking-[-0.02em] text-ink">{copy.empty.title}</p>
             <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-muted">{copy.empty.description}</p>
           </div>
         )}
-
-        <nav
-          aria-label={copy.pagination.label}
-          className="grid min-h-14 grid-cols-[1fr_auto_1fr] items-center border-t border-line px-3 sm:px-5"
-        >
-          <button
-            type="button"
-            disabled={currentPage <= 1 || filteredRows.length === 0}
-            onClick={() => setPage(Math.max(1, currentPage - 1))}
-            className="inline-flex min-h-11 items-center gap-2 justify-self-start px-2 font-mono text-[8px] font-bold uppercase tracking-[0.07em] text-ink transition-colors hover:text-accentDark disabled:cursor-not-allowed disabled:opacity-35"
-          >
-            <ChevronLeft size={14} aria-hidden="true" />
-            <span className="hidden sm:inline">{copy.pagination.previous}</span>
-          </button>
-          <p className="font-mono text-[8px] font-bold uppercase tracking-[0.07em] text-muted">
-            {pageCopy}
-          </p>
-          <button
-            type="button"
-            disabled={currentPage >= pageCount || filteredRows.length === 0}
-            onClick={() => setPage(Math.min(pageCount, currentPage + 1))}
-            className="inline-flex min-h-11 items-center gap-2 justify-self-end px-2 font-mono text-[8px] font-bold uppercase tracking-[0.07em] text-ink transition-colors hover:text-accentDark disabled:cursor-not-allowed disabled:opacity-35"
-          >
-            <span className="hidden sm:inline">{copy.pagination.next}</span>
-            <ChevronRight size={14} aria-hidden="true" />
-          </button>
-        </nav>
       </section>
 
-      <ReportMethodology
-        label={copy.methodologyLabel}
-        text={copy.methodology}
-      />
+      <ReportMethodology label={copy.methodologyLabel} text={copy.methodology} />
     </div>
   )
 }

@@ -5,8 +5,10 @@ create extension if not exists pgtap with schema extensions;
 select extensions.plan(27);
 
 set local session_replication_role = replica;
-delete from catalog.companies
-where slug in ('anonim-sirket-a', 'anonim-sirket-b', 'anonim-sirket-c');
+-- This test asserts the complete public projection and must remain isolated
+-- from the production-like employer catalog seeds.
+delete from catalog.company_aliases;
+delete from catalog.companies;
 delete from catalog.roles where taxonomy_version = '2026.1';
 delete from catalog.role_families where taxonomy_version = '2026.1';
 delete from catalog.sectors where id between 1001 and 1010 or id in (1, 2, 3);

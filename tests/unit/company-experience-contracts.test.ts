@@ -4,6 +4,7 @@ import { companyExperienceCreateBodySchema } from '@/lib/company-experience/cont
 
 export const validCompanyExperienceBody = {
   companyName: 'Example Corp', appliedRole: 'Frontend Developer', processYear: 2026,
+  seniority: 'mid', experienceBand: '3-5',
   promisedTimeline: 'yes', promisedDays: 7, actualDays: 10,
   wasGhosted: false, ghostedAfterStage: null, interviewerPrepared: 4,
   wasAskedIrrelevant: true, irrelevantTypes: ['age'],

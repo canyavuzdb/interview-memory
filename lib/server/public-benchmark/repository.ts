@@ -2,6 +2,8 @@ import 'server-only'
 
 import {
   publicBenchmarkReportSchema,
+  companyProcessReportSchema,
+  companyProcessContextReportSchema,
   publicRoleBenchmarkReportSchema,
   type PublicBenchmarkReport,
   type PublicRoleBenchmarkReport,
@@ -20,7 +22,7 @@ export interface PublicBenchmarkReportQuery {
   roleLimit?: number
 }
 
-function normalizePublicThresholds(data: unknown) {
+export function normalizePublicThresholds(data: unknown) {
   if (!data || typeof data !== 'object' || Array.isArray(data)) return data
 
   const report = data as Record<string, unknown>
@@ -66,20 +68,45 @@ PublicBenchmarkRepository {
       const minimumSample = options?.minimumSample ?? 1
       const roleOffset = options?.roleOffset ?? 0
       const roleLimit = options?.roleLimit ?? 100
-      const { data, error } = await client.rpc(
-        'get_public_benchmark_report_v1',
-        {
+      const [
+        { data, error },
+        { data: companyProcessData, error: companyProcessError },
+        { data: companyContextData, error: companyContextError },
+      ] = await Promise.all([
+        client.rpc('get_public_benchmark_report_v1', {
           p_min_cohort_size: minimumSample,
           p_months: 6,
           p_role_offset: roleOffset,
           p_role_limit: roleLimit,
-        },
+        }),
+        client.rpc('get_company_process_report_v1', {
+          p_min_cohort_size: minimumSample,
+          p_months: 6,
+        }),
+        client.rpc('get_company_process_context_report_v1', {
+          p_min_cohort_size: minimumSample,
+          p_months: 6,
+        }),
+      ])
+
+      if (error || companyProcessError || companyContextError) throw new PublicBenchmarkPersistenceError()
+
+      const companyProcess = companyProcessReportSchema.safeParse(companyProcessData)
+      const companyContext = companyProcessContextReportSchema.safeParse(companyContextData)
+      if (!companyProcess.success || !companyContext.success) throw new PublicBenchmarkPersistenceError()
+      const contextsByCompany = new Map(
+        companyContext.data.rows.map((row) => [row.id, row.contexts]),
       )
 
-      if (error) throw new PublicBenchmarkPersistenceError()
-
       const result = publicBenchmarkReportSchema.safeParse(
-        normalizePublicThresholds(data),
+        normalizePublicThresholds({
+          ...(data as Record<string, unknown>),
+          companyResponsivenessMeta: companyProcess.data.meta,
+          companyResponsiveness: companyProcess.data.rows.map((row) => ({
+            ...row,
+            contexts: contextsByCompany.get(row.id) ?? [],
+          })),
+        }),
       )
       if (!result.success) throw new PublicBenchmarkPersistenceError()
 

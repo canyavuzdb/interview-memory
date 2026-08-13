@@ -1166,9 +1166,9 @@ const messages = {
         },
         responsiveness: {
           eyebrow: '03 / Şirket yanıt performansı',
-          title: '30 gün içinde anlamlı güncelleme alınamayan süreçler.',
+          title: 'Şirketlerin aday süreçleri nasıl ilerliyor?',
           description:
-            'Adayların paylaştığı olgun başvuru kayıtlarında otomatik alındı mesajı dışında bir süreç güncellemesi görülmeyen oranı ve görüşme sonrası iletişimsizliği ayrı incele.',
+            'Adayların anonim katkılarından; başvurudan geri dönüşe, İK görüşmesinden teklife uzanan süreci şirket ve rol bazında incele.',
           contributeCta: 'Şirket deneyimini paylaş',
           viewsLabel: 'Şirket raporu görünümü',
           views: {
@@ -1176,12 +1176,31 @@ const messages = {
             all: 'Tüm şirketler',
           },
           summary: {
-            companies: 'Yayınlanan şirket',
-            applications: 'Olgun başvuru',
-            medianNoUpdate: 'Medyan güncellenmeme',
-            heading: 'Yüksek güncellenmeme oranı bildirilen şirketler',
-            description: 'Minimum örneklem eşiğini geçen şirketler, 30 günlük güncellenmeme oranına göre gösterilir.',
+            companies: 'Şirket',
+            applications: 'Başvuru',
+            medianResponse: 'Medyan geri dönüş',
+            heading: 'Şirketlerin aday süreç özeti',
+            description: 'Başvuru hacmini, geri dönüşü ve rol kırılımını tek görünümde incele.',
             viewAll: 'Tüm şirketleri gör',
+          },
+          treemap: {
+            description: 'Her şirketin alanı bildirilen başvuru hacmini gösterir. İç bölümler rollerin ağırlığını; koyulaşan yeşil ise başvurulara anlamlı dönüş oranını gösterir. Bir şirketi seçerek süreç akışını incele.',
+            legendArea: 'Alan: bildirilen başvuru sayısı',
+            legendColor: 'Koyu renk: daha yüksek geri dönüş',
+            ariaLabel: 'Şirket ve rol başvuru hacmi treemap görünümü',
+            companyAria: '{{company}}: {{applications}} başvuru, {{response}} geri dönüş',
+            selectedEyebrow: 'Seçilen şirketin süreç akışı',
+            contributorCount: '{{count}} anonim aday bildirimi',
+            roleSummary: 'Dönüş {{response}} · {{interview}} mülakat · {{offer}} teklif',
+            context: {
+              seniorities: { intern: 'Stajyer / öğrenci', junior: 'Başlangıç seviyesi', mid: 'Orta seviye', senior: 'Kıdemli', lead_manager: 'Liderlik / yönetim' },
+              experienceBands: { '0-1': '0–1 yıl', '1-3': '1–3 yıl', '3-5': '3–5 yıl', '5-8': '5–8 yıl', '8+': '8+ yıl' },
+              applicationChannels: { linkedin: 'LinkedIn', job_board: 'İlan platformu', company_site: 'Şirket kariyer sitesi', referral: 'Referans', recruiter_outreach: 'İşe alım uzmanı ulaştı', other: 'Diğer' },
+              referral: 'referanslı',
+            },
+            companyNarrative: '{{company}} için bu görünüm, son dönemde {{candidates}} anonim adayın bildirdiği {{applications}} başvuru kaydına dayanır. Bu kayıtlardan {{response}} tanesine anlamlı geri dönüş bildirildi.',
+            roleNarrative: '{{company}} için {{role}} rolünde {{candidates}} adaydan {{applications}} başvuru bildirildi. Bunların {{response}} tanesine anlamlı dönüş yapıldı; {{hr}} İK, {{interview}} mülakat, {{technical}} teknik, {{final}} final, {{offer}} teklif ve {{employment}} işe başlangıcı kaydı var.',
+            legacyContextNote: 'Bu kayıt, kıdem ve deneyim bilgisi toplanmaya başlanmadan önce eklendi. Yeni katkılarda rol, kıdem, deneyim ve başvuru kanalı birlikte gösterilir.',
           },
           toolbar: {
             searchLabel: 'Şirket ara',
@@ -1190,7 +1209,7 @@ const messages = {
             filtersLabel: 'Diğer filtreler',
             minSampleLabel: 'Minimum örneklem',
             pageSizeLabel: 'Sayfa başına',
-            results: '{start}–{end} / {count} şirket',
+            results: '{count} şirket',
           },
           sort: {
             noResponse: '30 günlük güncellenmeme',
@@ -1208,14 +1227,29 @@ const messages = {
             title: 'Bu filtrelerle eşleşen şirket bulunamadı.',
             description: 'Arama metnini veya minimum örneklem eşiğini değiştir.',
           },
-          tableScrollLabel: 'Şirket yanıt performansı tablosu; daha fazla sütun için yatay kaydır',
-          tableCaption: 'Şirketlere göre 30 günlük yanıtsızlık ve görüşme sonrası iletişimsizlik oranları',
+          tableScrollLabel: 'Şirket aday süreci tablosu; daha fazla sütun için yatay kaydır',
+          tableCaption: 'Şirketlere göre aday başvuru hunisi',
           columns: {
             rank: 'Sıra',
             company: 'Şirket',
-            noResponse: '30 günde güncelleme yok',
-            postInterview: 'Görüşme sonrası iletişim yok',
+            applications: 'Başvuru',
+            response: 'Geri dönüş',
+            hrScreen: 'İK',
+            interview: 'Mülakat',
+            offer: 'Teklif',
+            employment: 'İşe başladı',
             sample: 'Aday',
+          },
+          detail: {
+            summary: 'Rol kırılımı ve aday deneyimi',
+            contextsLabel: 'Rol ve aday bağlamında süreç',
+            roleTableCaption: 'Role göre şirket başvuru süreci hunisi',
+            role: 'Rol',
+            transparency: 'Ort. şeffaflık',
+            professionalism: 'Ort. profesyonellik',
+            feedback: 'Geri bildirim paylaşıldı',
+            irrelevant: 'Uygunsuz soru bildirimi',
+            note: 'Bunlar şirket beyanı değil, adayların anonim olarak bildirdiği toplu süreç sinyalleridir. Tekil deneyimler gösterilmez.',
           },
           methodologyLabel: 'Veri ve hesaplama notu',
           methodology:
@@ -1637,6 +1671,14 @@ const messages = {
           fields: {
             companyName: { label: 'Şirket adı', placeholder: 'Örn. Tech Corp' },
             appliedRole: { label: 'Pozisyon / rol', placeholder: 'Örn. Frontend Developer' },
+            seniority: {
+              label: 'Başvurduğun kıdem seviyesi',
+              options: { intern: 'Stajyer / öğrenci', junior: 'Başlangıç seviyesi', mid: 'Orta seviye', senior: 'Kıdemli', lead_manager: 'Liderlik / yönetim' },
+            },
+            experienceBand: {
+              label: 'Toplam deneyim yılın',
+              options: { '0-1': '0–1 yıl', '1-3': '1–3 yıl', '3-5': '3–5 yıl', '5-8': '5–8 yıl', '8+': '8+ yıl' },
+            },
             processYear: {
               label: 'Süreç hangi yıl gerçekleşti?',
               options: { '2024': '2024', '2025': '2025', '2026': '2026' },
@@ -1658,7 +1700,11 @@ const messages = {
         },
         step2: {
           title: 'Süreç ve yanıtsızlık',
-          description: 'Taahhüt edilen yanıt süresiyle gerçekleşen süreyi karşılaştır.',
+          description: 'Önce sürecin sonucunu ve iletişim durumunu paylaş. Hatırladığın ayrıntıları isteğe bağlı ekleyebilirsin.',
+          optionalDetails: {
+            title: 'Süreç ayrıntılarını ekle (isteğe bağlı)',
+            description: 'Süre taahhüdü, görüşmeci hazırlığı ve uygunsuz sorular toplu analizi zenginleştirir; bunları hatırlamıyorsan devam edebilirsin.',
+          },
           fields: {
             lastStage: {
               label: 'Başvuru hangi aşamaya kadar ilerledi?',
@@ -1750,9 +1796,18 @@ const messages = {
       consentNotice:
         'Göndererek; yanıtımın anonim analiz ve moderasyon amacıyla özel olarak saklanmasını, isteğe bağlı notlarda tanımlayıcı bilgi paylaşmamam gerektiğini, giriş yaptıysam hesabımla ilişkilendirilmesini ve yalnız moderasyon ile yeterli örneklem sonrasında toplu sonuçlarda kullanılmasını kabul ediyorum.',
       success: {
-        title: 'Süreç değerlendirmen hazır.',
-        description: 'Katkın güvenle kaydedildi. Moderasyon sonrasında yalnızca yeterli örneklem içindeki toplu sonuçlara dahil edilebilir.',
+        eyebrow: 'Anonim katkın kaydedildi',
+        title: 'Deneyimini görünür veriye dönüştürdün.',
+        description: 'Paylaştığın süreç, kişisel bilgilerden ayrıştırılmış anonim bir kayıt olarak saklandı. Yeterli sayıda benzer kayıt oluştuğunda yalnızca toplu şirket süreç göstergelerine katkı sağlar.',
+        summaryTitle: 'Paylaştığın deneyim',
+        outcomeLabel: 'Süreç sonucu',
         ghostedLabel: 'Ghosting durumu',
+        ghostedYes: 'Yanıtsızlık bildirildi',
+        ghostedNo: 'Yanıtsızlık yok',
+        contributionTitle: 'Bu katkı neden önemli?',
+        contributionDescription: 'Tek bir deneyim bir şirketi tanımlamaz. Ancak benzer anonim kayıtlar biriktikçe, adayların iletişim kalitesi ve süreç şeffaflığı hakkında daha güvenilir toplu bir görünüm oluşur.',
+        ratingsTitle: 'Paylaştığın değerlendirme',
+        outOfFive: '/5',
         transparencyLabel: 'Şeffaflık skoru',
         professionalismLabel: 'Profesyonellik skoru',
       },
@@ -2931,9 +2986,9 @@ const messages = {
         },
         responsiveness: {
           eyebrow: '03 / Company response performance',
-          title: 'Processes without a substantive update within 30 days.',
+          title: 'How do company candidate processes progress?',
           description:
-            'Separately review the share of mature candidate-reported applications with no update beyond an automated acknowledgement and the share with no follow-up after an interview.',
+            'Use anonymous candidate contributions to inspect the process from application to response, recruiter interview, and offer by company and role.',
           contributeCta: 'Share company experience',
           viewsLabel: 'Company report view',
           views: {
@@ -2941,12 +2996,31 @@ const messages = {
             all: 'All companies',
           },
           summary: {
-            companies: 'Published companies',
-            applications: 'Mature applications',
-            medianNoUpdate: 'Median no-update rate',
-            heading: 'Companies reporting higher no-update rates',
-            description: 'Companies meeting the minimum sample threshold are shown by their 30-day no-update rate.',
+            companies: 'Companies',
+            applications: 'Applications',
+            medianResponse: 'Median response rate',
+            heading: 'Company candidate-process summary',
+            description: 'Review application volume, responses, and role breakdown in a single view.',
             viewAll: 'View all companies',
+          },
+          treemap: {
+            description: 'Each company area represents reported application volume. Inner areas show the weight of each role, while deeper green indicates a higher rate of substantive responses. Select a company to inspect its process flow.',
+            legendArea: 'Area: reported applications',
+            legendColor: 'Darker color: higher response rate',
+            ariaLabel: 'Treemap of application volume by company and role',
+            companyAria: '{{company}}: {{applications}} applications, {{response}} response rate',
+            selectedEyebrow: 'Selected company process flow',
+            contributorCount: '{{count}} anonymous candidate reports',
+            roleSummary: 'Response {{response}} · {{interview}} interviews · {{offer}} offers',
+            context: {
+              seniorities: { intern: 'Intern / student', junior: 'Entry level', mid: 'Mid-level', senior: 'Senior', lead_manager: 'Leadership / management' },
+              experienceBands: { '0-1': '0–1 years', '1-3': '1–3 years', '3-5': '3–5 years', '5-8': '5–8 years', '8+': '8+ years' },
+              applicationChannels: { linkedin: 'LinkedIn', job_board: 'Job board', company_site: 'Company careers site', referral: 'Referral', recruiter_outreach: 'Recruiter outreach', other: 'Other' },
+              referral: 'with referral',
+            },
+            companyNarrative: 'For {{company}}, this view is based on {{applications}} application records reported by {{candidates}} anonymous candidates in the current period. {{response}} of those records reported a substantive response.',
+            roleNarrative: 'For {{role}} at {{company}}, {{candidates}} candidates reported {{applications}} applications. {{response}} received a substantive response; the records include {{hr}} recruiter screens, {{interview}} interviews, {{technical}} technical stages, {{final}} final stages, {{offer}} offers, and {{employment}} employment starts.',
+            legacyContextNote: 'This record was contributed before seniority and experience information was collected. New contributions show role, seniority, experience, and application channel together.',
           },
           toolbar: {
             searchLabel: 'Search companies',
@@ -2955,7 +3029,7 @@ const messages = {
             filtersLabel: 'More filters',
             minSampleLabel: 'Minimum sample',
             pageSizeLabel: 'Per page',
-            results: '{start}–{end} of {count} companies',
+            results: '{count} companies',
           },
           sort: {
             noResponse: 'No update within 30 days',
@@ -2973,14 +3047,29 @@ const messages = {
             title: 'No companies match these filters.',
             description: 'Adjust the search term or minimum sample threshold.',
           },
-          tableScrollLabel: 'Company response-performance table; scroll horizontally for more columns',
-          tableCaption: 'Thirty-day no-update and post-interview no-follow-up rates by company',
+          tableScrollLabel: 'Company candidate-process table; scroll horizontally for more columns',
+          tableCaption: 'Candidate application funnel by company',
           columns: {
             rank: 'Rank',
             company: 'Company',
-            noResponse: 'No update within 30 days',
-            postInterview: 'No follow-up after interview',
+            applications: 'Applications',
+            response: 'Responses',
+            hrScreen: 'Recruiter',
+            interview: 'Interview',
+            offer: 'Offer',
+            employment: 'Started',
             sample: 'Candidates',
+          },
+          detail: {
+            summary: 'Role breakdown and candidate experience',
+            contextsLabel: 'Process by role and candidate context',
+            roleTableCaption: 'Company application funnel by role',
+            role: 'Role',
+            transparency: 'Avg. transparency',
+            professionalism: 'Avg. professionalism',
+            feedback: 'Feedback shared',
+            irrelevant: 'Inappropriate-question reports',
+            note: 'These are aggregate process signals anonymously reported by candidates, not statements from the company. Individual experiences are never shown.',
           },
           methodologyLabel: 'Data and calculation note',
           methodology:
@@ -3400,6 +3489,14 @@ const messages = {
           fields: {
             companyName: { label: 'Company name', placeholder: 'e.g. Tech Corp' },
             appliedRole: { label: 'Position / role', placeholder: 'e.g. Frontend Developer' },
+            seniority: {
+              label: 'Seniority level for this application',
+              options: { intern: 'Intern / student', junior: 'Entry level', mid: 'Mid-level', senior: 'Senior', lead_manager: 'Leadership / management' },
+            },
+            experienceBand: {
+              label: 'Total years of experience',
+              options: { '0-1': '0–1 years', '1-3': '1–3 years', '3-5': '3–5 years', '5-8': '5–8 years', '8+': '8+ years' },
+            },
             processYear: {
               label: 'In what year did the process take place?',
               options: { '2024': '2024', '2025': '2025', '2026': '2026' },
@@ -3421,7 +3518,11 @@ const messages = {
         },
         step2: {
           title: 'Process and non-response',
-          description: 'Compare the promised timeline with the actual timeline.',
+          description: 'First share the outcome and communication status. You can add any details you remember if you wish.',
+          optionalDetails: {
+            title: 'Add process details (optional)',
+            description: 'Timeline commitments, interviewer preparation, and inappropriate questions enrich the aggregate analysis, but you can continue if you do not remember them.',
+          },
           fields: {
             lastStage: {
               label: 'What was the furthest stage reached?',
@@ -3513,9 +3614,18 @@ const messages = {
       consentNotice:
         'By submitting, I agree that my response may be stored privately for anonymous analysis and moderation, that I must not share identifying details in optional notes, that it may be linked to my account if I am signed in, and that it may be used in aggregate results only after moderation and a sufficient sample size.',
       success: {
-        title: 'Your process evaluation is ready.',
-        description: 'Your contribution was saved securely. After moderation, it may enter aggregate results only when the sample threshold is met.',
+        eyebrow: 'Your anonymous contribution was saved',
+        title: 'You turned an experience into visible data.',
+        description: 'Your process was saved as an anonymous record separated from personal information. Once enough similar records exist, it can contribute only to aggregate company-process indicators.',
+        summaryTitle: 'The experience you shared',
+        outcomeLabel: 'Process outcome',
         ghostedLabel: 'Ghosting status',
+        ghostedYes: 'Non-response reported',
+        ghostedNo: 'No non-response reported',
+        contributionTitle: 'Why this contribution matters',
+        contributionDescription: 'One experience does not define a company. But as similar anonymous records accumulate, they create a more reliable aggregate view of candidate communication and process transparency.',
+        ratingsTitle: 'Your evaluation',
+        outOfFive: '/5',
         transparencyLabel: 'Transparency score',
         professionalismLabel: 'Professionalism score',
       },
