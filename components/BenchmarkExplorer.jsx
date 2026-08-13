@@ -1038,6 +1038,7 @@ export default function BenchmarkExplorer({
             {compact ? (
               <Link
                 href={`/${locale}/benchmarks`}
+                prefetch={false}
                 className="group inline-flex min-h-12 items-center justify-between gap-3 border border-ink px-4 font-mono text-[9px] font-bold uppercase tracking-[0.07em] text-ink transition-colors hover:bg-[var(--surface-muted)]"
               >
                 {copy.detailCta}

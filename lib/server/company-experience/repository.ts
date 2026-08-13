@@ -50,6 +50,8 @@ export type CreateCompanyExperienceInput = HashFields & {
   quotaPolicyVersion: string
   companyName: string | null
   appliedRole: string
+  seniority: string
+  experienceBand: string
   processYear: number
   promisedTimeline: string
   promisedDays: number | null
@@ -82,6 +84,11 @@ export interface CompanyExperienceRepository {
     submissionId: string
     dataSubjectId: string
   }): Promise<CompanyExperienceReplayRecord | null>
+  createApplicationCandidateContext(input: {
+    applicationId: string
+    seniority: string
+    experienceBand: string
+  }): Promise<void>
 }
 
 function checkedHash(value: string) {
@@ -189,6 +196,16 @@ export function createSupabaseCompanyExperienceRepository(): CompanyExperienceRe
         )
       }
       return result.data
+    },
+
+    async createApplicationCandidateContext(input) {
+      const { error } = await client.rpc('create_application_candidate_context_v1', {
+        p_application_id: input.applicationId,
+        p_seniority: input.seniority,
+        p_experience_band: input.experienceBand,
+      })
+
+      if (error) throw new CompanyExperiencePersistenceError('COMPANY_EXPERIENCE_WRITE_FAILED')
     },
 
     async getCreateResult(input) {

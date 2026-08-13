@@ -1,6 +1,10 @@
 import { z } from 'zod'
 
-import { applicationContextSchema } from '@/lib/application-outcome/contracts'
+import {
+  applicationContextSchema,
+  applicationExperienceBands,
+  applicationSeniorities,
+} from '@/lib/application-outcome/contracts'
 
 export const companyExperiencePromisedTimelines = [
   'yes',
@@ -51,6 +55,8 @@ export const companyExperienceCreateBodySchema = z
   .strictObject({
     companyName: optionalCleanText(200),
     appliedRole: cleanText(120),
+    seniority: z.enum(applicationSeniorities),
+    experienceBand: z.enum(applicationExperienceBands),
     processYear: z.int().min(2000).max(2100),
     promisedTimeline: z.enum(companyExperiencePromisedTimelines),
     promisedDays: days.nullable(),

@@ -45,6 +45,7 @@ function LockedLink({ href, label }) {
   return (
     <Link
       href={href}
+      prefetch={false}
       className="group inline-flex min-h-11 items-center gap-2 border border-[var(--line-strong)] bg-surface px-3 font-mono text-[8px] font-bold uppercase tracking-[0.07em] text-ink shadow-sm transition-colors hover:border-ink hover:bg-ink hover:text-surface"
     >
       <LockKeyhole size={12} strokeWidth={1.8} aria-hidden="true" />

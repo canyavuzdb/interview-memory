@@ -8,6 +8,8 @@ import SurveyCompanyCombobox from '@/components/survey-flow/SurveyCompanyCombobo
 import SurveyRoleCombobox from '@/components/survey-flow/SurveyRoleCombobox'
 import {
   APPLICATION_CHANNELS,
+  APPLICATION_EXPERIENCE_BANDS,
+  APPLICATION_SENIORITIES,
 } from '@/lib/constants/hrProcess'
 
 export default function StepCompanyInfo({
@@ -81,6 +83,34 @@ export default function StepCompanyInfo({
           onChange={(role) => setField('appliedRole', role?.label ?? '')}
         />
       </SurveyField>
+
+      <div className="grid gap-6 sm:grid-cols-2">
+        <SurveyField id="hr-seniority" label={copy.fields.seniority.label} error={errors.seniority}>
+          <SurveySelect
+            id="hr-seniority"
+            value={state.seniority}
+            onChange={(event) => setField('seniority', event.target.value)}
+          >
+            <option value="">{selectPlaceholder}</option>
+            {APPLICATION_SENIORITIES.map((seniority) => (
+              <option key={seniority} value={seniority}>{copy.fields.seniority.options[seniority]}</option>
+            ))}
+          </SurveySelect>
+        </SurveyField>
+
+        <SurveyField id="hr-experience-band" label={copy.fields.experienceBand.label} error={errors.experienceBand}>
+          <SurveySelect
+            id="hr-experience-band"
+            value={state.experienceBand}
+            onChange={(event) => setField('experienceBand', event.target.value)}
+          >
+            <option value="">{selectPlaceholder}</option>
+            {APPLICATION_EXPERIENCE_BANDS.map((band) => (
+              <option key={band} value={band}>{copy.fields.experienceBand.options[band]}</option>
+            ))}
+          </SurveySelect>
+        </SurveyField>
+      </div>
 
       <SurveyField
         id="hr-application-month"

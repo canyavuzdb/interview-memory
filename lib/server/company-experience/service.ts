@@ -168,6 +168,15 @@ export function createCompanyExperienceService(
         if (!replay) {
           throw new CompanyExperienceServiceError('COMPANY_EXPERIENCE_REPLAY_FAILED')
         }
+        try {
+          await dependencies.repository.createApplicationCandidateContext({
+            applicationId: replay.job_application_id,
+            seniority: body.seniority,
+            experienceBand: body.experienceBand,
+          })
+        } catch {
+          throw new CompanyExperienceServiceError('COMPANY_EXPERIENCE_WRITE_FAILED')
+        }
         const submissionCapability =
           input.actor.kind === 'anonymous'
             ? deriveCapability(
@@ -264,6 +273,8 @@ export function createCompanyExperienceService(
           quotaPolicyHash: quota24h.policyHash,
           companyName: body.companyName,
           appliedRole: body.appliedRole,
+          seniority: body.seniority,
+          experienceBand: body.experienceBand,
           processYear: body.processYear,
           promisedTimeline: body.promisedTimeline,
           promisedDays: body.promisedDays,
@@ -290,6 +301,12 @@ export function createCompanyExperienceService(
             body.plannedStartMonth === null
               ? null
               : `${body.plannedStartMonth}-01`,
+        })
+
+        await dependencies.repository.createApplicationCandidateContext({
+          applicationId: created.job_application_id,
+          seniority: body.seniority,
+          experienceBand: body.experienceBand,
         })
 
         try {

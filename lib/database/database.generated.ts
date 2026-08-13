@@ -203,6 +203,14 @@ export type Database = {
           submission_id: string
         }[]
       }
+      create_application_candidate_context_v1: {
+        Args: {
+          p_application_id: string
+          p_experience_band: string
+          p_seniority: string
+        }
+        Returns: undefined
+      }
       create_interview_preparation_contribution_v1: {
         Args: {
           p_applied_role: string
@@ -371,6 +379,10 @@ export type Database = {
         Returns: Json
       }
       get_company_process_report_v1: {
+        Args: { p_min_cohort_size?: number; p_months?: number }
+        Returns: Json
+      }
+      get_company_process_context_report_v1: {
         Args: { p_min_cohort_size?: number; p_months?: number }
         Returns: Json
       }

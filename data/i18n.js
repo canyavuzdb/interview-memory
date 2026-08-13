@@ -1192,9 +1192,15 @@ const messages = {
             selectedEyebrow: 'Seçilen şirketin süreç akışı',
             contributorCount: '{{count}} anonim aday bildirimi',
             roleSummary: 'Dönüş {{response}} · {{interview}} mülakat · {{offer}} teklif',
+            context: {
+              seniorities: { intern: 'Stajyer / öğrenci', junior: 'Başlangıç seviyesi', mid: 'Orta seviye', senior: 'Kıdemli', lead_manager: 'Liderlik / yönetim' },
+              experienceBands: { '0-1': '0–1 yıl', '1-3': '1–3 yıl', '3-5': '3–5 yıl', '5-8': '5–8 yıl', '8+': '8+ yıl' },
+              applicationChannels: { linkedin: 'LinkedIn', job_board: 'İlan platformu', company_site: 'Şirket kariyer sitesi', referral: 'Referans', recruiter_outreach: 'İşe alım uzmanı ulaştı', other: 'Diğer' },
+              referral: 'referanslı',
+            },
             companyNarrative: '{{company}} için bu görünüm, son dönemde {{candidates}} anonim adayın bildirdiği {{applications}} başvuru kaydına dayanır. Bu kayıtlardan {{response}} tanesine anlamlı geri dönüş bildirildi.',
             roleNarrative: '{{company}} için {{role}} rolünde {{candidates}} adaydan {{applications}} başvuru bildirildi. Bunların {{response}} tanesine anlamlı dönüş yapıldı; {{hr}} İK, {{interview}} mülakat, {{technical}} teknik, {{final}} final, {{offer}} teklif ve {{employment}} işe başlangıcı kaydı var.',
-            experienceScopeNote: 'Bu ankette kıdem veya deneyim yılı henüz toplanmıyor; sonuçlar rol bazındaki aday bildirimlerini gösterir. Bu, şirketin tüm başvuru havuzunun kesin ölçümü değildir.',
+            legacyContextNote: 'Bu kayıt, kıdem ve deneyim bilgisi toplanmaya başlanmadan önce eklendi. Yeni katkılarda rol, kıdem, deneyim ve başvuru kanalı birlikte gösterilir.',
           },
           toolbar: {
             searchLabel: 'Şirket ara',
@@ -1236,7 +1242,7 @@ const messages = {
           },
           detail: {
             summary: 'Rol kırılımı ve aday deneyimi',
-            rolesLabel: 'Rol bazında süreç',
+            contextsLabel: 'Rol ve aday bağlamında süreç',
             roleTableCaption: 'Role göre şirket başvuru süreci hunisi',
             role: 'Rol',
             transparency: 'Ort. şeffaflık',
@@ -1665,6 +1671,14 @@ const messages = {
           fields: {
             companyName: { label: 'Şirket adı', placeholder: 'Örn. Tech Corp' },
             appliedRole: { label: 'Pozisyon / rol', placeholder: 'Örn. Frontend Developer' },
+            seniority: {
+              label: 'Başvurduğun kıdem seviyesi',
+              options: { intern: 'Stajyer / öğrenci', junior: 'Başlangıç seviyesi', mid: 'Orta seviye', senior: 'Kıdemli', lead_manager: 'Liderlik / yönetim' },
+            },
+            experienceBand: {
+              label: 'Toplam deneyim yılın',
+              options: { '0-1': '0–1 yıl', '1-3': '1–3 yıl', '3-5': '3–5 yıl', '5-8': '5–8 yıl', '8+': '8+ yıl' },
+            },
             processYear: {
               label: 'Süreç hangi yıl gerçekleşti?',
               options: { '2024': '2024', '2025': '2025', '2026': '2026' },
@@ -2998,9 +3012,15 @@ const messages = {
             selectedEyebrow: 'Selected company process flow',
             contributorCount: '{{count}} anonymous candidate reports',
             roleSummary: 'Response {{response}} · {{interview}} interviews · {{offer}} offers',
+            context: {
+              seniorities: { intern: 'Intern / student', junior: 'Entry level', mid: 'Mid-level', senior: 'Senior', lead_manager: 'Leadership / management' },
+              experienceBands: { '0-1': '0–1 years', '1-3': '1–3 years', '3-5': '3–5 years', '5-8': '5–8 years', '8+': '8+ years' },
+              applicationChannels: { linkedin: 'LinkedIn', job_board: 'Job board', company_site: 'Company careers site', referral: 'Referral', recruiter_outreach: 'Recruiter outreach', other: 'Other' },
+              referral: 'with referral',
+            },
             companyNarrative: 'For {{company}}, this view is based on {{applications}} application records reported by {{candidates}} anonymous candidates in the current period. {{response}} of those records reported a substantive response.',
             roleNarrative: 'For {{role}} at {{company}}, {{candidates}} candidates reported {{applications}} applications. {{response}} received a substantive response; the records include {{hr}} recruiter screens, {{interview}} interviews, {{technical}} technical stages, {{final}} final stages, {{offer}} offers, and {{employment}} employment starts.',
-            experienceScopeNote: 'This survey does not yet collect seniority or years of experience, so the signal represents reports within the role. It is not a definitive measure of the company’s entire applicant pool.',
+            legacyContextNote: 'This record was contributed before seniority and experience information was collected. New contributions show role, seniority, experience, and application channel together.',
           },
           toolbar: {
             searchLabel: 'Search companies',
@@ -3042,7 +3062,7 @@ const messages = {
           },
           detail: {
             summary: 'Role breakdown and candidate experience',
-            rolesLabel: 'Process by role',
+            contextsLabel: 'Process by role and candidate context',
             roleTableCaption: 'Company application funnel by role',
             role: 'Role',
             transparency: 'Avg. transparency',
@@ -3469,6 +3489,14 @@ const messages = {
           fields: {
             companyName: { label: 'Company name', placeholder: 'e.g. Tech Corp' },
             appliedRole: { label: 'Position / role', placeholder: 'e.g. Frontend Developer' },
+            seniority: {
+              label: 'Seniority level for this application',
+              options: { intern: 'Intern / student', junior: 'Entry level', mid: 'Mid-level', senior: 'Senior', lead_manager: 'Leadership / management' },
+            },
+            experienceBand: {
+              label: 'Total years of experience',
+              options: { '0-1': '0–1 years', '1-3': '1–3 years', '3-5': '3–5 years', '5-8': '5–8 years', '8+': '8+ years' },
+            },
             processYear: {
               label: 'In what year did the process take place?',
               options: { '2024': '2024', '2025': '2025', '2026': '2026' },

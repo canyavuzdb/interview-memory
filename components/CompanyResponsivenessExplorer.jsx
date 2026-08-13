@@ -50,6 +50,15 @@ function roleNarrative({ company, copy, locale, role }) {
   })
 }
 
+function contextTitle(context, copy) {
+  const seniority = copy.treemap.context.seniorities[context.seniority] ?? context.seniority
+  const experience = copy.treemap.context.experienceBands[context.experienceBand] ?? context.experienceBand
+  const channel = copy.treemap.context.applicationChannels[context.applicationChannel] ?? context.applicationChannel
+  const referral = context.hadReferral ? ` · ${copy.treemap.context.referral}` : ''
+
+  return `${context.role} · ${seniority} · ${experience} · ${channel}${referral}`
+}
+
 function interpolateCopy(template, values) {
   if (typeof template !== 'string') return ''
 
@@ -120,6 +129,12 @@ function tintFor(rate) {
   return `color-mix(in srgb, var(--accent) ${accentShare}%, var(--surface))`
 }
 
+function treemapHeightClass(count) {
+  if (count <= 3) return 'h-72 sm:h-80'
+  if (count <= 8) return 'h-80 sm:h-96'
+  return 'h-[28rem] sm:h-[32rem]'
+}
+
 function Funnel({ copy, locale, row }) {
   const applications = row.eligibleMatureApplicationsCount
   const steps = [
@@ -186,28 +201,31 @@ function CompanyDetails({ copy, locale, row }) {
 
       <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
         <div>
-          <p className="font-mono text-[8px] font-bold uppercase tracking-[0.07em] text-muted">{copy.detail.rolesLabel}</p>
+          <p className="font-mono text-[8px] font-bold uppercase tracking-[0.07em] text-muted">{copy.detail.contextsLabel}</p>
+          {row.contexts.length ? (
           <div className="mt-3 grid gap-2 sm:grid-cols-2">
-            {row.roles.map((role) => (
-              <div key={role.role} className="border border-line bg-surface p-3">
+            {row.contexts.map((context) => (
+              <div key={`${context.role}-${context.seniority}-${context.experienceBand}-${context.applicationChannel}-${context.hadReferral}`} className="border border-line bg-surface p-3">
                 <div className="flex items-start justify-between gap-3">
-                  <p className="min-w-0 text-sm font-semibold text-ink">{role.role}</p>
-                  <p className="shrink-0 font-mono text-xs font-bold text-ink">{formatNumber(role.applicationsCount, locale)}</p>
+                  <p className="min-w-0 text-sm font-semibold text-ink">{contextTitle(context, copy)}</p>
+                  <p className="shrink-0 font-mono text-xs font-bold text-ink">{formatNumber(context.applicationsCount, locale)}</p>
                 </div>
                 <p className="mt-2 font-mono text-[8px] font-bold uppercase tracking-[0.06em] text-muted">
                   {interpolateCopy(copy.treemap.roleSummary, {
-                    response: formatRate(role.respondedApplicationsCount, role.applicationsCount, locale),
-                    interview: formatNumber(role.interviewedApplicationsCount, locale),
-                    offer: formatNumber(role.offeredApplicationsCount, locale),
+                    response: formatRate(context.respondedApplicationsCount, context.applicationsCount, locale),
+                    interview: formatNumber(context.interviewedApplicationsCount, locale),
+                    offer: formatNumber(context.offeredApplicationsCount, locale),
                   })}
                 </p>
                 <p className="mt-3 text-xs leading-5 text-muted">
-                  {roleNarrative({ company: row.company, copy, locale, role })}
+                  {roleNarrative({ company: row.company, copy, locale, role: context })}
                 </p>
               </div>
             ))}
           </div>
-          <p className="mt-4 text-xs leading-5 text-muted">{copy.treemap.experienceScopeNote}</p>
+          ) : (
+            <p className="mt-3 text-sm leading-6 text-muted">{copy.treemap.legacyContextNote}</p>
+          )}
         </div>
 
         <dl className="grid grid-cols-2 gap-x-6 gap-y-4 border-t border-line pt-4 lg:w-72 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
@@ -236,7 +254,7 @@ function CompanyTreemap({ copy, locale, onSelect, rows, selectedId }) {
         <p className="font-mono text-[8px] font-bold uppercase tracking-[0.07em] text-muted">{copy.treemap.legendColor}</p>
       </div>
       <div
-        className="relative aspect-[4/3] min-h-[24rem] bg-[var(--surface-muted)] sm:aspect-[16/9]"
+        className={`relative ${treemapHeightClass(rows.length)} bg-[var(--surface-muted)]`}
         role="group"
         aria-label={copy.treemap.ariaLabel}
       >

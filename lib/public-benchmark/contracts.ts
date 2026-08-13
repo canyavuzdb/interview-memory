@@ -136,6 +136,23 @@ const responsivenessMetaSchema = z.strictObject({
   metricDefinitionVersion: z.string().regex(/^\d+\.\d+$/u),
 })
 
+const companyProcessContextSchema = z.strictObject({
+  role: z.string().min(1).max(120),
+  seniority: z.enum(['intern', 'junior', 'mid', 'senior', 'lead_manager']),
+  experienceBand: z.enum(['0-1', '1-3', '3-5', '5-8', '8+']),
+  applicationChannel: z.enum(['linkedin', 'job_board', 'company_site', 'referral', 'recruiter_outreach', 'other']),
+  hadReferral: z.boolean(),
+  applicationsCount: nonnegativeInteger,
+  contributorsCount: nonnegativeInteger,
+  respondedApplicationsCount: nonnegativeInteger,
+  hrScreenApplicationsCount: nonnegativeInteger,
+  interviewedApplicationsCount: nonnegativeInteger,
+  technicalApplicationsCount: nonnegativeInteger,
+  finalApplicationsCount: nonnegativeInteger,
+  offeredApplicationsCount: nonnegativeInteger,
+  employmentStartedApplicationsCount: nonnegativeInteger,
+})
+
 const responsivenessRowSchema = z.strictObject({
   id: z.string().min(1).max(120),
   company: z.string().min(1).max(200),
@@ -154,6 +171,7 @@ const responsivenessRowSchema = z.strictObject({
   averageProfessionalism: z.number().min(1).max(5).nullable(),
   feedbackSharedCount: nonnegativeInteger,
   irrelevantQuestionCount: nonnegativeInteger,
+  contexts: z.array(companyProcessContextSchema).default([]),
   roles: z.array(z.strictObject({
     role: z.string().min(1).max(120),
     applicationsCount: nonnegativeInteger,
@@ -171,6 +189,13 @@ const responsivenessRowSchema = z.strictObject({
 export const companyProcessReportSchema = z.strictObject({
   meta: responsivenessMetaSchema,
   rows: z.array(responsivenessRowSchema),
+})
+
+export const companyProcessContextReportSchema = z.strictObject({
+  rows: z.array(z.strictObject({
+    id: z.string().min(1).max(120),
+    contexts: z.array(companyProcessContextSchema),
+  })),
 })
 
 export const publicBenchmarkReportSchema = z.strictObject({

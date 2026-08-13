@@ -21,7 +21,7 @@ const input = {
   quota30dWindowStart: '2026-07-01T00:00:00.000Z', quota30dLimit: 10,
   quota30dExpiresAt: '2026-07-31T00:00:00.000Z',
   quotaPolicyVersion: 'v1', quotaPolicyHash: hash,
-  companyName: 'Example', appliedRole: 'Engineer', processYear: 2026,
+  companyName: 'Example', appliedRole: 'Engineer', seniority: 'mid', experienceBand: '3-5', processYear: 2026,
   promisedTimeline: 'yes', promisedDays: 7, actualDays: 9,
   wasGhosted: false, ghostedAfterStage: null, interviewerPrepared: 4,
   wasAskedIrrelevant: true, irrelevantTypes: ['age'],

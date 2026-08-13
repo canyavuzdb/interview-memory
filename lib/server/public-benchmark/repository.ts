@@ -3,6 +3,7 @@ import 'server-only'
 import {
   publicBenchmarkReportSchema,
   companyProcessReportSchema,
+  companyProcessContextReportSchema,
   publicRoleBenchmarkReportSchema,
   type PublicBenchmarkReport,
   type PublicRoleBenchmarkReport,
@@ -67,7 +68,11 @@ PublicBenchmarkRepository {
       const minimumSample = options?.minimumSample ?? 1
       const roleOffset = options?.roleOffset ?? 0
       const roleLimit = options?.roleLimit ?? 100
-      const [{ data, error }, { data: companyProcessData, error: companyProcessError }] = await Promise.all([
+      const [
+        { data, error },
+        { data: companyProcessData, error: companyProcessError },
+        { data: companyContextData, error: companyContextError },
+      ] = await Promise.all([
         client.rpc('get_public_benchmark_report_v1', {
           p_min_cohort_size: minimumSample,
           p_months: 6,
@@ -78,18 +83,29 @@ PublicBenchmarkRepository {
           p_min_cohort_size: minimumSample,
           p_months: 6,
         }),
+        client.rpc('get_company_process_context_report_v1', {
+          p_min_cohort_size: minimumSample,
+          p_months: 6,
+        }),
       ])
 
-      if (error || companyProcessError) throw new PublicBenchmarkPersistenceError()
+      if (error || companyProcessError || companyContextError) throw new PublicBenchmarkPersistenceError()
 
       const companyProcess = companyProcessReportSchema.safeParse(companyProcessData)
-      if (!companyProcess.success) throw new PublicBenchmarkPersistenceError()
+      const companyContext = companyProcessContextReportSchema.safeParse(companyContextData)
+      if (!companyProcess.success || !companyContext.success) throw new PublicBenchmarkPersistenceError()
+      const contextsByCompany = new Map(
+        companyContext.data.rows.map((row) => [row.id, row.contexts]),
+      )
 
       const result = publicBenchmarkReportSchema.safeParse(
         normalizePublicThresholds({
           ...(data as Record<string, unknown>),
           companyResponsivenessMeta: companyProcess.data.meta,
-          companyResponsiveness: companyProcess.data.rows,
+          companyResponsiveness: companyProcess.data.rows.map((row) => ({
+            ...row,
+            contexts: contextsByCompany.get(row.id) ?? [],
+          })),
         }),
       )
       if (!result.success) throw new PublicBenchmarkPersistenceError()

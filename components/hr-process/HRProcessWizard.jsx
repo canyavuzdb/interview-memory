@@ -42,6 +42,8 @@ export default function HRProcessWizard({ copy, locale, sampleSize }) {
     const payload = {
       companyName: state.companyName || null,
       appliedRole: state.appliedRole,
+      seniority: state.seniority,
+      experienceBand: state.experienceBand,
       processYear: Number(state.applicationMonth.slice(0, 4)),
       applicationMonth: state.applicationMonth,
       applicationChannel: state.applicationChannel,
