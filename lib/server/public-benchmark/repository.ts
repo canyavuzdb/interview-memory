@@ -22,7 +22,7 @@ export interface PublicBenchmarkReportQuery {
   roleLimit?: number
 }
 
-function normalizePublicThresholds(data: unknown) {
+export function normalizePublicThresholds(data: unknown) {
   if (!data || typeof data !== 'object' || Array.isArray(data)) return data
 
   const report = data as Record<string, unknown>
